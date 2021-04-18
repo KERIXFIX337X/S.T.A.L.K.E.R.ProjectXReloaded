@@ -1,0 +1,876 @@
+function dbglog(fmt,...)
+--[[		local msg = string.format(fmt, ...)
+		local msg_no_ws = string.gsub(msg, "%s", "_")
+		get_console():execute("dbg:" .. msg_no_ws)
+		get_console():execute("flush")
+]]
+end
+
+class "AnomalyManager"
+function AnomalyManager:__init()
+	local game_diff_table =        {
+					[0] = 50,
+					[1] = 55,
+					[2] = 60,
+					[3] = 65,
+					[4] = 70
+					}
+	local 	time_interval = {}
+		time_interval["l01_escape"] 	= 10000
+		time_interval["l02_garbage"] 	= 8000
+		time_interval["l03_agroprom"] 	= 10000
+		time_interval["l04_darkvalley"] = 10000
+		time_interval["l05_bar"] 	= 40000
+		time_interval["l06_rostok"] 	= 35000
+		time_interval["l07_military"] 	= 8000
+		time_interval["l08_yantar"] 	= 25000
+		time_interval["l10_radar"] 	= 15000
+		time_interval["l11_pripyat"] 	= 15000
+--[[		time_interval["l01_escape"] 	= 10000
+		time_interval["l02_garbage"] 	= 8000
+		time_interval["l03_agroprom"] 	= 10000
+		time_interval["l04_darkvalley"] = 10000
+		time_interval["l05_bar"] 	= 40000
+		time_interval["l06_rostok"] 	= 35000
+		time_interval["l07_military"] 	= 8000
+		time_interval["l08_yantar"] 	= 25000
+		time_interval["l10_radar"] 	= 15000
+		time_interval["l11_pripyat"] 	= 15000]]
+
+--	dbglog("AnomalyManager:_init()")
+	self.an_position = vector():set(0,0,0)
+	self.level_vertex_id = 0
+	self.game_vertex_id = 0
+	self.section_name = ""
+	self.anomaly_table = {}
+	self.full_table = game_diff_table[level.get_game_difficulty()]
+
+--	self.full_table = 100
+--	self.delta_time = 1000
+
+	if time_interval[level.name()] ~= nil then
+		self.delta_time = time_interval[level.name()]
+	else
+		self.delta_time = 10000
+	end
+	
+	self.time_update = time_global() + 5000
+	self.caps_delta_time = 1000
+	self.caps_time_update = time_global() 
+	self.radius = 1
+	self.min_radius = 2.2
+	self.max_radius = 4.5
+	self.temp_name = ""
+--	self.temp_name = "dino_buzz_weak"
+	-- math.randomseed(self.time_update) -- @checkme
+	local xseed = xiani.getLSRandomSeed()
+	-- dbglog("Update time (random seed) is :" .. tostring(xseed))
+	-- dbglog("Random number1 from 1 to 10 is :" .. tostring(math.random(1, 10)))
+	-- dbglog("Random number2 from 1 to 10 is :" .. tostring(math.random(1, 10)))
+	-- dbglog("Random number3 from 1 to 10 is :" .. tostring(math.random(1, 10)))
+--	dbglog("AnomalyManager:_init() self.full_table=%d percent",self.full_table)
+end
+
+function AnomalyManager:re_init()
+	local lost_objects_count = 0
+--	dbglog("AnomalyManager:re_init()")
+	for a, obj_id in ipairs(self.anomaly_table) do
+		local obj = level.object_by_id(obj_id)
+		if obj == nil then
+			lost_objects_count = lost_objects_count + 1
+		else
+			if self:check_enable_anomaly(obj_id) == false then
+	--			dbglog("--==AnomalyManager:re_init(%d)",obj_id)
+				obj:disable_anomaly()
+			else
+				-- changed by XiaNi
+				-- we should not set power to unknown anomaly.. leave as is
+				-- also added "harmless" type of anomaly
+				-- also added elseif instead several if blocks
+				-- also check of name replaced with check of section_name
+				-- also string.find replaced with string.sub
+				-- (string.sub (self.section_name, 0 , 3) == "sr_")
+				local objSection = obj:section()
+				if (string.sub(objSection, -4) == "weak") then
+					obj:set_anomaly_power(math.random(3, 7)/10)
+				elseif (string.sub(objSection, -7) == "average") then
+					obj:set_anomaly_power(math.random(7, 15)/10)
+				elseif (string.sub(objSection, -6) == "strong") then
+					obj:set_anomaly_power(math.random(15, 25)/10)
+				elseif (string.sub(objSection, -8) == "harmless") then
+					obj:set_anomaly_power(0)
+				else
+					--obj:set_anomaly_power(math.random(10, 20)/10)
+				end
+				
+				-- XiaNi note: @fixme!!! this line should not be like that
+				-- we should not set constant power to anomaly
+				-- may be better way is to increase anomaly power basing on rain_factor
+				-- something like:
+				-- anomaly_power = anomaly_power + (level.rain_factor()*anomaly_power)
+				-- so if rain_factor will be 1 then anomaly will be twice powered
+				-- but if rain is not big anomaly stay almost as it is
+				-- if (string.find(obj:name(),"witches_galantine") ~= nil) and (level.rain_factor() > 0) then
+				if (string.find(obj:section(),"witches_galantine") ~= nil) and (level.rain_factor() > 0) then
+					-- obj:set_anomaly_power(5)
+					local anomaly_power = obj:get_anomaly_power()
+					anomaly_power = anomaly_power + (level.rain_factor()*anomaly_power)
+					obj:set_anomaly_power(anomaly_power)
+				end
+			end
+	--		dbglog("--==AnomalyManager:re_init(%s), power(%f)",obj:name(),obj:get_anomaly_power())
+		end
+	end
+	if (lost_objects_count>0) then
+		xiani.xlog("lost_objects_count = " .. tostring(lost_objects_count))
+	end
+end
+
+function AnomalyManager:set_anomaly(pos_x, pos_y, pos_z, rad, name, lvid, gvid)
+	-- dbglog("AnomalyManager:set_anomaly()")
+	pos_y = pos_y + 0.2
+	if name == "" then
+		name = self:get_random_name()
+		if name == "" then 
+			dbglog("AnomalyManager:name is empty... aborting set")
+			return false 
+		end
+	end
+	self.an_position:set(pos_x, pos_y, pos_z)
+	self.radius = rad
+	self.section_name = name
+	self.level_vertex_id = lvid
+	self.game_vertex_id = gvid
+	
+	if (string.sub (self.section_name, 0 , 3) == "sr_") then
+		self.section_name = string.sub (self.section_name, 4)
+		-- xiani.xlog('new zone name =' .. self.section_name)
+		-- dbglog("AnomalyManager:create_srzone")
+		self:create_srzone()
+	else
+		-- dbglog("AnomalyManager:create_anomaly")
+		self:create_anomaly()
+	end
+end
+
+function AnomalyManager:fields_init()
+local 	level_key = {}
+	level_key["l01_escape"] 	= "esc_zone"
+	level_key["l02_garbage"] 	= "gar_zone"
+	level_key["l03_agroprom"] 	= "agr_zone"
+	level_key["l04_darkvalley"] 	= "val_zone"
+	level_key["l05_bar"] 		= "bar_zone"
+	level_key["l06_rostok"] 	= "rostok_zone"
+	level_key["l07_military"] 	= "mil_zone"
+	level_key["l08_yantar"] 	= "no_anomalies_on_level"
+	level_key["l10_radar"] 		= "rad_zone"
+	level_key["l11_pripyat"] 	= "pri_zone"
+
+local 	level_table = {}
+	level_table["l01_escape"] = {
+					{ 397203, 151}}
+	level_table["l02_garbage"] = {
+					{ 166767, 355}}
+	level_table["l03_agroprom"] = {
+					{ 305700, 427}}
+	level_table["l04_darkvalley"] = {
+					{  36504, 834}}
+	level_table["l05_bar"] = {
+					{  35612, 1249}}
+	level_table["l06_rostok"] = {
+					{  40892, 1313}}
+	level_table["l08_yantar"] = {
+					{  13881, 1488}}
+	level_table["l10_radar"] = {
+					{ 105974, 1923}}
+	level_table["l11_pripyat"] = {
+					{ 126108, 2150}}
+
+
+--	dbglog("AnomalyManager:fields_init()")
+	if (table.getn(self.anomaly_table) ~= 0) or (level_table[level.name()] == nil) then
+--		dbglog("AnomalyManager:fields_init() - return false")
+		return false
+	end
+	local n_tmp = se_zones.get_count_tmp_anom()
+	local n_count = 0
+	for aa=1, n_tmp, 1 do
+		local tmp_id = se_zones.get_point_tmp_anom(aa)
+		local alife_obj = alife():object(tmp_id)
+		if self:check_no_managment(tmp_id) then
+			local tmp_radius = get_radius(alife_obj)
+			rewrite_anomaly(alife_obj, "enable", tmp_radius)
+		else
+			if (string.find(alife_obj:name(),level_key[level.name()]) ~= nil) and self:check_anom_on_level(tmp_id) then
+				n_count = n_count + 1
+				self:add_anomaly(alife_obj)
+			end
+		end
+	end
+	-- dbglog("AnomalyManager:fields_init - %d anomalies",n_count)
+	for a, pos_obj in ipairs(level_table[level.name()]) do
+		local pos = level.vertex_position(pos_obj[1])
+		self:set_anomaly(pos.x, pos.y, pos.z, self:get_random_radius(), self.temp_name, pos_obj[1], pos_obj[2])
+	end
+	return true
+end
+
+function AnomalyManager:check_no_managment(obj_id)
+	local no_managment_table = {}
+	no_managment_table["l01_escape"] = {{ 6239, 66}}
+
+	no_managment_table["l06_rostok"] = {{ 30137, 1403},
+					    }
+
+--	dbglog("AnomalyManager:check_no_managment(%d)",obj_id)
+	local tmp_lvid = self:get_lvid_anomaly(obj_id)
+	local tmp_gvid = self:get_gvid_anomaly(obj_id)
+	if no_managment_table[level.name()] ~= nil then
+		for a, obj_nm in ipairs(no_managment_table[level.name()]) do
+			if (obj_nm[1] == tmp_lvid) and (obj_nm[2] == tmp_gvid) then
+--				dbglog("--==AnomalyManager:check_no_managment lvid(%d) gvid(%d) is true",obj_nm[1],obj_nm[2])
+				return true
+			end
+		end 
+	end
+	return false
+end
+
+function AnomalyManager:add_anomaly(obj)
+--	dbglog("AnomalyManager:add_anomaly(%s)",obj:name())
+	self.anomaly_table[table.getn(self.anomaly_table)+1] = obj.id
+	local tmp_str = ""
+	if self.full_table >= math.random(1, 100) then
+		tmp_str = level.name().." _on"
+	else 
+		tmp_str = level.name().." _off"
+	end
+	rewrite_anomaly(obj, tmp_str, self:get_random_radius())
+end
+
+function AnomalyManager:create_srzone()
+	self.an_position = level.vertex_position(self.level_vertex_id)
+	local tmp_str = ""
+	local obj = alife():create("space_restrictor", self.an_position, self.level_vertex_id, self.game_vertex_id)
+	
+	tmp_str = "[logic]\ncfg=misc\\sr_zones\\sr_zone_" .. self.section_name .. ".ltx\n"
+	
+	-- adding mapspot -- for debug only!
+	str = tostring(self.section_name)
+	-- dbglog( "[anom %s] add mapspot", self.section_name)
+	-- level.map_add_object_spot(obj.id, "anomaly_zone_location", str)
+	self.radius = math.floor(math.random(10,25)) -- self.radius*10
+	np_tools.rewrite_restrictor(obj, tmp_str, self.radius)
+end
+
+function AnomalyManager:create_anomaly()
+	self.an_position = level.vertex_position(self.level_vertex_id)
+	local tmp_str = ""
+	local obj = alife():create(self.section_name, self.an_position, self.level_vertex_id, self.game_vertex_id)
+	
+	zone_mgr.preregister_zone(obj, self.radius)
+	self.anomaly_table[table.getn(self.anomaly_table)+1] = obj.id
+	if self.full_table >= math.random(1, 100) then
+		tmp_str = tmp_str .. level.name().." _on"
+	else 
+		tmp_str = tmp_str .. level.name().." _off"
+	end
+	
+	rewrite_anomaly(obj, tmp_str, self.radius)
+--	dbglog("AnomalyManager:create_anomaly(%d)",obj.id)
+	-- adding mapspot -- for debug only!
+--[[	if (self.section_name == "zone_grill") or (self.section_name == "zone_emi") then
+		str = tostring(self.section_name)
+		-- dbglog( "[anom %s] add mapspot", self.section_name)
+		level.map_add_object_spot(obj.id, "anomaly_zone_location", str)
+	end]]
+end
+
+function AnomalyManager:get_pos_anomaly(arg_id)
+--	dbglog("AnomalyManager:get_pos_anomaly(%d)",arg_id)
+	local pos_obj = alife():object(arg_id)
+	local pos = pos_obj.position
+	return pos
+end
+
+function AnomalyManager:get_lvid_anomaly(arg_id)
+	local lvid_obj = alife():object(arg_id)
+	local lvid = lvid_obj.m_level_vertex_id
+--	dbglog("AnomalyManager:get_lvid_anomaly(%d)=%d",arg_id,lvid)
+	return lvid
+end
+
+function AnomalyManager:get_gvid_anomaly(arg_id)
+	local gvid_obj = alife():object(arg_id)
+	local gvid = gvid_obj.m_game_vertex_id
+--	dbglog("AnomalyManager:get_gvid_anomaly(%d)=%d",arg_id,gvid)
+	return gvid
+end
+
+function AnomalyManager:get_random_radius()
+	-- math.randomseed (device ():time_global ())
+	return math.random(math.floor(self.min_radius*10), math.floor(self.max_radius*10))/10
+end
+
+function AnomalyManager:get_random_name()
+
+local 	level_rules = {}
+	level_rules["l01_escape"] 		= {60,40,20, 50,30,10, 30,10,5,   15,7,2,    2,0,0, 2,0,0,     2,    2, 2, 2, 0}
+	level_rules["l02_garbage"] 		= {40,50,30, 50,40,30, 30,25,15, 25,15,10,    2,0,0, 2,0,0,    2,    5, 5, 5, 1}
+	level_rules["l03_agroprom"] 	= {30,40,30, 40,50,30, 30,25,20, 35,25,20,  15,10,0, 2,0,0,    2,    5, 5, 5, 0}
+	level_rules["l04_darkvalley"] 	= {30,40,30, 40,50,30, 30,25,20, 35,25,20,  15,10,0, 2,0,0,    2,    5, 5, 5, 1}
+	level_rules["l05_bar"] 			= {20,50,30, 20,50,30, 20,45,30,    5,5,0,   5,10,0, 0,0,0,    2,    1, 1, 1, 0}
+	level_rules["l06_rostok"] 		= {20,25,30, 20,25,30, 30,35,20, 55,45,30, 25,15,10, 2,0,0,    2,    5, 5, 5, 1}
+	level_rules["l07_military"] 	= {20,50,30, 20,50,30, 20,45,30, 35,25,10, 15,10,10, 2,0,0,    2,    5, 5, 5, 0}
+	level_rules["l08_yantar"] 		= {40,45,30, 40,45,30, 30,35,20, 15,15,10,   15,5,0, 5,0,0,    2,    5, 5, 5, 1}
+	level_rules["l10_radar"] 		= {40,45,30, 40,45,30, 30,35,20, 35,25,10, 25,15,10, 0,0,0,    2,    5, 5, 5, 1}
+	level_rules["l11_pripyat"] 		= {40,45,40, 40,45,40, 30,35,30, 35,25,20, 35,25,20, 0,0,0,    2,    5, 5, 5, 1}
+
+local	level_zones =  {
+			"dino_mosquito_bald_weak",
+			"dino_mosquito_bald_average",
+			"dino_mosquito_bald_strong",
+
+			"dino_mincer_weak",
+			"dino_mincer_average",
+			"dino_mincer_strong",
+
+			"dino_gravi_zone_weak",
+			"dino_gravi_zone_average",
+			"dino_gravi_zone_strong",
+
+			"dino_witches_galantine_weak",
+			"dino_witches_galantine_average",
+			"dino_witches_galantine_strong",
+
+			"dino_zharka_static_weak",
+			"dino_zharka_static_average",
+			"dino_zharka_static_strong",
+
+			"dino_buzz_weak",
+			"dino_buzz_average",
+			"dino_buzz_strong",
+			
+			"zone_emi",
+			
+			"sr_psy_zone_harmless",
+			"sr_psy_zone_harmlessClean",
+			"sr_psy_zone_harmlessBW"
+			
+--			"zone_grill"
+			}
+
+--	dbglog("AnomalyManager:get_random_name()")
+	local rnd_name = ""
+	local rnd_num = 0
+	local levelName = level.name()
+	--math.randomseed (device ():time_global ())
+	local xseed = xiani.getLSRandomSeed() -- @check_me!!! uncomment if there is lack of random
+	if level_rules[levelName] ~= nil then
+		local localRules = level_rules[levelName]
+		--for a=1, 10000, 1 do
+		for a=1, 5000, 1 do
+			rnd_num = math.random(1,table.getn(level_zones))
+			rnd_name = level_zones[rnd_num]
+			if localRules[rnd_num] ~= nil then
+				if localRules[rnd_num] >= math.random(1, 100) then
+					-- xiani.xlog('generated ' .. rnd_name .. ' in ' .. tostring(a) .. ' rounds')
+					return rnd_name
+				end
+			end
+		end
+	end
+	return rnd_name
+end
+
+function AnomalyManager:check_enable_anomaly(obj_id)
+--	dbglog("AnomalyManager:check_enable_anomaly(%d)",obj_id)
+	local custom_data = get_custom_data(obj_id)
+	if string.find(custom_data,"_on") ~= nil then
+		return true
+	else
+		return false
+	end
+end
+
+function AnomalyManager:check_disable_anomaly(obj_id)
+--	dbglog("AnomalyManager:check_disable_anomaly(%d)",obj_id)
+	local custom_data = get_custom_data(obj_id)
+	if string.find(custom_data,"_off") ~= nil then
+		return true
+	else
+		return false
+	end
+end
+
+function AnomalyManager:enable_anomaly(obj_id)
+--	dbglog("AnomalyManager:enable_anomaly(%d)",obj_id)
+	local alife_obj = alife():object(obj_id)
+	local obj = level.object_by_id(obj_id)
+	if obj ~= nil then
+		local radius = 2.5
+		if (string.find(obj:name(),"witches_galantine") ~= nil) and (level.rain_factor() > 0) then
+			radius = 5
+		else
+			radius = self:get_random_radius()
+		end
+	--	dbglog("AnomalyManager:enable_anomaly(%d)_radius(%f)",obj_id, radius)
+		rewrite_anomaly(alife_obj, level.name().." _on", radius)
+		obj:enable_anomaly()
+	else
+		-- xiani.xlog("AnomalyManager:enable_anomaly: object == nil")
+	end
+end
+
+function AnomalyManager:disable_anomaly(obj_id)
+--	dbglog("AnomalyManager:disable_anomaly(%d)",obj_id)
+	local alife_obj = alife():object(obj_id)
+	rewrite_anomaly(alife_obj, level.name().." _off", 0)
+	local obj = level.object_by_id(obj_id)
+	if obj then
+		obj:disable_anomaly()
+	else
+		xiani.xlog("AnomalyManager:disable_anomaly() : obj is nil")
+	end
+end
+
+function AnomalyManager:save()
+end
+
+function AnomalyManager:load()
+--	dbglog("AnomalyManager:load()")
+	local n_tmp = se_zones.get_count_tmp_anom()
+	local n_count = 0
+	for aa=1, n_tmp, 1 do
+		local tmp_id = se_zones.get_point_tmp_anom(aa)
+		if self:check_level_anomaly(tmp_id) then
+			if level.name() == "l04_darkvalley" then
+				local alife_obj = alife():object(tmp_id)
+				if (alife_obj:name() == "val_zone_zharka_static_strong") or (alife_obj:name() == "val_zone_zharka_static_strong_0000") then
+					dbglog("--==AnomalyManager:release_err(%s)", alife_obj:name())
+					alife():release(alife_obj)
+				else
+					n_count = n_count + 1
+					self.anomaly_table[n_count] = tmp_id
+				end
+			else
+				n_count = n_count + 1
+				self.anomaly_table[n_count] = tmp_id
+			end
+		end
+	end
+	-- dbglog("AnomalyManager:load(%d)",n_count)
+	self.time_update = time_global() + 5000
+end
+
+function AnomalyManager:check_level_anomaly(obj_id)
+--	dbglog("AnomalyManager:check_level_anomaly(%d)",obj_id)
+	local custom_data = get_custom_data(obj_id)
+	if string.find(custom_data,level.name()) ~= nil then
+		return true
+	else
+		return false
+	end
+end
+
+function AnomalyManager:check_anom_on_level(obj_id)
+--	dbglog("AnomalyManager:check_anom_on_level(%d)",obj_id)
+	local obj = level.object_by_id(obj_id)
+	if obj ~= nil then
+		return true
+	else
+		return false
+	end
+end
+
+function AnomalyManager:check_manager_anomaly(obj_id)
+--	dbglog("AnomalyManager:check_manager_anomaly(%d)",obj_id)
+	local obj = alife():object(obj_id)
+	local packet = net_packet()
+	obj:STATE_Write(packet)
+	local game_vertex_id = packet:r_u16()
+	local cse_alife_object__unk1_f32 = packet:r_float()
+	local cse_alife_object__unk2_u32 = packet:r_u32()
+	local level_vertex_id = packet:r_u32()
+	local object_flags = packet:r_s32()
+	local custom_data = packet:r_stringZ()
+	if (string.find(custom_data,"_on") ~= nil) or (string.find(custom_data,"_off") ~= nil) then
+		return true
+	else
+		return false
+	end
+end
+
+function AnomalyManager:print_info_anomaly(obj_id)
+--	dbglog("AnomalyManager:print_info_anomaly(%d)",obj_id)
+	local obj = alife():object(obj_id)
+	local packet = net_packet()
+	obj:STATE_Write(packet)
+	print_se_zone_anom(obj, packet)
+end
+
+function AnomalyManager:switch_random_anomaly()
+--	dbglog("AnomalyManager:switch_random_anomaly()")
+	local tmp_enable_anomalyes,tmp_disable_anomalyes={},{}
+	local en_count,ds_count=1,1
+	for a,obj_id in ipairs(self.anomaly_table) do
+		if self:check_enable_anomaly(obj_id) then
+			tmp_enable_anomalyes[en_count]=obj_id
+			en_count=en_count+1
+		elseif self:check_disable_anomaly(obj_id) then
+			tmp_disable_anomalyes[ds_count]=obj_id
+			ds_count=ds_count+1
+		end
+	end
+	local dis_cnt=table.getn(tmp_disable_anomalyes)
+	if dis_cnt>0 then
+		local rnd_id=tmp_disable_anomalyes[math.random(1,dis_cnt)]
+		self:enable_anomaly(rnd_id)
+--		dbglog("AnomalyManager:switch_random_anomaly(%d) is enable",rnd_id)
+
+		tmp_enable_anomalyes[en_count]=rnd_id
+--		en_count=en_count+1
+--		ds_count=ds_count-1
+	end
+	local enb_cnt=table.getn(tmp_enable_anomalyes)
+	if enb_cnt>0 then
+		local indx=math.random(1,enb_cnt)
+		local rnd_id=tmp_enable_anomalyes[indx]
+		self:disable_anomaly(rnd_id)
+--		dbglog("AnomalyManager:switch_random_anomaly(%d) is disable",rnd_id)
+
+		table.remove(tmp_enable_anomalyes,indx)
+--		en_count=en_count-1
+--		ds_count=ds_count+1
+	end
+--	dbglog("AnomalyManager: is disable=%d, is enable=%d, all=%d",ds_count-1,en_count-1,ds_count+en_count-2)
+	art_mgr.update(tmp_enable_anomalyes)
+	watcher_act.on_anoms_tbl(tmp_enable_anomalyes)
+	-- ќтображение аномалий на карте текущей локации
+--[[	for i,v in pairs(tmp_disable_anomalyes) do
+		level.map_remove_object_spot(v, "red_location")
+	end
+	for i,v in pairs(tmp_enable_anomalyes) do
+		local anom=level.object_by_id(v)
+		if anom then
+			level.map_add_object_spot(v, "red_location", anom:name())
+		end
+	end]]
+end
+
+function AnomalyManager:caps_update()
+	local caps_table = {}
+	local n_tmp = se_zones.get_count_tmp_caps()
+	for a=1, n_tmp, 1 do
+		local tmp_caps_id = se_zones.get_point_tmp_caps(a)
+		caps_table[a] = tmp_caps_id
+	end
+	local m_tmp = table.getn(caps_table)
+	for i=1, m_tmp, 1 do
+		local tmp_str = ""
+		tmp_str = get_custom_data(caps_table[i])
+		if string.find(tmp_str,"TIME{") ~= nil then
+			local time_life_str = string.gsub(tmp_str, "TIME{", "")
+			time_life_str = string.gsub(time_life_str, "}", "")
+			local patern_str = ""
+			for j=1, string.len(time_life_str), 1 do
+				 patern_str =  patern_str.."%d"
+			end
+			local time_life = tonumber(string.match(time_life_str, patern_str))
+			local alife_obj = alife():object(caps_table[i])
+			local tmp_radius = get_radius(alife_obj)
+			if time_life <= 0 then
+				rewrite_anomaly(alife_obj, "disable", 0)
+			else 
+				time_life = time_life - 1
+				rewrite_anomaly(alife_obj, string.format("TIME{%d}",time_life), tmp_radius)
+			end
+		elseif string.find(tmp_str,"disable") ~= nil then
+			if self:check_anom_on_level(caps_table[i]) then
+				local obj = level.object_by_id(caps_table[i])
+				obj:disable_anomaly()
+			end
+		end
+	end
+end
+local iniF=1
+function AnomalyManager:update_all_levels()
+	local 	infop_table = {}
+		infop_table["l01_escape"] 	= "esc_anomalies_created"
+		infop_table["l02_garbage"] 	= "gar_anomalies_created"
+		infop_table["l03_agroprom"] 	= "agr_anomalies_created"
+		infop_table["l04_darkvalley"] 	= "val_anomalies_created"
+		infop_table["l05_bar"] 		= "bar_anomalies_created"
+		infop_table["l06_rostok"] 	= "rostok_anomalies_created"
+		infop_table["l07_military"] 	= "mil_anomalies_created"
+		infop_table["l08_yantar"] 	= "yan_anomalies_created"
+		infop_table["l10_radar"] 	= "rad_anomalies_created"
+		infop_table["l11_pripyat"] 	= "pri_anomalies_created"
+	local level_name_table = {	"l01_escape",
+					"l02_garbage",
+					"l03_agroprom",
+					"l04_darkvalley",
+					"l05_bar",
+					"l06_rostok",
+					"l07_military",
+					"l08_yantar",
+					"l10_radar",
+					"l11_pripyat"
+				   }
+	local m_tmp = table.getn(level_name_table)
+	for a=1, m_tmp, 1 do
+		if level.name() == level_name_table[a] then
+			iniF=nil
+			if xr_logic.pstor_retrieve(db.actor, infop_table[level.name()], false) == false then
+				self:fields_init()
+				xr_logic.pstor_store(db.actor, infop_table[level.name()], true)
+				-- dbglog("AnomalyManager:update(%s): All anomalies created",level.name())
+
+--				if xr_logic.pstor_retrieve(db.actor, "dump_on_map", 0) == 0 then
+--					zone_mgr.dump_on_map()
+--					xr_logic.pstor_store(db.actor, "dump_on_map", 1)
+--				end
+			else
+				self:re_init()
+				self:switch_random_anomaly()
+			end
+	    end
+	end
+	if iniF then
+		iniF=nil
+		watcher_act.on_anoms_tbl(iniF)
+	end
+end
+
+function AnomalyManager:update()
+--[[
+	if time_global() >= self.caps_time_update then
+		self:caps_update()
+	    	self.caps_time_update = time_global() + self.caps_delta_time
+	end 
+]]
+	if time_global() >= self.time_update then
+		self:update_all_levels()
+		self.time_update = time_global() + self.delta_time
+	end 
+end
+
+---------utils---
+
+
+function set_switch_online(obj_id)
+	alife():set_switch_online(alife():object(obj_id))
+end
+
+function set_switch_offline(obj_id)
+	alife():set_switch_offline(alife():object(obj_id))
+end
+
+function get_custom_data(obj_id)
+	local custom_data = ""
+--	dbglog("level_anomaly.get_custom_data(%d)",obj_id)
+	local obj = alife():object(obj_id)
+	if obj == nil then
+		dbglog("level_anomaly.get_custom_data(%d) : object not found (obj == nil)",obj_id)
+		dbglog("level_anomaly.get_custom_data(%d) : will return empty custom_data",obj_id)
+	else
+		local packet = net_packet()
+		obj:STATE_Write(packet)
+		local game_vertex_id = packet:r_u16()
+		local cse_alife_object__unk1_f32 = packet:r_float()
+		local cse_alife_object__unk2_u32 = packet:r_u32()
+		local level_vertex_id = packet:r_u32()
+		local object_flags = packet:r_s32()
+		custom_data = packet:r_stringZ()
+	end
+	return custom_data
+end
+
+function get_radius(obj)
+--	dbglog("level_anomaly.get_radius()")
+	local packet = net_packet()
+	obj:STATE_Write(packet)
+	local game_vertex_id = packet:r_u16()
+	local cse_alife_object__unk1_f32 = packet:r_float()
+	local cse_alife_object__unk2_u32 = packet:r_u32()
+	local level_vertex_id = packet:r_u32()
+	local object_flags = packet:r_s32()
+	local custom_data = packet:r_stringZ()
+	local story_id = packet:r_s32()
+	local cse_alife_object__unk3_u32 = packet:r_s32()
+	local shape_count = packet:r_u8()
+	if shape_count ~= 1 then return 0 end
+	local radius, center
+	for i=1,shape_count do
+		local shape_type = packet:r_u8()
+		if shape_type == 0 then
+			center = packet:r_vec3()
+			radius = packet:r_float()
+		else
+			local box = packet:r_matrix()
+			return 0
+		end
+	end
+	return radius
+end
+
+function rewrite_anomaly(obj, in_custom_data, in_radius)
+--	dbglog("level_anomaly.rewrite_anomaly()")
+	local packet = net_packet()
+	obj:STATE_Write(packet)
+	local game_vertex_id = packet:r_u16()
+	local cse_alife_object__unk1_f32 = packet:r_float()
+	local cse_alife_object__unk2_u32 = packet:r_u32()
+	local level_vertex_id = packet:r_u32()
+	local object_flags = packet:r_s32()
+	local custom_data = packet:r_stringZ()
+	local story_id = packet:r_s32()
+	local cse_alife_object__unk3_u32 = packet:r_s32()
+	local shape_count = packet:r_u8()
+	for i=1,shape_count do
+		local shape_type = packet:r_u8()
+		if shape_type == 0 then
+			local center = packet:r_vec3()
+			local radius = packet:r_float()
+		else
+			local box = packet:r_matrix()
+		end
+	end
+	local restrictor_type = packet:r_u8()
+	local cse_alife_custom_zone__unk1_f32 = packet:r_float()
+	local cse_alife_custom_zone__unk2_u32 = packet:r_s32()
+	local on_off_mode_enabled_time = packet:r_u32()
+	local on_off_mode_disabled_time = packet:r_u32()
+	local on_off_mode_shift_time = packet:r_u32()
+	local offline_interactive_radius = packet:r_float()
+	local artefact_spawn_places_count = packet:r_u16()
+	local cse_alife_anomalous_zone__unk1_u32 = packet:r_s32()
+	local last_spawn_time_present = packet:r_u8()
+	if packet:r_elapsed() ~= 0 then abort("left=%d", packet:r_elapsed()) end
+	packet:w_begin(game_vertex_id)
+	packet:w_float(cse_alife_object__unk1_f32)
+	packet:w_u32(cse_alife_object__unk2_u32)
+	packet:w_u32(level_vertex_id)
+	packet:w_u32(object_flags)
+	if in_custom_data ~= nil then custom_data = in_custom_data end
+	packet:w_stringZ(custom_data)
+	packet:w_s32(story_id)
+	packet:w_u32(cse_alife_object__unk3_u32)
+	packet:w_u8(1)			
+	packet:w_u8(0)			
+	local sphere_center = vector()
+	sphere_center:set(0, 0, 0)
+	packet:w_vec3(sphere_center)
+	if in_radius ~= nil then radius = in_radius end
+	packet:w_float(radius)
+	packet:w_u8(restrictor_type)
+	packet:w_float(cse_alife_custom_zone__unk1_f32)
+	cse_alife_custom_zone__unk2_u32 = bit_not(0)
+	packet:w_u32(cse_alife_custom_zone__unk2_u32)
+	packet:w_u32(on_off_mode_enabled_time)
+	packet:w_u32(on_off_mode_disabled_time)
+	packet:w_u32(on_off_mode_shift_time)
+	packet:w_float(offline_interactive_radius)
+	packet:w_u16(artefact_spawn_places_count)
+	packet:w_u32(cse_alife_anomalous_zone__unk1_u32)
+	packet:w_u8(last_spawn_time_present)
+	packet:r_seek(0)
+	obj:STATE_Read(packet, packet:w_tell())
+	return obj
+end
+
+function check_on_off_mode(obj)
+--	dbglog("level_anomaly.check_on_off_mode(%d)", obj.id)
+	local packet = net_packet()
+	obj:STATE_Write(packet)
+	local game_vertex_id = packet:r_u16()
+	local cse_alife_object__unk1_f32 = packet:r_float()
+	local cse_alife_object__unk2_u32 = packet:r_u32()
+	local level_vertex_id = packet:r_u32()
+	local object_flags = packet:r_s32()
+	local custom_data = packet:r_stringZ()
+	local story_id = packet:r_s32()
+	local cse_alife_object__unk3_u32 = packet:r_s32()
+	local shape_count = packet:r_u8()
+	if shape_count ~= 1 then return end
+	local radius, center
+	for i=1,shape_count do
+		local shape_type = packet:r_u8()
+		if shape_type == 0 then
+			center = packet:r_vec3()
+			radius = packet:r_float()
+		else
+			local box = packet:r_matrix()
+			return
+		end
+	end
+	local restrictor_type = packet:r_u8()
+	local cse_alife_custom_zone__unk1_f32 = packet:r_float()
+	local cse_alife_custom_zone__unk2_u32 = packet:r_s32()
+	local on_off_mode_enabled_time = packet:r_u32()
+	local on_off_mode_disabled_time = packet:r_u32()
+	local on_off_mode_shift_time = packet:r_u32()
+	if (on_off_mode_enabled_time ~= 0) or (on_off_mode_disabled_time ~= 0) or (on_off_mode_shift_time ~= 0) then
+		return true
+	else
+		return false
+	end
+end
+
+function print_se_zone_anom(obj, packet)
+--	dbglog("level_anomaly.print_se_zone_anom(%d)", obj.id)
+	local game_vertex_id = packet:r_u16()
+	local cse_alife_object__unk1_f32 = packet:r_float()
+	local cse_alife_object__unk2_u32 = packet:r_u32()
+	local level_vertex_id = packet:r_u32()
+	local object_flags = packet:r_s32()
+	local custom_data = packet:r_stringZ()
+	local story_id = packet:r_s32()
+	local cse_alife_object__unk3_u32 = packet:r_s32()
+	local shape_count = packet:r_u8()
+	if shape_count ~= 1 then return end
+	local radius, center
+	for i=1,shape_count do
+		local shape_type = packet:r_u8()
+		if shape_type == 0 then
+			center = packet:r_vec3()
+			radius = packet:r_float()
+		else
+			local box = packet:r_matrix()
+			return
+		end
+	end
+	local restrictor_type = packet:r_u8()
+	local cse_alife_custom_zone__unk1_f32 = packet:r_float()
+	local cse_alife_custom_zone__unk2_u32 = packet:r_s32()
+	local on_off_mode_enabled_time = packet:r_u32()
+	local on_off_mode_disabled_time = packet:r_u32()
+	local on_off_mode_shift_time = packet:r_u32()
+	local offline_interactive_radius = packet:r_float()
+	local artefact_spawn_places_count = packet:r_u16()
+	local cse_alife_anomalous_zone__unk1_u32 = packet:r_s32()
+	local last_spawn_time_present = packet:r_u8()
+	dbglog("[%s]", obj:name())
+	dbglog("game_vertex_id=%d", game_vertex_id)
+	dbglog("cse_alife_object__unk1_f32=%f", cse_alife_object__unk1_f32)
+	dbglog("cse_alife_object__unk2_u32=%d", cse_alife_object__unk2_u32)
+	dbglog("level_vertex_id=%d", level_vertex_id)
+	dbglog("object_flags=0x%x", object_flags)
+	dbglog("custom_data=%s", custom_data)
+	dbglog("story_id=%d", story_id)
+	dbglog("cse_alife_object__unk3_u32=0x%x", cse_alife_object__unk3_u32)
+	dbglog("shapes=shape0")
+	dbglog("shape0:type=sphere")
+	dbglog("shape0:offset=%f,%f,%f", center.x, center.y, center.z)
+	dbglog("shape0:radius=%f", radius)
+	dbglog("restrictor_type=%d", restrictor_type)
+	dbglog("cse_alife_custom_zone__unk1_f32=%f", cse_alife_custom_zone__unk1_f32)
+	dbglog("cse_alife_custom_zone__unk2_u32=0x%x", cse_alife_custom_zone__unk2_u32)
+	dbglog("on_off_mode_enabled_time=%d", on_off_mode_enabled_time)
+	dbglog("on_off_mode_disabled_time=%d", on_off_mode_disabled_time)
+	dbglog("on_off_mode_shift_time=%d", on_off_mode_shift_time)
+	dbglog("offline_interactive_radius=%f", offline_interactive_radius)
+	dbglog("artefact_spawn_places_count=%d", artefact_spawn_places_count)
+	dbglog("cse_alife_anomalous_zone__unk1_u32=0x%x", cse_alife_anomalous_zone__unk1_u32)
+	dbglog("last_spawn_time_present=%d", last_spawn_time_present)
+end

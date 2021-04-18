@@ -1,0 +1,157 @@
+class "ui_eoc2_wnd" (CUIScriptWnd)
+
+function test()
+	return true
+end
+
+function ui_eoc2_wnd:__init(owner) super()
+	self.owner = owner
+	self:InitControls()
+	self:InitCallBacks()
+	self:UpdateControls()
+end
+
+function ui_eoc2_wnd:__finalize() end
+	
+function ui_eoc2_wnd:InitControls(x, y, xml, handler)
+	self:Init(0,0,1024,768)
+
+	local xml = CScriptXmlInit()
+	xml:ParseFile("ui_eoc2.xml")
+	
+	self:Enable (true)
+	
+	self.form = xml:InitStatic("form",self)
+	
+	xml:InitStatic("form:caption",self.form)
+	
+	ctrl = xml:Init3tButton("form:btn_cancel", 	self.form)
+	self:Register(ctrl, "btn_cancel")
+	ctrl = xml:Init3tButton("form:btn_start", self.form)
+	self:Register(ctrl,"btn_start")
+	
+	local _ver = xml:InitStatic		("static_version",self)
+	local mm						= main_menu.get_main_menu()
+	_ver:SetText					("ver. " .. mm:GetGSVer() .. " +EyeOfChernobyl2 +FreeplayStart " .. xiani.getFreeplayStartVersion())
+	
+	xml:InitStatic		("form:static_section_name",self)
+	self.section_name	= xml:InitEditBox("form:edit_section_name", self)
+	
+	xml:InitStatic		("form:static_object_name",self)
+	self.object_name	= xml:InitEditBox("form:edit_object_name", self)
+	
+	xml:InitStatic		("form:cap_searchSubs",self)
+	self.searchSubs	= xml:InitCheck("form:check_searchSubs", self)
+end
+
+function ui_eoc2_wnd:InitCallBacks()
+	self:AddCallback("btn_start", ui_events.BUTTON_CLICKED, self.on_start, self)
+	self:AddCallback("btn_cancel", ui_events.BUTTON_CLICKED, self.on_cancel, self)
+end
+
+function ui_eoc2_wnd:UpdateControls()
+--[[	local comm2ppe = {
+	"electra",
+	"flame",
+	"fuzz",
+	"gravi",
+	"level_red_forest",
+	"psy_antenna",
+	"psy_zone",
+	"psychic",
+	"radiation",
+	"thermal",
+	}
+	
+	local str = ""
+	for k,v in pairs(comm2ppe) do
+		str = str .. "[" .. tostring(k) .. "]='" .. tostring(v) .. "', "
+	end
+	xiani.xlog(str)]]
+end
+
+function ui_eoc2_wnd:on_start()
+	local searchSubs = self.searchSubs:GetCheck()
+--[[	
+	
+	local comm = self.section_name:GetText()
+	xiani.xlog("comS:" .. tostring(comm))
+	comm = tonumber(comm)
+	xiani.xlog("comN:" .. tostring(comm))
+	if comm == nil then comm = 1 end
+	xiani.xlog("comResult:" .. tostring(comm))
+	
+	local comm2ppe = {
+	"electra",
+	"flame",
+	"fuzz",
+	"gravi",
+	"level_red_forest",
+	"psy_antenna",
+	"psy_zone",
+	"psychic",
+	"radiation",
+	"thermal",
+	}
+	
+	local curPPE = comm2ppe[comm]
+	
+	if curPPE ~= nil then
+		curPPE = curPPE .. ".ppe"
+		xiani.xlog("effector:" .. tostring(curPPE))
+		
+		level.remove_pp_effector(9999)
+		level.add_pp_effector(curPPE, 9999, true)
+		level.set_pp_effector_factor(9999, 1.0)
+	end]]
+	
+--[[	local comm = self.section_name:GetText()
+	xiani.xlog("comS:" .. tostring(comm))
+	comm = tonumber(comm)
+	xiani.xlog("comN:" .. tostring(comm))
+	if comm == nil then comm = 1 end
+	xiani.xlog("comResult:" .. tostring(comm))
+	level.set_time_factor (comm)
+	get_console():execute("demo_record on")
+	]]
+	
+	local section = self.section_name:GetText()
+	if string.len (section)>0 then
+		xiani_maptools.markBySection(section, searchSubs)
+	end
+	
+	local obj_name = self.object_name:GetText()
+	if string.len (obj_name)>0 then
+		xiani_maptools.markByName(obj_name, searchSubs)
+	end
+	
+	self:GetHolder():start_stop_menu (self.owner, true)
+	self:GetHolder():start_stop_menu (self,true)
+	self.owner:Show	(true)
+	if (alife() ~= nil) then
+		get_console():execute("main_menu off")
+	end
+end
+
+function ui_eoc2_wnd:on_cancel()
+	self:GetHolder():start_stop_menu (self.owner, true)
+	self:GetHolder():start_stop_menu (self,true)
+	self.owner:Show	(true)
+	if (alife() ~= nil) then
+		get_console():execute("main_menu off")
+	end
+end
+
+function ui_eoc2_wnd:OnKeyboard(dik, keyboard_action)
+	CUIScriptWnd.OnKeyboard(self,dik,keyboard_action)
+	if keyboard_action == ui_events.WINDOW_KEY_PRESSED then
+		if dik == DIK_keys.DIK_ESCAPE then
+			self:on_cancel()
+		end
+		if dik == DIK_keys.DIK_RETURN then
+			self:on_start()
+		end
+	end
+	return true
+end
+

@@ -1,0 +1,240 @@
+[wpn_ak74u]:identity_immunities
+GroupControlSection		= spawn_group
+discovery_dependency	= 
+$spawn              	= "weapons\ak-74u"
+$npc					= on				
+$prefetch 				= 8
+scheduled				= off      
+cform               	= skeleton
+class               	= WP_LR300			
+min_radius          	= 30
+max_radius          	= 100
+description				= enc_weapons1_wpn-ak74u
+	
+ef_main_weapon_type		= 2
+ef_weapon_type			= 6
+
+holder_range_modifier	= 1.0
+holder_fov_modifier		= 0.7
+
+cost					= 7000
+weapon_class			= assault_rifle
+	
+ammo_limit				= 210
+ammo_elapsed			= 30
+	
+ammo_mag_size			= 30
+fire_modes				= 1, -1
+
+ammo_class				= ammo_5.45x39_fmj, ammo_5.45x39_ap   ; name of the ltx-section of used ammo 
+
+hand_dependence			= 1	
+single_handed			= 0
+	
+slot 					= 2	
+animation_slot			= 2
+
+inv_name	        	= wpn-ak74u	
+inv_name_short			= wpn-ak74u	
+inv_weight			= 2.7
+
+inv_grid_width     = 4
+inv_grid_height    = 2
+inv_grid_x         = 11
+inv_grid_y         = 28
+
+kill_msg_x			= 0
+kill_msg_y			= 123
+kill_msg_width		= 69
+kill_msg_height		= 30
+
+fire_dispersion_base			= 0.2
+control_inertion_factor			= 1.09f
+
+cam_relax_speed         		= 0	
+cam_dispersion          		= 0.3
+cam_dispersion_inc			= 0.3
+cam_dispertion_frac			= 0.9
+cam_max_angle				= 12.0
+cam_max_angle_horz			= 30.0
+cam_step_angle_horz			= 1.25
+
+fire_dispersion_condition_factor 	= 5
+misfire_probability 		= 0.003
+misfire_condition_k			= 0.05
+condition_shot_dec 			= 0.0001
+
+fire_point             		=  0.0, 0.262, 0.447
+
+flame_particles				= weapons\generic_weapon05
+smoke_particles				= weapons\generic_shoot_00
+grenade_flame_particles		= weapons\generic_weapon01
+	
+shell_point		 			= 0.00, 0.262, 0.189
+shell_particles	 			= amik\weapons\5_45x39\5_45x39_shells_r
+
+PDM_disp_base 				= 1.0
+PDM_disp_vel_factor 			= 0.95
+PDM_disp_accel_factor 			= 0.95
+PDM_crouch	 			= 1.0
+PDM_crouch_no_acc 			= 1.0
+
+hit_power               = 0.50
+hit_impulse		 		= 140
+hit_type 				= fire_wound
+
+fire_distance            		= 200
+bullet_speed				= 790
+rpm                      		= 600
+
+use_aim_bullet				= true
+time_to_aim					= 1.0	
+
+silencer_hit_power       		= 0.36
+silencer_hit_impulse	 		= 120
+silencer_fire_distance   		= 250
+silencer_bullet_speed	 		= 600
+
+hud                      	= wpn_ak74u_hud
+
+position         	        = -0.026,-0.215,0
+orientation      	        = 0,0,0
+
+strap_position         		= -0.18,-0.45,0.2
+strap_orientation      		= -10,-5,10
+strap_bone0					= bip01_spine2
+strap_bone1					= bip01_spine1
+
+visual         		        = weapons\ak-74u\wpn_ak74u.ogf
+
+light_color					= 0.6,0.5,0.3
+light_range					= 5
+light_var_color				= 0.05						
+light_var_range				= 0.5
+light_time 					= 0.2						
+
+ph_mass						= 5
+
+scope_status				= 0
+silencer_status				= 0
+grenade_launcher_status		= 0
+
+zoom_enabled				= true
+scope_zoom_factor	    	= 70
+
+scope_name 				= wpn_addon_scope
+scope_x 					= 60
+scope_y 					= -2
+silencer_name  			= wpn_addon_silencer
+silencer_x 				= 168
+silencer_y 				= -3					
+
+snd_draw					= weapons\ak_74u\draw
+snd_holster					= weapons\ak_74u\holster
+snd_shoot					= weapons\ak_74u\shoot
+snd_empty					= weapons\ak_74u\empty
+snd_reload					= weapons\ak_74u\reload_empty
+snd_reload_jammed					= weapons\ak_74u\jammed
+
+snd_shoot_grenade			= weapons\gen_grenshoot
+snd_reload_grenade			= weapons\gen_grenload, 
+snd_switch					= weapons\groza_switch, 
+
+silencer_smoke_particles 	= weapons\generic_shoot_00
+
+snd_silncer_shot			= weapons\silshot\762mm-1 
+
+silencer_light_color		= 0.6,0.5,0.3
+silencer_light_range		= 0.01
+silencer_light_var_color	= 0.05
+silencer_light_var_range	= 0.5
+silencer_light_time 		= 0.2
+ 
+[wpn_ak74u_hud]
+shell_point          		= 0.00, -0.04, -0.6
+shell_dir			 		= 0.0, 1.0, 0.0
+fire_point               	= -0.01,0,-0.5
+fire_bone                	= muzzle
+orientation              	= 3,1.5,0
+position                 	= 0.01,0.0,-0.15
+visual                  	= weapons\ak-74u\wpn_ak74u_hud.ogf
+
+anim_idle			= idle
+anim_reload			= reload_empty
+anim_reload_jammed  = reload_jammed
+anim_draw			= draw
+anim_holster		= holster
+anim_shoot			= shoot
+anim_idle_aim		= idle_aim
+anim_idle_sprint	= idle_sprint
+anim_idle_moving	= idle_moving
+
+zoom_offset					= -0.068,0.016,0.0
+zoom_rotate_x				= 0.02
+zoom_rotate_y				= 0.053
+
+\\\\\\\\\\\\\\
+\\Upgrade's\\\
+\\\\\\\\\\\\\\
+
+[wpn_ak74u_m1]:wpn_ak74u	;АК-74У + Глушитель
+$spawn             				= "weapons\uniq\wpn_ak74u_m1"
+description						= enc_weapons1_wpn-ak74u_m1
+silencer_status					= 1
+inv_weight			= 2.1
+inv_grid_width     = 5
+inv_grid_height    = 2
+inv_grid_x         = 15
+inv_grid_y         = 28
+cam_dispersion          		= 0.27
+cam_dispersion_inc			= 0.18;0.15	
+smoke_particles 				= weapons\generic_shoot_00
+flame_particles					= 
+light_disabled					= true
+snd_shoot					= weapons\w_ak74_shot1 
+snd_shoot1					= weapons\w_ak74_shot1 
+snd_shoot2					= weapons\w_ak74_shot1 
+snd_shoot3					= weapons\w_ak74_shot1 
+
+[wpn_ak74u_m2]:wpn_ak74u	;АК-74У + Магазин на 60 пт.
+$spawn             				= "weapons\uniq\wpn_ak74u_m2"
+description						= enc_weapons1_wpn-ak74u_m2
+inv_grid_width     = 4
+inv_grid_height    = 2
+inv_grid_x         = 20
+inv_grid_y         = 28
+ammo_mag_size		 			= 60
+inv_weight						= 2.85	
+hud                      	= wpn_ak74u_m2_hud
+snd_reload					= weapons\ak_74\reload_empty
+visual         		        = weapons\ak-74u\wpn_ak74u_m2.ogf
+[wpn_ak74u_m2_hud]:wpn_ak74u_hud
+visual                  	= weapons\ak-74u\wpn_ak74u_m2_hud.ogf
+anim_reload			= reload_empty_bmag_aksu
+
+[wpn_ak74u_m3]:wpn_ak74u	;АК-74У + Тактический обвес
+$spawn             				= "weapons\uniq\wpn_ak74u_m3"
+description						= enc_weapons1_wpn-ak74u_m3
+inv_grid_width     = 4
+inv_grid_height    = 2
+inv_grid_x         = 22
+inv_grid_y         = 36
+inv_weight						= 3.45
+cam_dispersion_inc			= 0.1
+hud                      	= wpn_ak74u_m3_hud
+scope_zoom_factor	    	= 50
+visual         		        = weapons\ak-74u\wpn_ak74u_m3.ogf
+[wpn_ak74u_m3_hud]:wpn_ak74u_hud
+visual                  	= weapons\ak-74u\wpn_ak74u_m3_hud.ogf
+anim_idle			= idle_tac
+anim_reload			= reload_empty_tac
+anim_reload_jammed          = reload_jammed_tac
+anim_draw			= draw_tac
+anim_holster		= holster_tac
+anim_shoot			= shoot_tac
+anim_idle_aim		= idle_aim_tac
+anim_idle_sprint		= idle_sprint_tac
+anim_idle_moving		    = idle_moving_tac
+zoom_offset					= -0.068,0.004,0.0
+zoom_rotate_x				= 0.03
+zoom_rotate_y				= 0.053

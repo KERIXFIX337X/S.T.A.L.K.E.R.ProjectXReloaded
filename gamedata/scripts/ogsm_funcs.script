@@ -1,0 +1,357 @@
+------------------- Библиотека служебных скриптов для OGSM 2.x ----------------
+
+---------------------- Copyright 2007-2008 xStream & DEXXX --------------------
+
+local timers={}
+local g_timers={}
+local timer_trigger=nil
+wthr = level.get_weather()
+local wfx1 = "p_surge_day_"..tostring(level.get_time_hours())
+local wfx2 = "surge_day_"..tostring(level.get_time_hours())
+
+-- Старт таймера в реальном времени
+function start_timer(name,delay,action)
+	if not delay then
+		return false
+	end
+	
+	if not action then
+		action = ""
+	end
+
+	local time = game.time() --time in seconds since 1970
+	local a=1
+	while db.storage[db.actor:id()].pstor["rt"..a] do
+		a=a+1
+		if a>100 then 
+			return false 
+		end
+	end
+
+	save_variable("rt"..a, name)
+	save_variable("rt"..a.."d", time+delay*10000)
+	save_variable("rt"..a.."p", action)
+	
+	return true
+end
+
+
+-- Старт таймера в игровом времени
+function g_start_timer(name,delay_d,delay_h,delay_m,action)
+    local time = level.get_time_days()*60*24+level.get_time_hours()*60+level.get_time_minutes()  --time in game minutes
+	if delay_d==nil or delay_h==nil or delay_m==nil then
+		return false
+	end
+	
+	if action==nil then
+		action = ""
+	end
+
+	local a=1
+	while db.storage[db.actor:id()].pstor["gt"..a] do
+		a=a+1
+		if a>100 then 
+			return false 
+		end
+	end
+
+	save_variable("gt"..a, name)
+	save_variable("gt"..a.."d", time+delay_d*60*24+delay_h*60+delay_m)
+	save_variable("gt"..a.."p", action)
+
+	return true
+end
+
+-- Проверка таймеров, использует 3 следующие за ним функции для выбора действия
+function check_timers()
+	local tmp
+	for a=1,100,1 do
+		tmp=load_variable("rt"..a,nil)
+		if tmp~=nil then
+			__timer_found(a)	
+		end
+	end
+	
+	for a=1,100,1 do
+		tmp=load_variable("gt"..a,nil)
+		if tmp~=nil then
+			__g_timer_found(a)	
+		end
+	end
+end
+function __timer_found(idx)
+	local time = game.time() --time in seconds since 1970
+	local name,params
+	if load_variable("rt"..idx.."d", nil)<=time then
+		name=load_variable("rt"..idx, nil)
+		params=load_variable("rt"..idx.."p", nil)
+		del_variable("rt"..idx)
+		del_variable("rt"..idx.."d")
+		del_variable("rt"..idx.."p")
+		__do_timer_action(name,params)
+		return true
+	end
+	return false
+end
+function __g_timer_found(idx)
+    local gtime = level.get_time_days()*60*24+level.get_time_hours()*60+level.get_time_minutes()  --time in game minutes
+	local name,params
+	if load_variable("gt"..idx.."d", nil)<=gtime then
+		name=load_variable("gt"..idx, nil)
+		params=load_variable("gt"..idx.."p", nil)
+		del_variable("gt"..idx)
+		del_variable("gt"..idx.."d")
+		del_variable("gt"..idx.."p")
+		__do_timer_action(name,params)
+		return true
+	end
+	return false
+end
+function __do_timer_action(select_string,params_string)
+
+	if select_string=="bl1" then
+		if xiani_config.use_blowouts ~= true then
+			-- если выбросы отключены то просто не показывать их,
+			-- но сохранять их назначенное время и расписание
+			del_variable("blt")
+			g_start_timer("bl1",0, vars.t_surge+math.random(-4,4), 0)
+			db.Dead2 = 0
+			db.Flag2 = 0
+			db.Flag3 = 0
+			return true
+		end
+	end
+
+-- Начало алгоритма выброса --
+
+	local dist_by_level ={}
+	dist_by_level["l01_escape"]		= 8
+	dist_by_level["l02_garbage"]	= 6
+	dist_by_level["l03_agroprom"]	= 6
+	dist_by_level["l04_darkvalley"]	= 6
+	dist_by_level["l05_bar"]		= 4
+	dist_by_level["l06_rostok"]		= 4
+	dist_by_level["l08_yantar"]		= 3
+	dist_by_level["l07_military"]	= 3
+	dist_by_level["l10_radar"]		= 2
+	dist_by_level["l11_pripyat"]	= 1
+	dist_by_level["l12_stancia"]	= 0
+	dist_by_level["l12_stancia_2"]	= 0
+	
+	local distance = dist_by_level[level.name()]
+	if distance == nil then
+		distance = 5
+	end
+	xiani.xlog("distance=" .. tostring(distance))
+	
+	local explode_delay = distance * 1
+	xiani.xlog("explode_delay=" .. tostring(explode_delay))
+	
+	local max_sound_dist = 15
+	local explode_volume = 2*(max_sound_dist-distance)/max_sound_dist
+	if explode_volume < 0 then
+		explode_volume = 0
+	end
+	xiani.xlog("explode_volume=" .. tostring(explode_volume))
+	
+-- 1. Настало время выброса.
+	if select_string=="bl1" then
+		if ogsm_surge then
+			-- if (level.name() ~= "l03u_agr_underground") and (level.name() ~= "l08u_brainlab") and (level.name() ~= "l10u_bunker") and (level.name() ~= "l04u_labx18") and (level.name() ~= "l12u_sarcofag") and (level.name() ~= "l12u_control_monolith") and (level.name() ~= "l12_stancia") and (level.name() ~= "l12_stancia_2") then
+			if (level.name() ~= "l03u_agr_underground") and (level.name() ~= "l08u_brainlab") and (level.name() ~= "l10u_bunker") and (level.name() ~= "l04u_labx18") and (level.name() ~= "l12u_sarcofag") and (level.name() ~= "l12u_control_monolith") then
+				if sleep_manager and sleep_manager.is_sleep_active() then sleep_manager.stopper() end
+				-- start_timer("bl2",start_in)
+				start_timer("bl1_5",1)
+			else
+				g_start_timer("bl1",0,5,0)
+			end
+		else
+			g_start_timer("bl1",0,10,0)
+		end
+	end
+
+-- 1.5 "предчувствие"
+	if select_string=="bl1_5" then
+		-- тут можно добавить какиенибудь приметы выброса
+		-- что мол он начнется возможно в ближайшие 5 минут
+		local start_in = (10-distance)+math.random(1,3)
+		-- чем ближе к АЭС тем предчувствие раньше
+		-- таким образом даем время на то чтоб смыться
+		-- так как на АЭС выброс начинается очень резко
+		xiani.xlog('smell ' .. tostring(start_in))
+		ogsm_surge.play_smell_of_surge()
+		g_start_timer("bl2",0,0,start_in)
+	end
+	
+-- 2. Сирена, первые визуальные признаки выброса
+-- 2. удаленный бум и тишина
+	if select_string=="bl2" then
+		db.Flag2 = 1
+		save_variable("blt", 1)
+		-- level.set_weather("stancia_surge")
+		-- wfx1 = "p_surge_day_"..tostring(level.get_time_hours())
+		-- level.set_weather_fx(wfx1)
+		-- level.add_pp_effector("vibros_p.ppe", 1974, false)	
+		-- local snd_obj = xr_sound.get_safe_sound_object([[anomaly\dezodor]])
+		local snd_obj = xr_sound.get_safe_sound_object([[ambient\random\new_drone2]])
+		snd_obj:play_at_pos(db.actor, vector():set(0,0,0), 0, sound_object.s2d)
+		snd_obj.volume = explode_volume
+		--g_start_timer("bl3",0,0,8)
+		g_start_timer("bl4",0,0,explode_delay)
+	end
+
+-- 3. Проигрываем промежуточные эффекты
+	if select_string=="bl3" then
+		--level.set_weather("stancia_surge")
+		--level.set_weather_fx(wfx1)
+		--g_start_timer("bl4",0,0,5)
+		--g_start_timer("bl4",0,0,4)
+	end
+
+-- 4. Спустя 5 минут затишья начинаем выброс
+	if select_string=="bl4" then
+		db.Flag3 = 1
+		xr_sound.set_actor_sound("")
+		level.set_weather("stancia_surge")
+		local snd_obj = xr_sound.get_safe_sound_object([[ambient\earthquake]])
+		snd_obj:play_at_pos(db.actor, vector():set(0,0,0), 0, sound_object.s2d)
+		--level.add_cam_effector("camera_effects\\earthquake.anm", 1974, true, "")
+		wfx2 = "surge_day_"..tostring(level.get_time_hours())
+		level.set_weather_fx(wfx2)
+		--level.add_pp_effector ("vibros.ppe", 1974, false)
+		-- level.add_pp_effector ("sr_bw.ppe", 1974, false)
+		level.add_pp_effector ("bw2.ppe", 2009, true)
+		local snd_obj = xr_sound.get_safe_sound_object([[anomaly\blowout]])
+		snd_obj:play_at_pos(db.actor, vector():set(0,0,0), 0, sound_object.s2d)
+		ogsm_surge.play_sounds()
+		g_start_timer("bl5",0,0,4)
+	end
+
+-- 5. Начинаем расколбас
+	if select_string=="bl5" then
+		save_variable("blt", 2)
+		-- level.remove_cam_effector(1974)
+		db.Dead2 = 1
+		if db.FlagEsc == 0 then
+			local snd_obj = xr_sound.get_safe_sound_object([[actor\pain_3]])
+			snd_obj:play_at_pos(db.actor, vector():set(0,0,0), 0, sound_object.s2d)
+			-- level.add_cam_effector("camera_effects\\head_shot.anm", 1975, false, "")
+			-- level.add_pp_effector ("sr_bw.ppe", 1974, true)
+			ogsm_surge.g_R_Vibros:Run()
+		end
+		g_start_timer("bl6",0,0,5)
+	end
+
+
+-- 6. Выброс близится к концу
+	if select_string=="bl6" then
+		level.set_weather_fx(wfx1)
+		g_start_timer("bl7",0,0,5)
+	end
+
+-- 7. Завершаем выброс, устанавливаем время следующего
+	if select_string=="bl7" then
+		ogsm_surge.g_R_Vibros:Stop()
+		if db.FlagEsc == 0 then
+			level.add_cam_effector("camera_effects\\shell_shock.anm", 1974, false, "")
+			local snd_obj = xr_sound.get_safe_sound_object([[actor\breath_1]])
+			snd_obj:play_at_pos(db.actor, vector():set(0,0,0), 0, sound_object.s2d)
+		end
+		level.add_pp_effector ("teleport.ppe", 2009, false)
+		local snd_obj2 = xr_sound.get_safe_sound_object([[ambient\earthquake]])
+		snd_obj2:play_at_pos(db.actor, vector():set(0,0,0), 0, sound_object.s2d)
+		level.set_weather(wthr)
+		del_variable("blt")
+		g_start_timer("bl1",0, vars.t_surge+math.random(-4,4), 0)
+		-- ogsm_surge.spawn_arts()
+		db.Dead2 = 0
+		db.Flag2 = 0
+		db.Flag3 = 0
+	end
+
+
+-- Конец алгоритма выброса --
+
+end
+
+-- Записываем переменную
+function save_variable(variable_name, value)
+	xr_logic.pstor_store(db.actor, variable_name, value)
+end
+
+-- Загружаем переменную
+function load_variable(variable_name, value_if_not_found)
+	return xr_logic.pstor_retrieve(db.actor, variable_name, value_if_not_found)
+end
+
+-- Удаляем переменную
+function del_variable(variable_name)
+	if db.storage[db.actor:id()].pstor[variable_name] then
+		db.storage[db.actor:id()].pstor[variable_name] = nil
+	end
+end
+
+-- Колбэк на апдейт ГГ
+function on_actor_update()
+	if not timer_trigger then 
+		timer_trigger=game.time() 
+	end
+
+	if timer_trigger<=game.time() then
+		timer_trigger=game.time()+5000
+		check_timers()
+	end
+
+	ogsm_surge.update_surge()
+end
+
+-- Загружаем все переменные, которые нужно, вызывается загрузке игры автоматически
+function on_game_load()
+	if db.storage[db.actor:id()].pstor == nil then
+		db.storage[db.actor:id()].pstor = {}
+	end
+
+	if load_variable("frn",true) then
+		local first_blowout_time = vars.t_start
+		g_start_timer("bl1", 0, first_blowout_time, 0)
+		ogsm_hideout.first_run()
+		save_variable("frn",false)
+	end
+
+	ogsm_hideout.get_level_hides()
+
+end
+
+function set_sun()
+	if load_variable("blt",0) == 1 then
+		level.set_weather("stancia_surge")
+		db.Flag2 = 1
+	elseif load_variable("blt",0) == 2 then
+		level.set_weather("stancia_surge")
+		db.Flag2 = 1
+		db.Dead2 = 1
+	else
+		level.set_weather(wthr)
+	end
+end
+
+
+------------------- Библиотека служебных скриптов для OGSM 2.x ----------------
+
+---------------------- Copyright 2007-2008 xStream & DEXXX --------------------
+
+--[[
+
+If you're going to use the whole of this script or its parts in your own creative 
+developments for the S.T.A.L.K.E.R. game, please don't become such a goddamn 
+motherfucker like the notorious author of the ABC Mod - Carbrobro. Leave the 
+copyrights, note the real author(s) and don't claim others' ideas and their 
+realization to be your own ones. It's just simple Modmakers' Ethics. Thank you!
+
+Если вы собираетесь использовать данный скрипт целиком или частично в своих 
+разработках по игре S.T.A.L.K.E.R., пожалуйста не опускайтесь до уровня печально 
+известного автора ABC мода - Carbrobro. Не удаляйте копирайты, указывайте настоящего 
+автора(ов) и не выдавайте чужие идеи и их реализацию за свои. Ведь это элементарная 
+этика модостроителей! Спасибо за понимание.
+
+]]--

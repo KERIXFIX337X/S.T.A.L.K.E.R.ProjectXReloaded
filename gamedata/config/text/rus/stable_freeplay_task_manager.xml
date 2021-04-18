@@ -1,0 +1,21 @@
+ <?xml version="1.0" encoding="windows-1251" ?> 
+- <string_table>
+	- <string id="mercs_kill_stalker_1">
+		<text>Убить сталкера.</text> 
+	  </string>
+	- <string id="mercs_kill_stalker_1_text">
+		<text>Убить сталкера.</text> 
+	  </string>
+	- <string id="mercs_kill_stalker_1_descr">
+		<text>Убить сталкера.</text> 
+	  </string>
+	- <string id="mercs_kill_stalker_2">
+		<text>Убить сталкера.</text> 
+	  </string>
+	- <string id="mercs_kill_stalker_2_text">
+		<text>Убить сталкера.</text> 
+	  </string>
+	- <string id="mercs_kill_stalker_2_descr">
+		<text>Убить сталкера.</text> 
+	  </string>
+- <string_table>

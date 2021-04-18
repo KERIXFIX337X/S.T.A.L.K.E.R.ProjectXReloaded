@@ -1,0 +1,1437 @@
+<?xml version="1.0" encoding="windows-1251" ?>
+<game_dialogs>
+    <dialog id="common_repair_dialog">
+        <precondition>dialogs.is_opp_not_wounded</precondition>
+        <precondition>dialogs_repair.trader_repair_precond</precondition>
+        <phrase_list>
+            <phrase id="0">
+                <action>dialogs_repair.init_dialog</action>
+                <text>common_repair_dialog_0</text>
+                <next>1</next>
+                <next>01x</next>
+            </phrase>
+            <phrase id="01x">
+                <precondition>dialogs_repair.npc_cant_repair_precond</precondition>
+                <text>common_repair_dialog_01</text>
+            </phrase>
+            <phrase id="1">
+                <precondition>dialogs_repair.npc_can_repair_precond</precondition>
+                <text>common_repair_dialog_1</text>
+                <action>dialogs_repair.repair_costs</action>
+                <next>2</next>
+                <next>3</next>
+                <next>4</next>
+                <next>5</next>
+            </phrase>
+            <phrase id="2">
+                <precondition>dialogs_repair.trader_check_money_s1</precondition>
+                <text>common_repair_dialog_2</text>
+                <action>dialogs_repair.trader_repiar_weapon_s1</action>
+                <next>6</next>
+            </phrase>
+            <phrase id="3">
+                <precondition>dialogs_repair.trader_check_money_s2</precondition>
+                <text>common_repair_dialog_3</text>
+                <action>dialogs_repair.trader_repiar_weapon_s2</action>
+                <next>6</next>
+            </phrase>
+            <phrase id="4">
+                <precondition>dialogs_repair.trader_check_money_s6</precondition>
+                <text>common_repair_dialog_4</text>
+                <action>dialogs_repair.trader_repiar_armor_s6</action>
+                <next>7</next>
+            </phrase>
+            <phrase id="5">
+                <text>common_repair_dialog_5</text>
+            </phrase>
+            <phrase id="6">
+                <text>common_repair_dialog_6</text>
+                <next>8</next>
+                <next>10</next>
+            </phrase>
+            <phrase id="7">
+                <text>common_repair_dialog_7</text>
+                <next>9</next>
+                <next>10</next>
+            </phrase>
+            <phrase id="8">
+                <text>common_repair_dialog_8</text>
+            </phrase>
+            <phrase id="9">
+                <text>common_repair_dialog_9</text>
+            </phrase>
+            <phrase id="10">
+                <precondition>dialogs_repair.trader_repair_precond</precondition>
+                <text>common_repair_dialog_10</text>
+                <next>11</next>
+            </phrase>
+            <phrase id="11">
+                <text>common_repair_dialog_11</text>
+                <action>dialogs_repair.repair_costs</action>
+                <next>2</next>
+                <next>3</next>
+                <next>4</next>
+                <next>5</next>
+            </phrase>
+        </phrase_list>
+    </dialog>
+	<dialog id="common_mod">
+		<phrase_list>
+			<phrase id="0">
+				<text>Я хочу модифицировать экипировку.</text>
+				<next>1</next>
+			</phrase>
+			<phrase id="1">
+				<text>Хорошо, смотри, что я могу модифицировать.</text>
+				<next>210</next>
+				<next>220</next>
+				<next>230</next>
+				<next>240</next>
+				<next>250</next>
+				<next>260</next>
+				<next>270</next>
+				<next>2</next>
+				<next>3</next>
+				<next>7</next>
+				<next>100</next>
+				<next>110</next>
+				<next>120</next>
+				<next>160</next>
+				<next>140</next>
+				<next>150</next>
+				<next>93</next>
+			</phrase>
+			<phrase id="93">
+				<text>Пожалуй, я ничего не буду модифицировать.</text>
+			</phrase>
+			<phrase id="200">
+			    <precondition>mod.has_pistol_box</precondition>
+				<text>Пистолет Макарова</text>
+				<next>201</next>
+			</phrase>
+			<phrase id="201">
+				<text>Какую модификацию установить на ПМ?</text>
+				<action>mod_icon.icon_mag84</action>
+				<next>19</next>
+			</phrase>
+			<phrase id="202">
+				<text>• Установить расширенный магазин на 84пт.</text>
+				<precondition>mod.has_pm_1</precondition>
+				<action>mod.pm_m1</action>
+			</phrase>
+			<phrase id="210">
+			    <precondition>mod.has_pistol_box</precondition>
+				<text>Пистолет Бесшумный</text>
+				<next>211</next>
+			</phrase>
+			<phrase id="211">
+				<text>Какую модификацию установить на ПБ?</text>
+				<action>mod_icon.icon_mag12</action>
+				<next>212</next>
+				<next>19</next>
+			</phrase>
+			<phrase id="212">
+				<text>• Установить расширенный магазин на 12пт.</text>
+				<precondition>mod.has_pb_2</precondition>
+				<action>mod.pb_m1</action>
+			</phrase>
+			<phrase id="220">
+			    <precondition>mod.has_pistol_box</precondition>
+				<text>Форт 12</text>
+				<next>221</next>
+			</phrase>
+			<phrase id="221">
+				<text>Какую модификацию установить на Форт 12?</text>
+				<action>mod_icon.icon_mag15</action>
+				<next>222</next>
+				<next>19</next>
+			</phrase>
+			<phrase id="222">
+				<text>• Установить расширенный магазин на 15пт.</text>
+				<precondition>mod.has_fort_1</precondition>
+				<action>mod.fort_m1</action>
+			</phrase>
+			<phrase id="230">
+			    <precondition>mod.has_pistol_box</precondition>
+				<text>Beretta 92 FS</text>
+				<next>231</next>
+			</phrase>
+			<phrase id="231">
+				<text>Какую модификацию установить на Beretta 92 FS?</text>
+				<action>mod_icon.icon_mag20</action>
+				<next>232</next>
+				<next>19</next>
+			</phrase>
+			<phrase id="232">
+				<text>• Установить расширенный магазин на 20пт.</text>
+				<precondition>mod.has_beretta_1</precondition>
+				<action>mod.beretta_m1</action>
+			</phrase>
+			<phrase id="240">
+			    <precondition>mod.has_pistol_box</precondition>
+				<text>FN Browning HP-SA</text>
+				<next>241</next>
+			</phrase>
+			<phrase id="241">
+				<text>Какую модификацию установить на FN Browning HP-SA?</text>
+				<action>mod_icon.icon_mag17</action>
+				<next>242</next>
+				<next>19</next>
+			</phrase>
+			<phrase id="242">
+				<text>• Установить расширенный магазин на 17пт.</text>
+				<precondition>mod.has_hpsa_1</precondition>
+				<action>mod.hpsa_m1</action>
+			</phrase>
+			<phrase id="250">
+			    <precondition>mod.has_pistol_box</precondition>
+				<text>Walther P99</text>
+				<next>251</next>
+			</phrase>
+			<phrase id="251">
+				<text>Какую модификацию установить на Walther P99?</text>
+				<action>mod_icon.icon_switch_9x18</action>
+				<action>mod_icon.icon_mag20</action>
+				<next>252</next>
+				<next>253</next>
+				<next>19</next>
+			</phrase>
+			<phrase id="252">
+				<text>• Смена калибра [9x18мм].</text>
+				<precondition>mod.has_walther_1</precondition>
+				<action>mod.walther_m1</action>
+			</phrase>
+			<phrase id="253">
+				<text>• Установить расширенный магазин на 20пт.</text>
+				<precondition>mod.has_walther_2</precondition>
+				<action>mod.walther_m2</action>
+			</phrase>
+			<phrase id="260">
+			    <precondition>mod.has_pistol_box</precondition>
+				<text>Sig Sauer P220</text>
+				<next>261</next>
+			</phrase>
+			<phrase id="261">
+				<text>Какую модификацию установить на Sig Sauer P220?</text>
+				<action>mod_icon.icon_mag12</action>
+				<next>262</next>
+				<next>19</next>
+			</phrase>
+			<phrase id="262">
+				<text>• Установить расширенный магазин на 12пт.</text>
+				<precondition>mod.has_sig220_1</precondition>
+				<action>mod.sig220_m1</action>
+			</phrase>
+			<phrase id="270">
+			    <precondition>mod.has_pistol_box</precondition>
+				<text>Desert Eagle</text>
+				<next>271</next>
+			</phrase>
+			<phrase id="271">
+				<text>Какую модификацию установить на Desert Eagle?</text>
+				<action>mod_icon.icon_compensator_eagle</action>
+				<next>272</next>
+				<next>19</next>
+			</phrase>
+			<phrase id="272">
+				<text>• Установить дульный компенсатор</text>
+				<precondition>mod.has_eagle_1</precondition>
+				<action>mod.eagle_m1</action>
+			</phrase>
+			<phrase id="2">
+			    <precondition>mod.has_smg_box</precondition>
+				<text>МР5</text>
+				<next>10</next>
+			</phrase>
+			<phrase id="10">
+				<text>Какую модификацию установить на MP5?</text>
+				<action>mod_icon.icon_swith_9x18_mp5</action>
+				<action>mod_icon.icon_sil</action>
+				<action>mod_icon.icon_mp5_aim</action>
+				<next>11</next>
+				<next>12</next>
+				<next>13</next>
+				<next>19</next>
+			</phrase>
+			<phrase id="11">
+				<text>• Переделать под патрон 9х18мм</text>
+				<precondition>mod.has_mp5_2</precondition>
+				<action>mod.mp5_m1</action>
+			</phrase>
+			<phrase id="12">
+				<text>• Установить глушитель</text>
+				<action>mod.mp5_m2</action>
+				<precondition>mod.has_mp5_1</precondition>
+			</phrase>
+			<phrase id="13">
+				<text>• Установить прицел Aimpoint</text>
+				<precondition>mod.has_mp5_3</precondition>
+				<action>mod.mp5_m3</action>
+			</phrase>
+			<phrase id="14">
+				<text>• Установить расширенный магазин</text>
+				<precondition>mod.has_mp5_3</precondition>
+				<action>mod.mp5_m4</action>
+			</phrase>
+			<phrase id="19">
+				<text>Пожалуй, никакую</text>
+			</phrase>
+			<phrase id="3">
+			    <precondition>mod.has_rifle_box</precondition>
+				<text>Автомат АК74у</text>
+				<next>20</next>
+			</phrase>
+			<phrase id="20">
+				<text>Какую модификацию установить на АК74у?</text>
+				<action>mod_icon.icon_mag_ak74u</action>
+				<action>mod.icon_sil_ak74u</action>
+				<next>21</next>
+				<next>19</next>
+			</phrase>
+			<phrase id="21">
+				<text>• Установить расширенный магазин</text>
+				<precondition>mod.has_ak74u_2</precondition>
+				<action>mod.ak74u_m2</action>
+			</phrase>
+			<phrase id="7">
+			    <precondition>mod.has_rifle_box</precondition>
+				<text>Автомат АК74</text>
+				<next>70</next>
+			</phrase>
+			<phrase id="70">
+				<text>Какую модификацию установить на АК74?</text>
+				<action>mod_icon.icon_mag_ak74</action>
+				<next>71</next>
+				<next>19</next>
+			</phrase>
+			<phrase id="71">
+				<text>• Увеличить емкость магазина</text>
+				<precondition>mod.has_ak74_4</precondition>
+				<action>mod.ak74_m2</action>
+			</phrase>
+			<phrase id="72">
+				<text>• Установить прицел "Ракурс"</text>
+				<action>mod.ak74_m4</action>
+				<precondition>mod.has_ak74_2</precondition>
+			</phrase>
+			<phrase id="100">
+			    <precondition>mod.has_rifle_box</precondition>
+				<text>АН94</text>
+				<next>101</next>
+			</phrase>
+			<phrase id="101">
+				<text>Какую модификацию установить на АН94?</text>
+				<action>mod_icon.icon_mag60</action>
+				<next>102</next>
+				<next>19</next>
+			</phrase>
+			<phrase id="102">
+				<text>• Установить расширенный магазин</text>
+				<precondition>mod.has_abakan_3</precondition>
+				<action>mod.abakan_m3</action>
+			</phrase>
+			<phrase id="110">
+			    <precondition>mod.has_rifle_box</precondition>
+				<text>АС Вал</text>
+				<next>111</next>
+			</phrase>
+			<phrase id="111">
+				<text>Какую модификацию установить на АС Вал?</text>
+				<action>mod_icon.icon_pka</action>
+				<next>112</next>
+				<next>19</next>
+			</phrase>
+			<phrase id="112">
+				<text>• Установить коллиматорный прицел ПК-А</text>
+				<precondition>mod.has_val</precondition>
+				<action>mod.val_m1</action>
+			</phrase>
+			<phrase id="120">
+			    <precondition>mod.has_rifle_box</precondition>
+				<text>СВД</text>
+				<next>121</next>
+			</phrase>
+			<phrase id="121">
+				<text>Какую модификацию установить на СВД?</text>
+				<action>mod_icon.icon_sil_svd</action>
+				<action>mod_icon.icon_mag_svd</action>
+				<next>122</next>
+				<next>123</next>
+				<next>19</next>
+			</phrase>
+			<phrase id="122">
+				<text>• Установить глушитель "Ротор 43"</text>
+				<precondition>mod.has_svd</precondition>
+				<action>mod.svd_m3</action>
+			</phrase>
+			<phrase id="123">
+				<text>• Установить расширенный магазин [15 пт.]</text>
+				<precondition>mod.has_svd</precondition>
+				<action>mod.svd_m2</action>
+			</phrase>
+			<phrase id="160">
+			    <precondition>mod.has_rifle_box</precondition>
+				<text>СВУ</text>
+				<next>161</next>
+			</phrase>
+			<phrase id="161">
+				<text>Какую модификацию установить на СВУ?</text>
+				<action>mod_icon.icon_mag_svu</action>
+				<next>162</next>
+				<next>19</next>
+			</phrase>
+			<phrase id="162">
+				<text>• Установить расширенный магазин [20 пт.]</text>
+				<precondition>mod.has_svu</precondition>
+				<action>mod.svu_m1</action>
+			</phrase>
+			<phrase id="140">
+			    <precondition>mod.has_rifle_box</precondition>
+				<text>SIG SG-550</text>
+				<next>141</next>
+			</phrase>
+			<phrase id="141">
+				<text>Какую модификацию установить на SIG SG-550?</text>
+				<action>mod_icon.icon_sil_sig</action>
+				<action>mod_icon.icon_march_scope</action>
+				<action>mod_icon.icon_sig_grip</action>
+				<next>142</next>
+				<next>143</next>
+				<next>144</next>
+				<next>19</next>
+			</phrase>
+			<phrase id="142">
+				<text>• Установить глушитель "5.56 НАТО"</text>
+				<precondition>mod.has_sig_1</precondition>
+				<action>mod.sig_m3</action>
+			</phrase>
+			<phrase id="143">
+				<text>• Установить оптический прицел [March Tactical 3-24x42 FFP]</text>
+				<precondition>mod.has_sig_2</precondition>
+				<action>mod.sig_m2</action>
+			</phrase>
+			<phrase id="144">
+				<text>• Установить вертикальную рукоять</text>
+				<precondition>mod.has_sig_2</precondition>
+				<action>mod.sig_m1</action>
+			</phrase>
+			<phrase id="150">
+			    <precondition>mod.has_rifle_box</precondition>
+				<text>SIG SG-552</text>
+				<next>151</next>
+			</phrase>
+			<phrase id="151">
+				<text>Какую модификацию установить на SIG SG-552?</text>
+				<action>mod_icon.icon_sil_sig</action>
+				<action>mod_icon.icon_sig552_grip</action>
+				<next>152</next>
+				<next>154</next>
+				<next>19</next>
+			</phrase>
+			<phrase id="152">
+				<text>• Установить глушитель "5.56 НАТО"</text>
+				<precondition>mod.has_sig552_1</precondition>
+				<action>mod.sig552_m1</action>
+			</phrase>
+			<phrase id="154">
+				<text>• Установить вертикальную рукоять</text>
+				<precondition>mod.has_sig552_2</precondition>
+				<action>mod.sig552_m2</action>
+			</phrase>
+		</phrase_list>
+	</dialog>
+	<dialog id="common_mod_outfit">
+		<phrase_list>
+			<phrase id="0">
+				<text>Я хочу модифицировать броню.</text>
+				<next>1</next>
+			</phrase>
+			<phrase id="1">
+				<text>Хорошо, смотри, что я могу модифицировать.</text>
+				<next>2</next>
+				<next>3</next>
+				<next>4</next>
+				<next>5</next>
+				<next>8</next>
+				<next>10</next>
+				<next>11</next>
+				<next>100</next>
+				<next>110</next>
+				<next>93</next>
+			</phrase>
+			<phrase id="93">
+				<text>Пожалуй, я ничего не буду модифицировать.</text>
+			</phrase>
+			<phrase id="2">
+				<text>Куртка новичка</text>
+				<next>20</next>
+			</phrase>
+			<phrase id="20">
+				<text>Какую модификацию установить на куртку новичка?</text>
+				<action>mod_icon.icon_up_leather</action>
+				<next>95</next>
+				<next>19</next>
+			</phrase>
+			<phrase id="95">
+				<text>• Нанести износостойкую кожу</text>
+				<action>mod.novice_m6</action>
+				<precondition>mod.has_novice_1</precondition>
+			</phrase>
+			<phrase id="19">
+				<text>Пожалуй, никакую</text>
+			</phrase>
+			<phrase id="3">
+				<text>Куртка бандита</text>
+				<next>30</next>
+			</phrase>
+			<phrase id="30">
+				<text>Какую модификацию установить на куртку бандита?</text>
+				<action>mod_icon.icon_up_kevlar</action>
+				<next>33</next>
+				<next>19</next>
+			</phrase>
+			<phrase id="33">
+				<text>• Установить бронированные элементы</text>
+				<precondition>mod.has_bandit_1</precondition>
+				<action>mod.bandit_m1</action>
+			</phrase>
+			<phrase id="100">
+				<text>Чёрный плащ</text>
+				<next>101</next>
+			</phrase>
+			<phrase id="101">
+				<text>Какую модификацию установить на плащ?</text>
+				<action>mod_icon.icon_up_dark_plash</action>
+				<next>102</next>
+				<next>19</next>
+			</phrase>
+			<phrase id="102">
+				<text>• Установить бронированные элементы</text>
+				<precondition>mod.has_dark_plash</precondition>
+				<action>mod.dark_plash_m1</action>
+			</phrase>
+			<phrase id="110">
+				<text>Коричневый плащ</text>
+				<next>111</next>
+			</phrase>
+			<phrase id="111">
+				<text>Какую модификацию установить на плащ?</text>
+				<action>mod_icon.icon_up_brown_plash</action>
+				<next>112</next>
+				<next>19</next>
+			</phrase>
+			<phrase id="112">
+				<text>• Установить кислородный баллон</text>
+				<precondition>mod.has_brown_plash</precondition>
+				<action>mod.brown_plash_m1</action>
+			</phrase>
+			<phrase id="4">
+				<text>Комбинезон наемника</text>
+				<next>40</next>
+			</phrase>
+			<phrase id="40">
+				<text>Какую модификацию установить на комбез наемника?</text>
+				<action>mod_icon.icon_up_ballon</action>
+				<action>mod_icon.icon_up_pnv</action>
+				<action>mod_icon.icon_up_rukzak</action>
+				<next>42</next>
+				<next>43</next>
+				<next>44</next>
+				<next>19</next>
+			</phrase>
+			<phrase id="42">
+				<text>• Установить кислородный баллон</text>
+				<action>mod.killer_m1</action>
+				<precondition>mod.has_killer_1</precondition>
+			</phrase>
+			<phrase id="43">
+				<text>• Установить ПНВ 3 - го поколения</text>
+				<precondition>mod.has_killer_1</precondition>
+				<action>mod.killer_m2</action>
+			</phrase>
+			<phrase id="44">
+				<text>• Установить дополнительный вещмешок</text>
+				<precondition>mod.has_killer_2</precondition>
+				<action>mod.killer_m3</action>
+			</phrase>
+			<phrase id="5">
+				<text>Костюм сталкера</text>
+				<next>50</next>
+			</phrase>
+			<phrase id="50">
+				<text>Какую модификацию установить на костюм сталкера?</text>
+				<action>mod_icon.icon_up_mediumruksak</action>
+				<next>54</next>
+				<next>19</next>
+			</phrase>
+			<phrase id="54">
+				<text>• Установить туристический рюкзак</text>
+				<precondition>mod.has_stalker_2</precondition>
+				<action>mod.stalker_m3</action>
+			</phrase>
+			<phrase id="8">
+				<text>Бронекостюм "Берилл 5М"</text>
+				<next>80</next>
+			</phrase>
+			<phrase id="80">
+				<text>Какую модификацию установить на "Берилл 5М"?</text>
+				<action>mod_icon.icon_medbag</action>
+				<action>mod_icon.icon_sfera_08</action>
+				<action>mod_icon.icon_bag</action>
+				<next>82</next>
+				<next>83</next>
+				<next>84</next>
+				<next>19</next>
+			</phrase>
+			<phrase id="82">
+				<text>• Установить медицинский подсумок</text>
+				<action>mod.specops_m2</action>
+				<precondition>mod.has_specops_1</precondition>
+			</phrase>
+			<phrase id="83">
+				<text>• Установить шлем "Сфера - 08"</text>
+				<precondition>mod.has_specops_1</precondition>
+				<action>mod.specops_m1</action>
+			</phrase>
+			<phrase id="84">
+				<text>• Установить дополнительный вещмешок</text>
+				<precondition>mod.has_specops_2</precondition>
+				<action>mod.specops_m3</action>
+			</phrase>
+			<phrase id="9">
+				<text>Оранжевый комбинезон экологов</text>
+				<next>90</next>
+			</phrase>
+			<phrase id="90">
+				<text>Какую модификацию установить на комбинезон экологов?</text>
+				<next>92</next>
+				<next>93</next>
+				<next>94</next>
+				<next>19</next>
+			</phrase>
+			<phrase id="92">
+				<text>Установить систему жизнеобеспечения         (10000)</text>
+				<action>mod.orange_m3</action>
+				<precondition>mod.has_orange</precondition>
+			</phrase>
+			<phrase id="93">
+				<text>Увеличить защиту от ранений  (10000)</text>
+				<precondition>mod.has_orange</precondition>
+				<action>mod.orange_m1</action>
+			</phrase>
+			<phrase id="94">
+				<text>Увеличить максимально переносимый вес       (10000)</text>
+				<precondition>mod.has_orange</precondition>
+				<action>mod.orange_m2</action>
+			</phrase>
+			<phrase id="10">
+				<text>Экзоскелет</text>
+				<next>901</next>
+			</phrase>
+			<phrase id="901">
+				<text>Какую модификацию установить на экзоскелет?</text>
+				<action>mod_icon.icon_highprivod</action>
+				<action>mod_icon.icon_higharmor_not</action>
+				<next>920</next>
+				<next>19</next>
+			</phrase>
+			<phrase id="920">
+				<text>• Установить усиленные сервоприводы</text>
+				<action>mod.exo_m1</action>
+				<precondition>mod.has_exo</precondition>
+			</phrase>
+			<phrase id="11">
+			    <precondition>mod.proverka_exo_m2</precondition>
+				<text>Усиленный экзоскелет</text>
+				<next>931</next>
+			</phrase>
+			<phrase id="931">
+				<text>Какую модификацию установить на усиленный экзоскелет?</text>
+				<action>mod_icon.icon_highprivod_apply</action>
+				<action>mod_icon.icon_higharmor</action>
+				<next>930</next>
+				<next>19</next>
+			</phrase>
+			<phrase id="930">
+				<text>• Установить титановый доспех "Кирасир"</text>
+				<action>mod.exo_m2</action>
+				<precondition>mod.has_exo_m2</precondition>
+			</phrase>
+		</phrase_list>
+	</dialog>
+	<dialog id="common_mod_outfit_01">
+		<phrase_list>
+			<phrase id="0">
+				<text>Я хочу модифицировать броню.</text>
+				<next>1</next>
+			</phrase>
+			<phrase id="1">
+				<text>Хорошо, смотри, что я могу модифицировать.</text>
+				<next>2</next>
+				<next>3</next>
+				<next>4</next>
+				<next>5</next>
+				<next>6</next>
+				<next>7</next>
+				<next>8</next>
+				<next>9</next>
+				<next>93</next>
+			</phrase>
+			<phrase id="93">
+				<text>Пожалуй, я ничего не буду модифицировать.</text>
+			</phrase>
+			<phrase id="2">
+				<text></text>
+				<next>20</next>
+			</phrase>
+			<phrase id="20">
+				<text>Какую модификацию установить на куртку новичка?</text>
+				<next>22</next>
+				<next>23</next>
+				<next>24</next>
+				<next>19</next>
+			</phrase>
+			<phrase id="22">
+				<text> Увеличить защиту от аномалий          (3000)</text>
+				<action>mod.novice_m1</action>
+				<precondition>mod.has_novice_1</precondition>
+			</phrase>
+			<phrase id="23">
+				<text>Увеличить защиту от ранений  (3000)</text>
+				<precondition>mod.has_novice_1</precondition>
+				<action>mod.novice_m2</action>
+			</phrase>
+			<phrase id="24">
+				<text>Увеличить максимально переносимый вес       (5000)</text>
+				<precondition>mod.has_novice_2</precondition>
+				<action>mod.novice_m3</action>
+			</phrase>
+			<phrase id="19">
+				<text>Пожалуй, никакую</text>
+			</phrase>
+			<phrase id="3">
+				<text>Куртка бандита</text>
+				<next>30</next>
+			</phrase>
+			<phrase id="30">
+				<text>Какую модификацию установить на куртку бандита?</text>
+				<next>32</next>
+				<next>33</next>
+				<next>34</next>
+				<next>19</next>
+			</phrase>
+			<phrase id="32">
+				<text> Увеличить защиту от аномалий          (4000)</text>
+				<action>mod.bandit_m2</action>
+				<precondition>mod.has_bandit_1</precondition>
+			</phrase>
+			<phrase id="33">
+				<text>Увеличить защиту от ранений  (4000)</text>
+				<precondition>mod.has_bandit_1</precondition>
+				<action>mod.bandit_m1</action>
+			</phrase>
+			<phrase id="34">
+				<text>Увеличить максимально переносимый вес       (6500)</text>
+				<precondition>mod.has_bandit_2</precondition>
+				<action>mod.bandit_m3</action>
+			</phrase>
+			<phrase id="4">
+				<text>Комбинезон наемника</text>
+				<next>40</next>
+			</phrase>
+			<phrase id="40">
+				<text>Какую модификацию установить на комбез наемника?</text>
+				<next>42</next>
+				<next>43</next>
+				<next>44</next>
+				<next>19</next>
+			</phrase>
+			<phrase id="42">
+				<text> Увеличить защиту от аномалий          (7000)</text>
+				<action>mod.killer_m1</action>
+				<precondition>mod.has_killer_1</precondition>
+			</phrase>
+			<phrase id="43">
+				<text>Увеличить защиту от ранений  (7000)</text>
+				<precondition>mod.has_killer_1</precondition>
+				<action>mod.killer_m3</action>
+			</phrase>
+			<phrase id="44">
+				<text>Увеличить максимально переносимый вес       (10000)</text>
+				<precondition>mod.has_killer_2</precondition>
+				<action>mod.killer_m3</action>
+			</phrase>
+			<phrase id="5">
+				<text>Научный костюм Долга</text>
+				<next>50</next>
+			</phrase>
+			<phrase id="50">
+				<text>Какую модификацию установить на научный костюм Долга?</text>
+				<next>52</next>
+				<next>53</next>
+				<next>54</next>
+				<next>19</next>
+			</phrase>
+			<phrase id="52">
+				<text>Установить систему жизнеобеспечения          (11000)</text>
+				<action>mod.dc_m1</action>
+				<precondition>mod.has_dc_1</precondition>
+			</phrase>
+			<phrase id="53">
+				<text>Увеличить защиту от ранений  (11000)</text>
+				<precondition>mod.has_dc_1</precondition>
+				<action>mod.dc_m3</action>
+			</phrase>
+			<phrase id="54">
+				<text>Увеличить максимально переносимый вес       (15000)</text>
+				<precondition>mod.has_dc_2</precondition>
+				<action>mod.dc_m2</action>
+			</phrase>
+			<phrase id="6">
+				<text>Костюм Долга</text>
+				<next>60</next>
+			</phrase>
+			<phrase id="60">
+				<text>Какую модификацию установить на костюм Долга?</text>
+				<next>62</next>
+				<next>63</next>
+				<next>64</next>
+				<next>19</next>
+			</phrase>
+			<phrase id="62">
+				<text> Увеличить защиту от аномалий          (7000)</text>
+				<action>mod.dolg_m2</action>
+				<precondition>mod.has_dolg_1</precondition>
+			</phrase>
+			<phrase id="63">
+				<text>Увеличить защиту от ранений  (7000)</text>
+				<precondition>mod.has_dolg_1</precondition>
+				<action>mod.dolg_m1</action>
+			</phrase>
+			<phrase id="64">
+				<text>Увеличить максимально переносимый вес       (10000)</text>
+				<precondition>mod.has_dolg_2</precondition>
+				<action>mod.dolg_m3</action>
+			</phrase>
+			<phrase id="7">
+				<text>Костюм Монолита</text>
+				<next>70</next>
+			</phrase>
+			<phrase id="70">
+				<text>Какую модификацию установить на костюм Монолита?</text>
+				<next>72</next>
+				<next>73</next>
+				<next>74</next>
+				<next>19</next>
+			</phrase>
+			<phrase id="72">
+				<text> Увеличить защиту от аномалий          (8000)</text>
+				<action>mod.monolit_m1</action>
+				<precondition>mod.has_monolit_1</precondition>
+			</phrase>
+			<phrase id="73">
+				<text>Увеличить защиту от ранений  (8000)</text>
+				<precondition>mod.has_monolit_1</precondition>
+				<action>mod.monolit_m2</action>
+			</phrase>
+			<phrase id="74">
+				<text>Увеличить максимально переносимый вес       (12000)</text>
+				<precondition>mod.has_monolit_2</precondition>
+				<action>mod.monolit_m3</action>
+			</phrase>
+			<phrase id="8">
+				<text>Зеленый комбинезон экологов</text>
+				<next>80</next>
+			</phrase>
+			<phrase id="80">
+				<text>Какую модификацию установить на комбинезон экологов?</text>
+				<next>82</next>
+				<next>83</next>
+				<next>84</next>
+				<next>19</next>
+			</phrase>
+			<phrase id="82">
+				<text>Установить систему жизнеобеспечения          (3000)</text>
+				<action>mod.green_m3</action>
+				<precondition>mod.has_green</precondition>
+			</phrase>
+			<phrase id="83">
+				<text>Увеличить защиту от ранений  (3000)</text>
+				<precondition>mod.has_green</precondition>
+				<action>mod.green_m1</action>
+			</phrase>
+			<phrase id="84">
+				<text>Увеличить максимально переносимый вес       (5000)</text>
+				<precondition>mod.has_green</precondition>
+				<action>mod.green_m2</action>
+			</phrase>
+			<phrase id="9">
+				<text>Комбинезон "СЕВА"</text>
+				<next>90</next>
+			</phrase>
+			<phrase id="90">
+				<text>Какую модификацию установить на комбинезон "СЕВА"?</text>
+				<next>92</next>
+				<next>93</next>
+				<next>94</next>
+				<next>19</next>
+			</phrase>
+			<phrase id="92">
+				<text>• Установить систему жизнеобеспечения         (20000)</text>
+				<action>mod.seva_m3</action>
+				<precondition>mod.has_seva</precondition>
+			</phrase>
+			<phrase id="93">
+				<text>• Увеличить защиту от ранений  (20000)</text>
+				<precondition>mod.has_seva</precondition>
+				<action>mod.seva_m1</action>
+			</phrase>
+			<phrase id="94">
+				<text>• Увеличить максимально переносимый вес       (20000)</text>
+				<precondition>mod.has_seva</precondition>
+				<action>mod.seva_m2</action>
+			</phrase>
+		</phrase_list>
+	</dialog>
+	<dialog id="change_team_1">
+	<dont_has_info>actor_ecolog</dont_has_info>
+	<dont_has_info>change_team_2</dont_has_info>
+		<phrase_list>
+			<phrase id="0">
+				<text>Я хотел бы работать на ученых.</text>
+				<next>1</next>
+			</phrase>
+			<phrase id="1">
+				<text>Ладно, группе исследователей как раз требуется человек.</text>
+				<next>2</next>
+				<next>3</next>
+			</phrase>
+			<phrase id="2">
+				<text>Я вступаю в "Экологи".</text>
+				<action>scmd.join_ecolog</action>
+				<next>4</next>
+			</phrase>
+			<phrase id="3">
+				<text>Я передумал.</text>
+				<next>5</next>
+			</phrase>
+			<phrase id="4">
+				<text>Теперь ты эколог.</text>
+				<give_info>change_team_2</give_info>
+			</phrase>
+			<phrase id="5">
+				<text>Ну, может еще надумаешь, подходи.</text>
+			</phrase>
+		</phrase_list>
+	</dialog>
+	<dialog id="change_team_2">
+		<dont_has_info>change_team_2</dont_has_info>
+		<dont_has_info>actor_ecolog</dont_has_info>
+		<has_info>actor_military</has_info>
+		<phrase_list>
+			<phrase id="0">
+				<text>Я хочу дезертировать из армии. Достал уже этот режим армейский.</text>
+				<next>1</next>
+			</phrase>
+			<phrase id="1">
+				<text>О как! Может не надо? Может лучше экологом пойдешь? И от режима освободишься, и без дезертирства?</text>
+				<next>2</next>
+				<next>3</next>
+			</phrase>
+			<phrase id="2">
+				<text>Ладно, вступаю в "Экологи".</text>
+				<action>scmd.join_ecolog</action>
+				<next>4</next>
+			</phrase>
+			<phrase id="3">
+				<text>Нет. Я хочу уйти из армии. Поможешь?.</text>
+				<next>5</next>
+			</phrase>
+			<phrase id="4">
+				<text>Теперь ты эколог.</text>
+				<give_info>actor_ecolog</give_info>
+			</phrase>
+			<phrase id="5">
+				<text>Ладно. Но тебе надо выбрать группировку. Без группировки долго не проживешь.</text>
+				<next>6</next>
+				<next>7</next>
+				<next>8</next>
+				<next>9</next>
+				<next>10</next>
+			</phrase>
+			<phrase id="6">
+				<text>Хочу стать бандитом.</text>
+				<action>scmd.join_bandit</action>
+				<next>14</next>
+			</phrase>
+			<phrase id="7">
+				<text>Хочу вступить в "Свободу".</text>
+				<action>scmd.join_freedom</action>
+				<next>14</next>
+			</phrase>
+			<phrase id="8">
+				<text>Хочу быть одиночкой.</text>
+				<action>scmd.join_stalker</action>
+				<next>14</next>
+			</phrase>
+			<phrase id="9">
+				<text>Хочу вступить в "Долг".</text>
+				<action>scmd.join_dolg</action>
+				<next>14</next>
+			</phrase>
+			<phrase id="10">
+				<text>Хочу стать наемником.</text>
+				<action>scmd.join_killer</action>
+				<next>14</next>
+			</phrase>
+			<phrase id="14">
+				<text>Группировка успешно изменена.</text>
+				<give_info>change_team_2</give_info>
+			</phrase>
+		</phrase_list>
+	</dialog>
+	<dialog id="change_team_3">
+		<has_info>actor_novice</has_info>
+		<dont_has_info>change_team_2</dont_has_info>
+		<phrase_list>
+			<phrase id="0">
+				<text>Я хочу вступить в армию</text>
+				<next>1</next>
+			</phrase>
+			<phrase id="1">
+				<text>О как! И что же тебя в армии привлекло?</text>
+				<next>2</next>
+				<next>3</next>
+				<next>4</next>
+			</phrase>
+			<phrase id="2">
+				<text>Режим. Строгий порядок, а не как тут - кто что хочет, то и делает.</text>
+				<next>10</next>
+			</phrase>
+			<phrase id="3">
+				<text>Цель. Защитить мир от зоны, а не как тут - собрал радиоактивный мусор и отнес за периметр.</text>
+				<next>11</next>
+			</phrase>
+			<phrase id="4">
+				<text>Просто хочу вступить в армию.</text>
+				<next>12</next>
+			</phrase>
+			<phrase id="10">
+				<text>Странно, водку я вроде не паленую продаю... Ну, раз хочешь, пусть будет по-твоему.</text>
+				<action>scmd.join_military</action>
+				<give_info>change_team_2</give_info>
+			</phrase>
+			<phrase id="11">
+				<text>Ох! Когда это сталкер от артефактов отказывался! Ну, раз хочешь, пусть будет по-твоему.</text>
+				<action>scmd.join_military</action>
+				<give_info>change_team_2</give_info>
+			</phrase>
+			<phrase id="12">
+				<text>Что ж ты дома от армии тогда откосил-то? Ну, раз хочешь, пусть будет по-твоему.</text>
+				<action>scmd.join_military</action>
+				<give_info>change_team_2</give_info>
+			</phrase>
+		</phrase_list>
+	</dialog>
+	<dialog id="change_team_4">
+		<has_info>actor_novice</has_info>
+		<dont_has_info>change_team_3</dont_has_info>
+		<phrase_list>
+			<phrase id="0">
+				<text>Я хочу стать бандитом.</text>
+				<next>1</next>
+			</phrase>
+			<phrase id="1">
+				<text>Ты уверен?</text>
+				<next>2</next>
+				<next>3</next>
+			</phrase>
+			<phrase id="2">
+				<text>Я передумал.</text>
+			</phrase>
+			<phrase id="3">
+				<text>Уверен.</text>
+				<next>5</next>
+				<action>join_bandit</action>
+				<give_info>change_team_3</give_info>
+			</phrase>
+			<phrase id="5">
+				<text>Группировка успешно изменена.</text>
+			</phrase>
+		</phrase_list>
+	</dialog>
+	<dialog id="change_team_5">
+		<has_info>actor_bandit</has_info>
+		<dont_has_info>change_team_3</dont_has_info>
+		<phrase_list>
+			<phrase id="0">
+				<text>Я хочу стать одиночкой.</text>
+				<next>1</next>
+			</phrase>
+			<phrase id="1">
+				<text>Ты уверен?</text>
+				<next>2</next>
+				<next>3</next>
+			</phrase>
+			<phrase id="2">
+				<text>Я передумал.</text>
+			</phrase>
+			<phrase id="3">
+				<text>Уверен.</text>
+				<next>5</next>
+				<action>join_stalker</action>
+				<give_info>change_team_3</give_info>
+			</phrase>
+			<phrase id="5">
+				<text>Группировка успешно изменена.</text>
+			</phrase>
+		</phrase_list>
+	</dialog>		
+	<dialog id="change_team_6">
+		<has_info>actor_bandit</has_info>
+		<dont_has_info>change_team_3</dont_has_info>
+		<phrase_list>
+			<phrase id="0">
+				<text>Я хочу стать одиночкой.</text>
+				<next>1</next>
+			</phrase>
+			<phrase id="1">
+				<text>Ты уверен?</text>
+				<next>2</next>
+				<next>3</next>
+			</phrase>
+			<phrase id="2">
+				<text>Я передумал.</text>
+			</phrase>
+			<phrase id="3">
+				<text>Уверен.</text>
+				<next>5</next>
+				<action>join_</action>
+				<give_info>change_team_3</give_info>
+			</phrase>
+			<phrase id="5">
+				<text>Группировка успешно изменена.</text>
+			</phrase>
+		</phrase_list>
+	</dialog>	
+	<dialog id="quest_01">
+		<dont_has_info>quest_rpg</dont_has_info>
+		<phrase_list>
+			<phrase id="0">
+				<text>Есть для меня работа?</text>
+				<next>1</next>
+			</phrase>
+			<phrase id="1">
+				<text>Да, есть одна работенка. Принести РПГ.</text>
+				<next>2</next>
+				<next>3</next>
+			</phrase>
+			<phrase id="2">
+				<text>Ого, и зачем тебе такое оружие?</text>
+				<next>5</next>
+			</phrase>
+			<phrase id="3">
+				<text>Я не буду выполнять это задание.</text>
+				<next>4</next>
+			</phrase>
+			<phrase id="4">
+				<text>Ну, как знаешь. Награда-то неплохая.</text>
+			</phrase>
+			<phrase id="5">
+				<text>За надом. Короче, после рейда военных на фабрике где-то потерялся РПГ. Принесешь?</text>
+				<next>6</next>
+				<next>3</next>
+			</phrase>
+			<phrase id="6">
+				<text>Хорошо, принесу.</text>
+				<give_info>quest_rpg</give_info>
+			</phrase>
+		</phrase_list>
+	</dialog>
+	<dialog id="quest_02">
+		<has_info>quest_rpg</has_info>
+		<dont_has_info>quest_rpg_done</dont_has_info>
+		<phrase_list>
+			<phrase id="0">
+				<text>Я по поводу задания.</text>
+				<next>1</next>
+			</phrase>
+			<phrase id="1">
+				<text>И что там с заданием? Принес РПГ?</text>
+				<next>2</next>
+				<next>3</next>
+			</phrase>
+			<phrase id="2">
+				<text>Да, принес.</text>
+				<precondition>mod.has_rpg</precondition>
+				<next>5</next>
+			</phrase>
+			<phrase id="3">
+				<text>Нет, пока не принес.</text>
+				<next>4</next>
+			</phrase>
+			<phrase id="4">
+				<text>Ну, давай ищи побыстрее.</text>
+			</phrase>
+			<phrase id="5">
+				<text>Вот молодец! Держи, заработал.</text>
+				<next>6</next>
+				<give_info>quest_rpg_done</give_info>
+				<action>mod.rpg</action>
+			</phrase>
+			<phrase id="6">
+				<text>Спасибо.</text>
+			</phrase>
+		</phrase_list>
+	</dialog>		
+
+<dialog id="instrumenti">
+	<precondition>mod.proverka_instrumenti</precondition>
+        <phrase_list>
+                <phrase id="0">
+                        <text>choose_instruments</text>
+                        <next>1</next>
+                </phrase>
+                <phrase id="1">
+                        <text>preview_instruments</text>
+						<next>2</next>
+						<next>3</next>
+						<next>4</next>
+						<next>16</next>
+                </phrase>
+				<phrase id="2">
+				        <dont_has_info>technic_dlg_stop_1</dont_has_info>
+				        <precondition>mod.proverka_pistol_box</precondition>
+                        <text>choose_pistol_box</text>
+						<action>mod.give_pistol_box</action>
+						<give_info>has_pistol_box</give_info>
+						<give_info>technic_dlg_stop_1</give_info>
+						<next>15</next>
+                </phrase>
+				<phrase id="3">
+				        <dont_has_info>technic_dlg_stop_2</dont_has_info>
+				        <precondition>mod.proverka_rifle_box</precondition>
+                        <text>• Инструменты для работы с винтовками</text>
+						<action>mod.give_rifle_box</action>
+						<give_info>has_rifle_box</give_info>
+						<give_info>technic_dlg_stop_2</give_info>
+						<next>15</next>
+                </phrase>
+				<phrase id="4">
+				        <dont_has_info>technic_dlg_stop_3</dont_has_info>
+				        <precondition>mod.proverka_smg_box</precondition>
+                        <text>• Инструменты для работы с ПП</text>
+						<action>mod.give_smg_box</action>
+						<give_info>has_smg_box</give_info>
+						<give_info>technic_dlg_stop_3</give_info>
+						<next>15</next>
+                </phrase>
+				<phrase id="15">
+                        <text>reward_instruments</text>
+                        <action>mod.reward</action>
+                </phrase>
+				<phrase id="16">
+                        <text>stop_instruments</text>
+                </phrase>
+        </phrase_list>
+</dialog>
+
+<dialog id="instrumenti_merc">
+        <phrase_list>
+                <phrase id="0">
+                        <text>choose_instruments</text>
+                        <next>1</next>
+                </phrase>
+                <phrase id="1">
+                        <text>preview_instruments</text>
+						<next>2</next>
+						<next>3</next>
+						<next>4</next>
+						<next>16</next>
+                </phrase>
+				<phrase id="2">
+				        <dont_has_info>merc_dlg_stop_1</dont_has_info>
+				        <precondition>mod.proverka_pistol_box</precondition>
+                        <text>choose_pistol_box</text>
+						<action>mod.give_pistol_box</action>
+						<give_info>has_pistol_box</give_info>
+						<give_info>merc_dlg_stop_1</give_info>
+						<next>15</next>
+                </phrase>
+				<phrase id="3">
+				        <dont_has_info>merc_dlg_stop_2</dont_has_info>
+				        <precondition>mod.proverka_rifle_box</precondition>
+                        <text>• Инструменты для работы с винтовками</text>
+						<action>mod.give_rifle_box</action>
+						<give_info>has_rifle_box</give_info>
+						<give_info>merc_dlg_stop_2</give_info>
+						<next>15</next>
+                </phrase>
+				<phrase id="4">
+				        <dont_has_info>merc_dlg_stop_3</dont_has_info>
+				        <precondition>mod.proverka_smg_box</precondition>
+                        <text>• Инструменты для работы с ПП</text>
+						<action>mod.give_smg_box</action>
+						<give_info>has_smg_box</give_info>
+						<give_info>merc_dlg_stop_3</give_info>
+						<next>15</next>
+                </phrase>
+				<phrase id="15">
+                        <text>reward_instruments</text>
+                        <action>mod.reward</action>
+                </phrase>
+				<phrase id="16">
+                        <text>stop_instruments</text>
+                </phrase>
+        </phrase_list>
+</dialog>
+
+<dialog id="instrumenti_bandit">
+        <phrase_list>
+                <phrase id="0">
+                        <text>choose_instruments</text>
+                        <next>1</next>
+                </phrase>
+                <phrase id="1">
+                        <text>preview_instruments</text>
+						<next>2</next>
+						<next>3</next>
+						<next>4</next>
+						<next>16</next>
+                </phrase>
+				<phrase id="2">
+				        <dont_has_info>bandit_dlg_stop_1</dont_has_info>
+				        <precondition>mod.proverka_pistol_box</precondition>
+                        <text>choose_pistol_box</text>
+						<action>mod.give_pistol_box</action>
+						<give_info>has_pistol_box</give_info>
+						<give_info>bandit_dlg_stop_1</give_info>
+						<next>15</next>
+                </phrase>
+				<phrase id="3">
+				        <dont_has_info>bandit_dlg_stop_2</dont_has_info>
+				        <precondition>mod.proverka_rifle_box</precondition>
+                        <text>• Инструменты для работы с винтовками</text>
+						<action>mod.give_rifle_box</action>
+						<give_info>has_rifle_box</give_info>
+						<give_info>bandit_dlg_stop_2</give_info>
+						<next>15</next>
+                </phrase>
+				<phrase id="4">
+				        <dont_has_info>bandit_dlg_stop_3</dont_has_info>
+				        <precondition>mod.proverka_smg_box</precondition>
+                        <text>• Инструменты для работы с ПП</text>
+						<action>mod.give_smg_box</action>
+						<give_info>has_smg_box</give_info>
+						<give_info>bandit_dlg_stop_3</give_info>
+						<next>15</next>
+                </phrase>
+				<phrase id="15">
+                        <text>reward_instruments</text>
+                        <action>mod.reward</action>
+                </phrase>
+				<phrase id="16">
+                        <text>stop_instruments</text>
+                </phrase>
+        </phrase_list>
+</dialog>
+
+<dialog id="instrumenti_dolg">
+        <phrase_list>
+                <phrase id="0">
+                        <text>choose_instruments</text>
+                        <next>1</next>
+                </phrase>
+                <phrase id="1">
+                        <text>preview_instruments</text>
+						<next>2</next>
+						<next>3</next>
+						<next>4</next>
+						<next>16</next>
+                </phrase>
+				<phrase id="2">
+				        <dont_has_info>duty_dlg_stop_1</dont_has_info>
+				        <precondition>mod.proverka_pistol_box</precondition>
+                        <text>choose_pistol_box</text>
+						<action>mod.give_pistol_box</action>
+						<give_info>has_pistol_box</give_info>
+						<give_info>duty_dlg_stop_1</give_info>
+						<next>15</next>
+                </phrase>
+				<phrase id="3">
+				        <dont_has_info>duty_dlg_stop_2</dont_has_info>
+				        <precondition>mod.proverka_rifle_box</precondition>
+                        <text>• Инструменты для работы с винтовками</text>
+						<action>mod.give_rifle_box</action>
+						<give_info>has_rifle_box</give_info>
+						<give_info>duty_dlg_stop_2</give_info>
+						<next>15</next>
+                </phrase>
+				<phrase id="4">
+				        <dont_has_info>duty_dlg_stop_3</dont_has_info>
+				        <precondition>mod.proverka_smg_box</precondition>
+                        <text>• Инструменты для работы с ПП</text>
+						<action>mod.give_smg_box</action>
+						<give_info>has_smg_box</give_info>
+						<give_info>duty_dlg_stop_3</give_info>
+						<next>15</next>
+                </phrase>
+				<phrase id="15">
+                        <text>reward_instruments</text>
+                        <action>mod.reward</action>
+                </phrase>
+				<phrase id="16">
+                        <text>stop_instruments</text>
+                </phrase>
+        </phrase_list>
+</dialog>
+
+<dialog id="instrumenti_svoboda">
+        <phrase_list>
+                <phrase id="0">
+                        <text>choose_instruments</text>
+                        <next>1</next>
+                </phrase>
+                <phrase id="1">
+                        <text>preview_instruments</text>
+						<next>2</next>
+						<next>3</next>
+						<next>4</next>
+						<next>16</next>
+                </phrase>
+				<phrase id="2">
+				        <dont_has_info>freedom_dlg_stop_1</dont_has_info>
+				        <precondition>mod.proverka_pistol_box</precondition>
+                        <text>choose_pistol_box</text>
+						<action>mod.give_pistol_box</action>
+						<give_info>has_pistol_box</give_info>
+						<give_info>freedom_dlg_stop_1</give_info>
+						<next>15</next>
+                </phrase>
+				<phrase id="3">
+				        <dont_has_info>freedom_dlg_stop_2</dont_has_info>
+				        <precondition>mod.proverka_rifle_box</precondition>
+                        <text>• Инструменты для работы с винтовками</text>
+						<action>mod.give_rifle_box</action>
+						<give_info>has_rifle_box</give_info>
+						<give_info>freedom_dlg_stop_2</give_info>
+						<next>15</next>
+                </phrase>
+				<phrase id="4">
+				        <dont_has_info>freedom_dlg_stop_3</dont_has_info>
+				        <precondition>mod.proverka_smg_box</precondition>
+                        <text>• Инструменты для работы с ПП</text>
+						<action>mod.give_smg_box</action>
+						<give_info>has_smg_box</give_info>
+						<give_info>freedom_dlg_stop_3</give_info>
+						<next>15</next>
+                </phrase>
+				<phrase id="15">
+                        <text>reward_instruments</text>
+                        <action>mod.reward</action>
+                </phrase>
+				<phrase id="16">
+                        <text>stop_instruments</text>
+                </phrase>
+        </phrase_list>
+</dialog>

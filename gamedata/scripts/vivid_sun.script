@@ -1,0 +1,11 @@
+local wthr
+
+function on_game_load()
+wthr = level.get_weather()
+level.set_weather("restore_sun",false) 
+game.start_tutorial("restore_sun")
+end
+
+function set_sun()
+level.set_weather(wthr)
+end

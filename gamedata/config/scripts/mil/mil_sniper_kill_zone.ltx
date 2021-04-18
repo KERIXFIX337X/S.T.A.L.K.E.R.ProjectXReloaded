@@ -1,0 +1,39 @@
+[logic]
+active = sr_idle1
+
+[sr_idle1]
+on_actor_inside = {-mil_sniper_dead} %=mil_actor_enemy_set% sr_idle2
+on_info = {+mil_sniper_get_job -mil_sniper_dead} sr_tip1
+on_info2 = {-mil_sniper_get_job +mil_sniper_dead} nil, {+mil_freedom_attack} nil
+
+[sr_idle2]
+on_actor_outside = %=mil_actor_enemy_reset% sr_idle1
+on_info = {+mil_sniper_dead} nil
+
+[sr_tip1]
+name = mil_sniper_to_player_warning
+type = tips
+on_actor_inside = sr_sound_act1 %=mil_actor_enemy_set%
+sender = dolg
+
+[sr_sound_act1]
+snd = characters_voice\scenario\military\pda\mil_pda_3
+on_signal = sound_end | sr_idle3
+
+[sr_idle3]
+on_info = {+mil_sniper_dead -mil_dolg_before_explode} sr_idle4
+
+[sr_idle4]
+on_timer = 1000 | sr_tip2
+
+[sr_tip2]
+name = mil_after_sniper_dead
+sender = dolg
+showtime = 3000
+type = tips
+on_actor_inside = sr_sound_act2
+on_actor_outside = sr_sound_act2
+
+[sr_sound_act2]
+snd = characters_voice\scenario\military\pda\mil_pda_6
+on_signal = sound_end | nil

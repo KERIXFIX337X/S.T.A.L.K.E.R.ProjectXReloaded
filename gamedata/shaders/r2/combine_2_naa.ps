@@ -1,0 +1,139 @@
+#include "ShaderSettings.txt"
+#include "common.h"
+#include "mblur.h"
+struct v2p {
+float4 tc0:TEXCOORD0;
+float4 tc1:TEXCOORD1;
+float4 tc2:TEXCOORD2;
+float4 tc3:TEXCOORD3;
+float4 tc4:TEXCOORD4;
+float4 tc5:TEXCOORD5;
+float4 tc6:TEXCOORD6;
+};
+uniform sampler2D s_distort;
+uniform half4 e_barrier;
+uniform half4 e_weights;
+uniform half4 e_kernel;
+#include "blur.h"
+#define EPSDEPTH 0.001
+half4 main(v2p I):COLOR {
+#ifdef USE_DISTORT
+half depth=tex2D(s_position,I.tc0).z;
+half4 distort=tex2D(s_distort,I.tc0);
+half2 offset=(distort.xy-.5h)*def_distort;
+float2 center=I.tc0+offset;
+half depth_x=tex2D (s_position,center).z;
+if ((depth_x+EPSDEPTH)<depth) center=I.tc0;
+#else
+float2 center=I.tc0;
+#endif
+half3 img=tex2D(s_image,center);
+half4 bloom=tex2D(s_bloom,center);
+#ifdef AA
+float3 result;
+if (e_kernel.x>0.4) {
+half3 nc=tex2D(s_normal,I.tc0);
+half4 nd;
+nd.x=dot(nc,(half3)tex2D(s_normal,I.tc1));
+nd.y=dot(nc,(half3)tex2D(s_normal,I.tc2));
+nd.z=dot(nc,(half3)tex2D(s_normal,I.tc3));
+nd.w=dot(nc,(half3)tex2D(s_normal,I.tc4));
+nd-=AA_BARRIER_X;
+nd=step(0,nd);
+half ne=saturate(dot(nd,AA_WEIGHTS_X));
+float4 tc5r=I.tc5.wzyx;
+float4 tc6r=I.tc6.wzyx;
+half4 dc=tex2D(s_position,I.tc0);
+half4 dd;
+dd.x=(half)tex2D(s_position,I.tc1).z+(half)tex2D(s_position,I.tc2).z;
+dd.y=(half)tex2D(s_position,I.tc3).z+(half)tex2D(s_position,I.tc4).z;
+dd.z=(half)tex2D(s_position,I.tc5).z+(half)tex2D(s_position,tc5r).z;
+dd.w=(half)tex2D(s_position,I.tc6).z+(half)tex2D(s_position,tc6r).z;
+dd=abs(2*dc.z-dd)-AA_BARRIER_Y;
+dd=step(dd,0);
+half de=saturate(dot(dd,AA_WEIGHTS_Y));
+half w=(1-de*ne)*AA_KERNEL;
+#ifdef USE_DISTORT
+half4 distort2=tex2D(s_distort,I.tc0);
+half2 doffs=(distort2.xy-.5h)*def_distort;
+center=I.tc0+doffs;
+#else
+center=I.tc0;
+#endif
+float2 offset2=center*(1-w);
+half4 s0=tex2D(s_image,offset2+I.tc1*w);
+half4 s1=tex2D(s_image,offset2+I.tc2*w);
+half4 s2=tex2D(s_image,offset2+I.tc3*w);
+half4 s3=tex2D(s_image,offset2+I.tc4*w);
+result=(s0+s1+s2+s3)/4.h;
+}
+else result=img.rgb;
+#else
+float3 result=img.rgb;
+#endif
+#ifdef IMPROVED_MBLUR
+float z=tex2D(s_position,I.tc0).z;
+if (z>START_DIST && z<FINAL_DIST) {img=mblur(center,tex2D(s_position,I.tc0),result);}
+else { img=result;}
+#else
+img=mblur(center,tex2D(s_position,I.tc0),result);
+#endif
+#ifdef USE_DISTORT
+half3 blurred=bloom*def_hdr;
+img=lerp(img,blurred,distort.z);
+#endif
+float2 cent=I.tc0;
+float dep=tex2D(s_position,cent).z;
+float fov=e_weights.y*1000;
+float mycof=MAXCOF;
+float myMINDIST=MINDIST;
+float myMAXDIST=MAXDIST;
+float myMAXNEAR=MAXNEAR;
+float myMINNEAR=MINNEAR;
+float targetDist=tex2D(s_position,float2(0.500001f,0.500001f)).z;
+if (targetDist<=myMAXNEAR) myMAXNEAR=targetDist;
+#ifdef DDOF
+if (targetDist<MAXDIST && targetDist>DDOF_MINDIST) {
+mycof=DDOF_MAXCOF;
+myMINDIST=targetDist+DDOF_MINDIST_ADD;	
+float maxFactor=(targetDist<DDOF_MAXDIST)?1:(targetDist/DDOF_MAXDIST);
+myMAXDIST=myMINDIST*DDOF_MAXDIST_FACTOR*maxFactor;
+}
+#endif
+if (dep<myMAXNEAR && dep>myMINNEAR) {
+dep=(1-(dep-myMINNEAR)/(myMAXNEAR-myMINNEAR))*myMAXDIST;
+mycof=MAXCOF_NEAR;
+}
+float algorithms=(e_kernel.x-0.3)*10/4.h;
+#ifdef DOF_CLASSIC
+#endif
+#ifdef DOF_GAUSSIAN
+#endif
+float3 sum=tex2D(s_image,cent).rgb;
+float contrib=1.h;
+float blur=pow(saturate((dep-myMINDIST)/(myMAXDIST-myMINDIST)),2);
+#ifdef CONTRAST_FILTER
+float3 highcontrast=img.xyz*img.xyz;
+img.xyz=lerp(img.xyz,highcontrast,CONTRAST_FILTER_COEF);
+#endif
+#ifdef DOF_CLASSIC
+float dof_classic_weight=(1-algorithms);
+float samples=DOF_QUALITY*DOF_OVERSAMPLING;
+sum=classicblur(cent,sum,mycof*blur*dof_classic_weight,samples);
+contrib+=samples;
+#endif
+#ifdef DOF_GAUSSIAN
+float dof_gaussian_weight=algorithms*DOF_CORRECTION;//MAXCOF correction
+int q=DOF_QUALITY;
+for (int i=0; i<q; i++) {
+sum+=simpleblur(I,mycof*blur*dof_gaussian_weight*(0.1+i/q));
+contrib++;
+}
+#endif
+#ifdef DEPTH_OF_FIELD
+img+=(sum/contrib);
+return combine_bloom(img,bloom)-tex2D(s_image,I.tc0);
+#else
+return combine_bloom(img,bloom);
+#endif 
+}

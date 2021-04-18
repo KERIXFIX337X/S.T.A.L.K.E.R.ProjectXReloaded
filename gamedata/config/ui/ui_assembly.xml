@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="windows-1251" ?>
+<main>
+	<background x="0" y="0" width="1024" height="768" stretch="1">
+		<texture>intro\intro_back</texture>
+	</background>
+	<assemb_window x="3" y="3" width="1018" height="762" stretch="1">
+		<texture x="0" y="0" width="1024" height="768">ui\ui_assembly</texture>
+	</assemb_window>
+	<caption x="28" y="16" width="400" height="33">
+		<text font="graffiti32" a="255" r="224" g="77" b="51">Сборка предметов</text>
+	</caption>
+	<comes_short x="520" y="218" width="440" height="40" complex_mode="1">
+		<text font="letterica18" align="c" />
+	</comes_short>
+	<list_caption x="557" y="476" width="250" height="24">
+		<text font="graffiti22" a="255" r="240" g="165" b="25">Информация по сборке:</text>
+	</list_caption>
+	<inv_caption x="50" y="93" width="250" height="24">
+		<text font="graffiti22" a="255" r="240" g="165" b="25">Детали:</text>
+	</inv_caption>
+	<wpn_caption x="488" y="302" width="140" height="60" complex_mode="1">
+		<text font="graffiti22" a="255" r="250" g="255" b="181">Собранный предмет:</text>
+	</wpn_caption>
+	<btn_assembly x="853" y="260" width="117" height="29">
+		<texture>ui_button_ordinary</texture>
+		<text font="graffiti19" a="255" r="0" g="200" b="0">Собрать</text>
+	</btn_assembly>
+	<btn_quit x="845" y="715" width="157" height="48">
+		<texture>ui_button_main02</texture>
+		<text font="graffiti19" a="255" r="240" g="165" b="25">Выход</text>
+	</btn_quit>
+	<frame_details x="49" y="125" width="380" height="580">
+		<texture>ui_tablist_textbox</texture>
+	</frame_details>
+	<frame_weapon x="652" y="298" width="320" height="170">
+		<texture>ui_tablist_textbox</texture>
+	</frame_weapon>
+	<frame_list x="555" y="505" width="420" height="193">
+		<texture>ui_tablist_textbox</texture>
+	</frame_list>
+	<list x="560" y="510" width="410" height="180" item_height="20">
+		<font font="letterica16" r="216" g="186" b="140" />
+	</list>
+</main>

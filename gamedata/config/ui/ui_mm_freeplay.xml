@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="windows-1251" ?>
+
+<window>
+	<background_st x="0" y="0" width="1024" height="768">
+		<texture x="0" y="0" width="1024" height="768">ui\ui_static_mm_back_04x2</texture> 
+	</background_st>
+		
+	<form x="0" y="40" width="1020" height="702">
+		<!-- texture>ui_menu_options_dlg</texture -->
+		<texture>ui\fs_options_bg</texture>
+		<caption x="65" y="10" width="500" height="25" complex_mode="0">
+			<text font="graffiti22" r="184" g="168" b="131"></text>
+		</caption>
+		
+		<!-- controls -->
+		<static_player_name x="123" y="133" width="240" height="24">
+			<text font="letterica16" r="129" g="123" b="113" complex_mode="1">mm_mp_player_name</text>
+		</static_player_name>
+		<edit_player_name x="123" y="150" width="240" height="24" max_symb_count="17">
+			<options_item entry="mm_net_player_name" group="mm_mp_client"/>
+			<text font="letterica18" r="235" g="219" b="185"/>
+			<texture>ui_linetextSmall_e</texture>
+		</edit_player_name>
+		
+		<cap_difficulty x="600" y="133" width="240" height="21">
+			<text font="letterica16" r="129" g="123" b="113">ui_mm_difficulty</text>
+		</cap_difficulty>
+		
+		<spin_difficulty x="600" y="150" width="240" height="21" always_show_scroll="1">
+			<options_item entry="g_game_difficulty" group="mm_opt_gameplay"/>
+			<text_color>
+				<e r="216" g="186" b="140"/>
+				<d r="227" g="199" b="178"/>
+			</text_color>
+			<list_font_s r="240" g="217" b="182"/>
+			<list_font	 r="216" g="186" b="140" font="letterica16"/>
+		</spin_difficulty>
+		
+		<cap_prof_list x="123" y="336" width="240" height="21">
+			<text font="letterica16" r="129" g="123" b="113">ui_st_profile</text>
+		</cap_prof_list>
+		<prof_list x="123" y="351" width="240" height="201" item_height="18">
+			<texture>ui_tablist_textbox</texture>
+			<font font="letterica16" r="216" g="186" b="140" /> 
+		</prof_list>
+		
+		<!-- profile description -->
+		<picture x="380" y="130" width="198" height="447" stretch="1">
+			<!-- texture>ui\ui_noise</texture -->
+			<texture>ui_npc_u_stalker_militari_antigas_1</texture> 
+		</picture>
+		<picture_over	x="390" y="35" width="238" height="150" stretch="1">
+		</picture_over>
+		
+		<cap_prof_desc x="600" y="325" width="204" height="21">
+			<text font="letterica16" r="129" g="123" b="113">ui_st_profile</text>
+		</cap_prof_desc>
+		<prof_description x="600" y="351" width="280" height="233" item_height="18" complex_mode="0">
+			<text font="letterica16" r="129" g="123" b="113"></text>
+			<font font="letterica16" r="216" g="186" b="140" /> 
+		</prof_description>
+		
+		<!-- buttons -->
+		<btn_start x="360" y="580" width="117" height="29">
+			<texture_e>ui_button_ordinary_e</texture_e>
+			<texture_t>ui_button_ordinary_t</texture_t>
+			<texture_h>ui_button_ordinary_h</texture_h>
+			<text r="235" g="219" b="185">ui_inv_ok</text>
+		</btn_start>
+		
+		<btn_cancel x="470" y="580" width="117" height="29">
+			<texture_e>ui_button_ordinary_e</texture_e>
+			<texture_t>ui_button_ordinary_t</texture_t>
+			<texture_h>ui_button_ordinary_h</texture_h>
+			<text r="235" g="219" b="185">ui_inv_cancel</text>
+		</btn_cancel>
+		
+	</form>
+	<static_version x="15" y="740" width="100" height="30">
+		<text align="l" font="graffiti19" r="135" g="123" b="116" complex_mode="0" /> 
+	</static_version>
+</window>

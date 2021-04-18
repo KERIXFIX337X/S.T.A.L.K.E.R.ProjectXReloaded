@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding="windows-1251"?>
+
+<game_information_portions>
+	<info_portion id="technic_dlg_stop_1"></info_portion>
+	<info_portion id="technic_dlg_stop_2"></info_portion>
+	<info_portion id="technic_dlg_stop_3"></info_portion>
+	<info_portion id="has_pistol_box"></info_portion>
+	<info_portion id="has_rifle_box"></info_portion>
+	<info_portion id="has_smg_box"></info_portion>
+	
+	<!-- merc_engineer_stop_dialog -->
+	<info_portion id="merc_dlg_stop_1"></info_portion>
+	<info_portion id="merc_dlg_stop_2"></info_portion>
+	<info_portion id="merc_dlg_stop_3"></info_portion>
+	
+	<!-- bandit_engineer_stop_dialog -->
+	<info_portion id="bandit_dlg_stop_1"></info_portion>
+	<info_portion id="bandit_dlg_stop_2"></info_portion>
+	<info_portion id="bandit_dlg_stop_3"></info_portion>
+	
+	<!-- duty_engineer_stop_dialog -->
+	<info_portion id="duty_dlg_stop_1"></info_portion>
+	<info_portion id="duty_dlg_stop_2"></info_portion>
+	<info_portion id="duty_dlg_stop_3"></info_portion>
+	
+	<!-- freedom_engineer_stop_dialog -->
+	<info_portion id="freedom_dlg_stop_1"></info_portion>
+	<info_portion id="freedom_dlg_stop_2"></info_portion>
+	<info_portion id="freedom_dlg_stop_3"></info_portion>
+	
+	<!-- sell_info_for_instruments	-->
+	<info_portion id="info_instruments_dlg_stop"></info_portion>
+	<info_portion id="info_locate_instruments">
+        <article>locate_instruments</article>
+    </info_portion>
+</game_information_portions>

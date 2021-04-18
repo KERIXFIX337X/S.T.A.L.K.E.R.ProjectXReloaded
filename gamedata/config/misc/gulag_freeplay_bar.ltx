@@ -1,0 +1,97 @@
+;*****************************************************************
+; Bar visitors
+;*****************************************************************
+[danger@bar_100r]
+ignore_distance = 40
+
+[meet@bar_100r]
+use = true
+use_wpn = true
+meet_talk_enabled = true
+meet_state = ward
+
+; tables count from door along wall
+; places count counterclockwise around table
+; alike:
+;    1
+;  2   4
+;    3
+; p.s some tables have only one place some only two places .. such counts as 1 and 1,2 respectively skipping absent places
+
+; stol 1 mesto 1 -- ex hunter
+[logic@bar_100r_hunter]
+active = walker@bar_100r_hunter_walk
+
+[walker@bar_100r_hunter_walk]
+path_walk = hunter_walk
+path_look = hunter_look_1
+soundgroup = bar_visitors1
+meet = meet@bar_100r
+danger = danger@bar_100r
+
+;stol 1 mesto 2
+[logic@bar_100r_table_1_place_2]
+active = walker@bar_100r_table_1_place_2_walk
+
+[walker@bar_100r_table_1_place_2_walk]
+path_walk = table_1_place_2_walk
+path_look = table_1_place_2_look
+soundgroup = bar_visitors1
+meet = meet@bar_100r
+danger = danger@bar_100r
+
+
+;stol 2 -- ex bandit stalker
+[logic@bar_100r_table_2]
+active = walker@bar_100r_table_2_walk
+
+[walker@bar_100r_table_2_walk]
+path_walk = table_2_walk
+path_look = table_2_look
+soundgroup = bar_visitors1
+meet = meet@bar_100r
+danger = danger@bar_100r
+
+; stol 3 mesto 1 -- ex drunk_dolg
+[logic@bar_100r_drunk_dolg]
+active = walker@bar_100r_drunk_dolg_walk
+
+[walker@bar_100r_drunk_dolg_walk]
+path_walk = drunk_dolg_walk
+path_look = drunk_dolg_look
+soundgroup = bar_visitors1
+meet = meet@bar_100r
+danger = danger@bar_100r
+
+;stol 5 mesto 1 -- ex lisiy
+[logic@bar_100r_table_5_place_1]
+active = walker@bar_100r_table_5_place_1_walk
+
+[walker@bar_100r_table_5_place_1_walk]
+path_walk = table_5_place_1_walk
+path_look = table_5_place_1_look
+soundgroup = bar_visitors1
+meet = meet@bar_100r
+danger = danger@bar_100r
+
+;stol 5 mesto 2
+[logic@bar_100r_table_5_place_2]
+active = walker@bar_100r_table_5_place_2_walk
+
+[walker@bar_100r_table_5_place_2_walk]
+path_walk = table_5_place_2_walk
+path_look = table_5_place_2_look
+soundgroup = bar_visitors1
+meet = meet@bar_100r
+danger = danger@bar_100r
+
+;stol 6 mesto 1
+[logic@bar_100r_table_6_place_1]
+active = walker@bar_100r_table_6_place_1_walk
+
+[walker@bar_100r_table_6_place_1_walk]
+path_walk = table_6_place_1_walk
+path_look = table_6_place_1_look
+soundgroup = bar_visitors1
+meet = meet@bar_100r
+danger = danger@bar_100r

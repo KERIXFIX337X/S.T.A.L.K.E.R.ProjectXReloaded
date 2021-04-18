@@ -1,0 +1,431 @@
+-----------------------------------------------------------
+-- С использованием наработок $DreamMod v0.2 by Ab@dDon ---
+-----------------------------------------------------------
+
+-- (s)talker, (d)olg, (f)reedom, (e)colog, (b)andit, (h)unter
+local table_sleep_zone =
+  {
+    -- На чердаке в доме возле Лиса
+    {"l01_escape", "sb", "", 141.5, 3, 339.5}, 
+
+    -- Матрас в подвале волзле лагеря новичков
+    {"l01_escape", "m", "s", -210.73, -23.9, -122.30, 42632, 59}, 
+
+    -- Матрас в подвале волзле лагеря новичков
+    {"l01_escape", "m", "s", -210.34, -23.9, -125.75, 42632, 59}, 
+
+    -- Матрас в доме в лагере новичков
+    {"l01_escape", "m", "s", -223.6, -20.5, -168, 32807, 47}, 
+
+    -- Матрас в доме в лагере новичков
+    {"l01_escape", "m", "s", -222.6, -20.5, -161.07, 32807, 47}, 
+
+    -- Костёр возле группы Серого
+    {"l02_garbage", "sb", "s", -72, -2.5, 19},
+
+    -- Матрас в вагончике возле заставы долга
+    {"l02_garbage", "m", "d", 46.73, 0.56, 243.93, 218601, 359},
+
+    -- Костёр в ангаре возле вызода с Арены
+    {"l05_bar", "sb", "sd", 117.5, -0.2, 122.1},
+
+    -- Костёр на базе Долга рядом с Петренко
+    {"l05_bar", "sb", "sd", 203.56, -1.0, 88.24},
+
+    -- Спальник в доме возле бара(где сталкер бродит)
+    {"l05_bar", "sb", "sd", 110.28, -0.8, 67.27},
+
+    -- Костёр в Ангаре
+    {"l05_bar", "sb", "sd", 131.36, -1.0, 57.55},
+
+    -- Костёр в Ангаре
+    {"l05_bar", "sb", "sd", 102.56, -1.0, 95.04},
+
+    -- Костёр в Ангаре
+    {"l05_bar", "sb", "sd", 95.44, -1.0, 99.84},
+
+    -- Матрас в доме возле бара(где сталкер бродит)
+    {"l05_bar", "m", "sd", 118.05, -0.8, 66.27, 34211, 1252},
+
+    -- Матрас на базе Долга
+    {"l05_bar", "m", "d", 232.28, -5.9, 131.44, 59301, 1200},
+
+    -- Матрас на базе Долга
+    {"l05_bar", "m", "d", 232.08, -5.9, 135.36, 59301, 1200},
+
+    -- Матрас в Ангаре
+    {"l05_bar", "m", "sd", 95.65, -0.38, 86.86, 30979, 1223},
+
+    -- Матрас в контейнере
+    {"l05_bar", "m", "sd", 118.18, -0.85, 130.33, 33399, 1213},
+
+    -- Матрас в контейнере
+    {"l05_bar", "m", "sd", 115.13, -0.85, 130.44, 33399, 1213},
+    
+    -- Костёр возле группы сталкеров рядом с базой Свободы
+    {"l07_military", "sb", "s", -95.07, -21, 222.33},
+
+    -- Костёр возле группы сталкеров рядом с базой Свободы
+    {"l07_military", "sb", "s", -91.8, -21.5, 212.86},
+
+    -- Спальник на базе Свободы в казармах
+    {"l07_military", "sb", "f", 60.8, -9.5, 20.32},
+
+    -- Спальник на базе Свободы в казармах
+    {"l07_military", "sb", "f", 56.52, -9.5, 12.88},
+
+    -- Спальник на базе Свободы в казармах
+    {"l07_military", "sb", "f", 48.07, -9.5, 19.07},
+
+    -- Спальник на базе Свободы в казармах
+    {"l07_military", "sb", "f", 17.01, -9, 20.48},
+
+    -- Спальник на базе Свободы в казармах
+    {"l07_military", "sb", "f", 7.9, -9, 20.24},
+
+    -- Матрас на базе Свободы в казармах
+    {"l07_military", "m", "f", 14.07, -7.82, 13.1, 319840, 1582},
+
+    -- Матрас на базе Свободы в казармах
+    {"l07_military", "m", "f", 11.18, -7.82, 13.27, 317158, 1582},
+
+    -- Матрас в комнате напротив Скряги
+    {"l07_military", "m", "f", -25.39, -7.82, -26.74, 281271, 1593},
+
+    -- Комната в гостинице
+    {"l11_pripyat", "sb", "", 100.2, 3.50, 126},
+
+    -- Спальник перед Припятью
+    {"l10_radar", "sb", "fd", 392.54, -35.5, 155.36},
+
+    -- Матрас бункере ученых на Янтаре
+    {"l08_yantar", "m", "ed", 30.36, -11.98, -280.2, 54978, 1480},
+
+    -- Матрас бункере ученых на Янтаре
+    {"l08_yantar", "m", "ed", 27.68, -11.98, -280.2, 54978, 1480},
+
+    -- Тайник Стрелка
+    {"l03u_agr_underground", "sb", "", -71, -7, -71}
+    
+  }
+
+last_sleep_time = nil
+last_sleep_duration = nil
+
+mattress_id = {}
+mattress_count = 0
+mattress_processed = 0
+sleeping_bag_in_slot = false
+sleeping_bag_used = false
+actor_can_sleep_here = true
+
+local first_run = false
+local just_in_zone = true
+local max_wakefulness_time = 36 * 60 * 60 * 1000
+local last_ppe_time = nil
+local ppe_interval = 60 * 60 * 1000
+local left_scaling
+local last_health
+
+function sleep_1_hour()
+	sleep_manager.main (1)
+end
+
+function sleep_2_hours()
+	sleep_manager.main (2)
+end
+
+function sleep_3_hours()
+	sleep_manager.main (3)
+end
+
+function sleep_4_hours()
+	sleep_manager.main (4)
+end
+
+function sleep_5_hours()
+	sleep_manager.main (5)
+end
+
+function sleep_6_hours()
+	sleep_manager.main (6)
+end
+
+function sleep_7_hours()
+	sleep_manager.main (7)
+end
+
+function sleep_9_hours()
+	sleep_manager.main (9)
+end
+
+function main(scale)
+	local sleep_ltx = ini_file ("scripts\\actorsleep.ltx")
+	schemes["ar_sleep"] = "ar_sleep"
+	ar_sleep.set_scheme(db.actor, sleep_ltx, "ar_sleep", logic)
+	db.actor:stop_talk()
+	db.actor:hide_weapon()
+	level.disable_input()
+	sleep_manager.starter (scale)
+end
+
+function starter(scale)
+	offlined_objects = {}
+	--[[if db.storage ~= nil then
+		for obj_id, v in pairs(db.storage) do
+			local obj = level.object_by_id(obj_id)
+			if obj_id ~= 0 then
+				if _g.IsMonster(obj) or _g.IsStalker(obj) then
+					local sim = alife()
+					if sim ~= nil then
+						sim:set_switch_online (obj_id, false)
+						sim:set_switch_offline	(obj_id, true)
+						sim:set_interactive	 (obj_id, true)
+						table.insert(offlined_objects, obj_id)
+					end
+				end
+			end
+		end
+	end]]
+	  
+	sleep_manager.hp_corrector(1)
+	last_health = db.actor.health	
+	last_sleep_duration = 0
+	left_scaling = scale
+
+  game.start_tutorial("time_scaling")
+	level.add_pp_effector("teleport.ppe", 2006, false)
+	level.set_time_factor(1100)
+end
+
+-- Вызывается каждый час сна
+function stop_scaling()
+	left_scaling = left_scaling - 1
+
+	last_sleep_duration = last_sleep_duration + 60 * 60 * 1000
+	xr_logic.pstor_store(db.actor, "last_sleep_duration", last_sleep_duration)
+	
+	-- Пробуждаемся. если начинает уходить здоровье
+	if left_scaling > 0 and last_health <= db.actor.health  then
+		sleep_manager.hp_corrector(1)
+		last_health = db.actor.health
+
+	  game.start_tutorial("time_scaling")
+		level.add_pp_effector("teleport.ppe", 2006, false)
+	else
+		sleep_manager.dreamer()
+	end
+end
+
+
+function dreamer()
+	level.set_time_factor(system_ini():r_float("alife","time_factor"))
+	if sleep_manager.is_sleep_active() then
+		sleep_manager.onliner()
+		local dream = dream.sleep_video_name_callback()
+		xiani.xlog('going to see "' .. tostring(dream) .. '" dream')
+		if dream ~= "" then game.start_tutorial(dream)
+		else game.start_tutorial("without_dream") end
+	end
+end
+
+function stopper()
+	level.set_time_factor(system_ini():r_float("alife","time_factor"))
+	ar_sleep.disable_scheme()
+	if not db.actor:alive() then
+		sleep_manager.onliner()
+	else 
+		level.add_cam_effector("camera_effects\\dream.anm", 25, false, "")
+		level.add_pp_effector("yantar_underground_psi.ppe", 2007, false)
+		level.add_pp_effector("total_recall.ppe", 2008, false)
+		db.actor:restore_weapon()
+		local snd_obj = xr_sound.get_safe_sound_object([[characters_voice\human_01\stalker\states\breath\breath_2]])
+		snd_obj:play_no_feedback(db.actor, sound_object.s2d, 0, vector(), 15.0)
+		level.add_cam_effector("camera_effects\\hit_back_left.anm", 26, false, "")
+	end
+	level.enable_input()	
+	
+	sleeping_bag_used = true
+	
+	last_sleep_time = game.time()
+	xr_logic.pstor_store(db.actor, "last_sleep_time", last_sleep_time)
+end
+
+function onliner()
+	--[[for k, id in pairs(offlined_objects) do
+		local sim = alife()
+		if sim ~= nil then
+			sim:set_switch_online (id, true)
+			sim:set_switch_offline	(id, false)
+			sim:set_interactive	 (id, true)
+		end
+	end]]
+end
+
+function hp_corrector(fr)
+	if sleeping_bag_in_slot then 
+		db.actor.health = fr/6
+	else
+		db.actor.health = fr/12
+	end
+end
+
+function is_sleep_active()
+	if db.storage[db.actor:id()].active_scheme == "ar_sleep" then 
+		return true 
+	end
+	return false
+end
+
+function actor_in_sleep_zone(pos)
+	for i,z in pairs(table_sleep_zone) do
+		if z[1] == level.name() and actor_in_zone(z[4], z[5], z[6], 3, pos) then
+			-- changed by XiaNi - no need to check goodwill - sleep anywhere
+			-- actor_can_sleep_here = check_goodwill(z[3])
+			actor_can_sleep_here = true
+			return z[2]
+		end
+	end
+
+	return ""
+end
+
+function actor_in_zone(x, y, z, r, pos)
+	if (y <= pos.y and pos.y <= y + 2) and math.pow(x-pos.x,2)+math.pow(z-pos.z,2) <= math.pow(r,2) then
+		return true
+	else
+		return false
+	end
+end
+
+function check_goodwill(communities)
+	if (string.find(communities, "f") and relation_registry.community_goodwill("freedom", db.actor:id ()) < 0) or
+	   (string.find(communities, "d") and relation_registry.community_goodwill("dolg", db.actor:id ()) < 0) or
+	   (string.find(communities, "e") and relation_registry.community_goodwill("ecolog", db.actor:id ()) < 0) or
+	   (string.find(communities, "b") and relation_registry.community_goodwill("bandit", db.actor:id ()) < 0) or
+	   (string.find(communities, "h") and relation_registry.community_goodwill("hunter", db.actor:id ()) < 0) or
+	   (string.find(communities, "s") and relation_registry.community_goodwill("stalker", db.actor:id ()) < 0) then
+		return false
+	else
+		return true
+	end
+end
+
+function update(delta)
+	if (db.actor == nil) or (not db.actor:alive()) then return end
+
+	local actor = db.actor
+	local pos = actor:position()
+	local obj = actor:item_in_slot(1)
+	local zn = actor_in_sleep_zone(pos)
+
+	if (not first_run) then start_sleep() end
+
+	-- ГГ долго не спал, запускаем пост-эффект
+	if game.time() > last_sleep_time + max_wakefulness_time then
+		if last_ppe_time == nil or game.time() > last_ppe_time + ppe_interval then
+			last_ppe_time = game.time()
+			xr_logic.pstor_store(db.actor, "last_ppe_time", last_ppe_time)
+
+			local snd_obj = xr_sound.get_safe_sound_object([[actor\sleep]])
+			snd_obj:play_no_feedback(db.actor, sound_object.s2d, 0, vector(), 15.0)
+
+			--level.add_cam_effector("camera_effects\\dream.anm", 25, false, "")
+			level.add_pp_effector("alcohol.ppe", 3000, false)
+		end
+	end
+
+	if (obj ~= nil) and (obj:section() == "sleeping_bag") then
+		sleeping_bag_in_slot = true
+	else
+		sleeping_bag_in_slot = false
+		sleeping_bag_used = false
+	end
+	
+	if zn == "m" then
+		local hud = get_hud()
+		local custom_static = hud:GetCustomStatic("hud_mattress")
+		if custom_static == nil then
+			hud:AddCustomStatic("hud_mattress", true)
+		end
+		if (obj ~= nil) and (obj:section() == "sleeping_bag") then
+			sleeping_bag_in_slot = true
+		else
+			sleeping_bag_in_slot = false
+		end
+	elseif (not sleeping_bag_in_slot) then
+		local hud = get_hud()
+
+		local custom_static = hud:GetCustomStatic("hud_sleeping_bag")
+		if custom_static ~= nil then
+			hud:RemoveCustomStatic("hud_sleeping_bag")
+		end
+
+		custom_static = hud:GetCustomStatic("hud_mattress")
+		if custom_static ~= nil then
+			hud:RemoveCustomStatic("hud_mattress")
+		end
+
+		sleeping_bag_in_slot = false
+	end
+	
+	if (sleeping_bag_in_slot) and (not sleeping_bag_used) then
+		sleeping_bag_used = true
+		local spwn = ui_sleep.sleep(hud)
+		level.start_stop_menu(spwn,true)
+	end
+ 
+end
+
+-- Update матраса(вешаем колбек если ещё не повесили)
+function mattress_update(obj)
+	if mattress_count ~= mattress_processed then
+		for kk,vv in pairs(mattress_id) do
+			if vv[1] == obj:id() and vv[2] == false then
+				vv[2] = true
+				obj:set_callback(callback.use_object, this.mattress_use)
+				obj:set_tip_text("tip_sleep")
+				mattress_processed = mattress_processed + 1
+			end
+		end
+	end
+end
+
+-- отлавливаем спавн матрасов и запоминаем их id
+function mattress_spawn(obj)
+	mattress_count = mattress_count + 1
+	local m = {obj:id(), false}
+	table.insert(mattress_id, m)
+end
+
+-- Юзаем матрас
+function mattress_use(obj, who)
+	sleeping_bag_in_slot = false
+
+	local hud = get_hud()
+	local spwn = ui_sleep.sleep(hud)
+	level.start_stop_menu(spwn,true)
+end
+
+-- Первый запуск
+function start_sleep()
+	first_run = true
+
+	last_sleep_time = xr_logic.pstor_retrieve(db.actor, "last_sleep_time", nil)
+	last_sleep_duration = xr_logic.pstor_retrieve(db.actor, "last_sleep_duration", nil)
+	last_ppe_time = xr_logic.pstor_retrieve(db.actor, "last_ppe_time", nil)
+
+	if xr_logic.pstor_retrieve(db.actor, "sleep_start_game", false) then return end
+	xr_logic.pstor_store(db.actor, "sleep_start_game", true)
+
+	-- последнее время сна устанавливаем равное началу игры
+	last_sleep_time = game.time()
+	xr_logic.pstor_store(db.actor, "last_sleep_time", last_sleep_time)
+
+	-- спавн матрасов	
+	for kk,vv in pairs(table_sleep_zone) do
+		if vv[2] == "m" then
+			local obj = alife():create("mattress", vector():set(vv[4], vv[5]+1, vv[6]), vv[7], vv[8])
+		end
+	end
+end

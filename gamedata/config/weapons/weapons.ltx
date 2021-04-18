@@ -1,0 +1,118 @@
+#include "delayed_action_fuse.ltx"
+#include "w_ak74.ltx"
+#include "w_akm.ltx"
+#include "w_ak74u.ltx"
+#include "w_fn2000.ltx"
+#include "w_rpg7.ltx"
+#include "w_knife.ltx"
+#include "w_bolt.ltx"
+#include "w_f1.ltx"
+#include "w_rgd5.ltx"
+#include "w_rg6.ltx"
+
+#include "w_vintorez.ltx"
+#include "w_lr300.ltx"
+#include "w_mp5.ltx"
+#include "w_val.ltx"
+
+#include "w_gauss.ltx"
+#include "w_groza.ltx"
+#include "w_hpsa.ltx"
+#include "w_pm.ltx"
+#include "w_pb.ltx"
+#include "w_walther.ltx"
+#include "w_ups.ltx"
+#include "w_fort.ltx"
+#include "w_toz34.ltx"
+#include "w_svd.ltx"
+#include "w_svu.ltx"
+#include "w_binoc.ltx"
+#include "w_l85.ltx"
+#include "w_bm16.ltx"
+#include "w_spas12.ltx"
+#include "w_wincheaster1300.ltx"
+#include "w_mounted.ltx"
+#include "w_colt1911.ltx"
+#include "w_beretta.ltx"
+#include "w_desert_eagle.ltx"
+#include "w_sig220.ltx"
+#include "w_sig550.ltx"
+#include "w_abakan.ltx"
+#include "w_g36.ltx"
+#include "w_toz106.ltx"
+#include "w_mosina.ltx"
+
+[bullet_manager]
+tracer_width					= 0.08
+tracer_length_max				= 10.0	;24.0 ;14.0	
+tracer_length_min				= 2		;0.2
+
+;расстояние после которого учитывается hit_probabilty полностью
+hit_probability_max_dist		= 10;
+
+gravity_const					= 9.81
+;сопротивление воздуха, процент, который отнимается от скорости полета пули
+air_resistance_k				= 0.4;0.3
+
+;размер шага времени (в милисекундах), по которому проигрываются 
+time_step						= 33
+;минимальная скорость (м/с), на которой пуля еще считается и показывается
+min_bullet_speed				= 3.0
+;cколько процентов энергии потеряет пуля при столкновении с материалом (при падении под прямым углом)
+collision_energy_min			= 0.80 ;0.75; 0.90
+;сколько процентов энергии останется у пули при любом столкновении
+collision_energy_max			= 0.5 ;0.7;0.50
+
+whine_sounds					= weapons\whine_1, weapons\whine_2, weapons\whine_3, weapons\whine_4, weapons\whine01, weapons\whine02
+explode_particles				= explosions\expl_bullet,explosions\expl_bullet_00,explosions\expl_bullet_01
+
+
+[tracers_color_table]	;color_table
+color_0 = 1.0, 0.54, 0.0	; yellow
+color_1 = 1.0, 1.0, 1.0	; white
+color_2 = 1.0, 0.1, 0.0	; red
+color_3 = 0.3, 1.0, 0.3	; green
+color_4 = 0.0, 0.0, 0.1 ; blue
+
+
+#include "addons\launchers\gp34.ltx"
+#include "addons\launchers\gp25.ltx"
+#include "addons\launchers\m203.ltx"
+
+#include "addons\silencers\sil_default.ltx"
+#include "addons\silencers\sil_atg.ltx"
+
+#include "addons\scopes\pso.ltx"
+#include "addons\scopes\susat.ltx"
+
+#include "ammo\base.ltx"
+#include "ammo\9x18.ltx"
+#include "ammo\9x19.ltx"
+#include "ammo\.45.ltx"
+#include "ammo\.50.ltx"
+#include "ammo\5.7x28.ltx"
+#include "ammo\12x70.ltx"
+#include "ammo\12x76.ltx"
+#include "ammo\20x70.ltx"
+#include "ammo\5.45x39.ltx"
+#include "ammo\5.56x45.ltx"
+#include "ammo\7.62x39.ltx"
+#include "ammo\7.62x54.ltx"
+#include "ammo\9x39.ltx"
+#include "ammo\gauss.ltx"
+
+#include "ammo\grenades\vog25.ltx"
+#include "ammo\grenades\vog25p.ltx"
+#include "ammo\grenades\og7b.ltx"
+#include "ammo\grenades\m209.ltx"
+
+#include "items\explosive_items\barrel.ltx"
+#include "items\explosive_items\barrel_low.ltx"
+#include "items\explosive_items\dinamit.ltx"
+#include "items\explosive_items\fuelcan.ltx"
+#include "items\explosive_items\green_barrel.ltx"
+#include "items\explosive_items\kanistra.ltx"
+
+#include "items\fake\fake_missile.ltx"
+#include "items\fake\fake_missile1.ltx"
+#include "items\fake\fake_missile2.ltx"

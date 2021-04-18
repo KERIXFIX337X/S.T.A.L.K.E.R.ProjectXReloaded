@@ -1,0 +1,48 @@
+function spawn_monster ()
+alife():create("m_controller_killer",vector():set(-367.65,-14.106,395.769),1682,1848) end
+
+function proverka_killer(actor,npc)
+   return has_alife_info("actor_killer")
+end
+
+function proverka_deadly(actor,npc)
+   return has_alife_info("controller_killer_dead")
+end
+
+function ammy(first_speaker, second_speaker)
+	dialogs.relocate_item_section(second_speaker, "medkit_army", "in")
+	dialogs.relocate_item_section(second_speaker, "grenade_f1", "in")
+end
+
+function proverka_vstrecha(actor,npc)
+   return has_alife_info("get_dialog_yantar_1")
+end
+
+function complete_bp(actor,npc)
+   return has_alife_info("where_blockpost_killer")
+end
+
+function proverka_otkaz(actor,npc)
+   return has_alife_info("raid_atp_close")
+end
+
+local obj = alife():story_object( 9912 )
+local obj_id = obj.id
+function add_spot_on_map(obj_id,type,text)
+    if obj_id then
+        if not text then text = "no_text" end
+        level.map_add_object_spot_ser(obj_id, type, text)
+    end
+end
+
+function show(obj_id,type,text)
+	army.add_spot_on_map(obj.id,"technic_location","Техник")
+end
+
+function spawn_buldog ()
+alife():create("bandit_buldog",vector():set(112.52,-2.842,-2.332),414726,117) end
+
+local text = "killer_engineer_message"
+function show_msg()
+    news_manager.send_tip(db.actor, text, 0, "mil_killer_engineer", 20000)
+end

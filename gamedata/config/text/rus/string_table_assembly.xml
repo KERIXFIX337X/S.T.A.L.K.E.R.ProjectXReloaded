@@ -1,0 +1,398 @@
+	<string id="assembly">
+		<text>Сборка оружия</text>
+	</string>
+	<string id="enc_assembly_wpn-knife">
+		<text>%c[255,0,255,0]Нож\n%c[default]Необходимые детали:\n%c[255,0,255,255]Металлическая пластина:%c[255,0,200,0] x1,\n%c[255,0,255,255]Лезвие:%c[255,0,200,0] x1</text>
+	</string>
+	<string id="enc_assembly_wpn-pm">
+		<text>%c[255,0,255,0]ПМ\n%c[default]Необходимые детали:\n%c[255,0,255,255]Корпус:%c[255,0,200,0] x1,\n%c[255,0,255,255]Курок:%c[255,0,200,0] x1,\n%c[255,0,255,255]Деталь:%c[255,0,200,0] x5,\n%c[255,0,255,255]Масло:%c[255,0,200,0] x1</text>
+	</string>
+	<string id="enc_assembly_wpn-pb">
+		<text>%c[255,0,255,0]ПБ\n%c[default]Необходимые детали:\n%c[255,0,255,255]Корпус:%c[255,0,200,0] x1,\n%c[255,0,255,255]Курок:%c[255,0,200,0] x1,\n%c[255,0,255,255]Деталь:%c[255,0,200,0] x4,\n%c[255,0,255,255]Запчасть:%c[255,0,200,0] x2</text>
+	</string>
+	<string id="enc_assembly_wpn-fort">
+		<text>%c[255,0,255,0]Форт-12\n%c[default]Необходимые детали:\n%c[255,0,255,255]Корпус:%c[255,0,200,0] x1,\n%c[255,0,255,255]Курок:%c[255,0,200,0] x1,\n%c[255,0,255,255]Деталь:%c[255,0,200,0] x8,\n%c[255,0,255,255]Масло:%c[255,0,200,0] x2</text>
+	</string>
+	<string id="enc_assembly_wpn-walther">
+		<text>%c[255,0,255,0]Walther P99\n%c[default]Необходимые детали:\n%c[255,0,255,255]Корпус:%c[255,0,200,0] x1,\n%c[255,0,255,255]Курок:%c[255,0,200,0] x1,\n%c[255,0,255,255]Деталь:%c[255,0,200,0] x5,\n%c[255,0,255,255]Запчасть:%c[255,0,200,0] x6</text>
+	</string>
+	<string id="enc_assembly_wpn-colt1911">
+		<text>%c[255,0,255,0]Colt M1911\n%c[default]Необходимые детали:\n%c[255,0,255,255]Корпус:%c[255,0,200,0] x1,\n%c[255,0,255,255]Курок:%c[255,0,200,0] x1,\n%c[255,0,255,255]Деталь:%c[255,0,200,0] x13,\n%c[255,0,255,255]Запчасть:%c[255,0,200,0] x7</text>
+	</string>
+	<string id="enc_assembly_wpn-usp">
+		<text>%c[255,0,255,0]HK USP .45\n%c[default]Необходимые детали:\n%c[255,0,255,255]Корпус:%c[255,0,200,0] x1,\n%c[255,0,255,255]Курок:%c[255,0,200,0] x1,\n%c[255,0,255,255]Деталь:%c[255,0,200,0] x11,\n%c[255,0,255,255]Масло:%c[255,0,200,0] x2</text>
+	</string>
+	<string id="enc_assembly_wpn-desert_eagle">
+		<text>%c[255,0,255,0]Desert Eagle (Mark VII)\n%c[default]Необходимые детали:\n%c[255,0,255,255]Корпус:%c[255,0,200,0] x1,\n%c[255,0,255,255]Курок:%c[255,0,200,0] x1,\n%c[255,0,255,255]Деталь:%c[255,0,200,0] x18,\n%c[255,0,255,255]Запчасть:%c[255,0,200,0] x8</text>
+	</string>
+	<string id="enc_assembly_wpn-sig220">
+		<text>%c[255,0,255,0]SIG-Sauer P220\n%c[default]Необходимые детали:\n%c[255,0,255,255]Корпус:%c[255,0,200,0] x1,\n%c[255,0,255,255]Курок:%c[255,0,200,0] x1,\n%c[255,0,255,255]Деталь:%c[255,0,200,0] x13,\n%c[255,0,255,255]Масло:%c[255,0,200,0] x2</text>
+	</string>
+	<string id="enc_assembly_wpn-beretta">
+		<text>%c[255,0,255,0]Beretta 92FS\n%c[default]Необходимые детали:\n%c[255,0,255,255]Корпус:%c[255,0,200,0] x1,\n%c[255,0,255,255]Курок:%c[255,0,200,0] x1,\n%c[255,0,255,255]Деталь:%c[255,0,200,0] x16,\n%c[255,0,255,255]Пружина:%c[255,0,200,0] x1</text>
+	</string>
+	<string id="enc_assembly_wpn-hpsa">
+		<text>%c[255,0,255,0]FN Browning HP-SA\n%c[default]Необходимые детали:\n%c[255,0,255,255]Корпус:%c[255,0,200,0] x1,\n%c[255,0,255,255]Курок:%c[255,0,200,0] x1,\n%c[255,0,255,255]Деталь:%c[255,0,200,0] x12,\n%c[255,0,255,255]Масло:%c[255,0,200,0] x5</text>
+	</string>
+	<string id="enc_assembly_wpn-mp5">
+		<text>%c[255,0,255,0]HK MP5A3\n%c[default]Необходимые детали:\n%c[255,0,255,255]Корпус:%c[255,0,200,0] x1,\n%c[255,0,255,255]Курок:%c[255,0,200,0] x1,\n%c[255,0,255,255]Затвор:%c[255,0,200,0] x1,\n%c[255,0,255,255]Масло:%c[255,0,200,0] x3</text>
+	</string>
+	<string id="enc_assembly_wpn-ak74u">
+		<text>%c[255,0,255,0]АКС-74У\n%c[default]Необходимые детали:\n%c[255,0,255,255]Корпус:%c[255,0,200,0] x1,\n%c[255,0,255,255]Курок:%c[255,0,200,0] x1,\n%c[255,0,255,255]Затвор:%c[255,0,200,0] x1,\n%c[255,0,255,255]Деталь:%c[255,0,200,0] x3</text>
+	</string>
+	<string id="enc_assembly_wpn-ak74">
+		<text>%c[255,0,255,0]АК-74М\n%c[default]Необходимые детали:\n%c[255,0,255,255]Корпус:%c[255,0,200,0] x1,\n%c[255,0,255,255]Курок:%c[255,0,200,0] x1,\n%c[255,0,255,255]Затвор:%c[255,0,200,0] x1,\n%c[255,0,255,255]Деталь:%c[255,0,200,0] x7</text>
+	</string>
+	<string id="enc_assembly_wpn-abakan">
+		<text>%c[255,0,255,0]АН-94 "Абакан"\n%c[default]Необходимые детали:\n%c[255,0,255,255]Корпус:%c[255,0,200,0] x1,\n%c[255,0,255,255]Курок:%c[255,0,200,0] x1,\n%c[255,0,255,255]Затвор:%c[255,0,200,0] x1,\n%c[255,0,255,255]Деталь:%c[255,0,200,0] x16</text>
+	</string>
+	<string id="enc_assembly_wpn-groza">
+		<text>%c[255,0,255,0]OЦ-14-4 "Гроза"\n%c[default]Необходимые детали:\n%c[255,0,255,255]Корпус:%c[255,0,200,0] x1,\n%c[255,0,255,255]Курок:%c[255,0,200,0] x1,\n%c[255,0,255,255]Затвор:%c[255,0,200,0] x1,\n%c[255,0,255,255]Деталь:%c[255,0,200,0] x29</text>
+	</string>
+	<string id="enc_assembly_wpn-val">
+		<text>%c[255,0,255,0]АС "Вал"\n%c[default]Необходимые детали:\n%c[255,0,255,255]Корпус:%c[255,0,200,0] x1,\n%c[255,1,255,255]Курок:%c[255,0,200,0] x1,\n%c[255,0,255,255]Затвор:%c[255,0,200,0] x1,\n%c[255,0,255,255]Деталь:%c[255,0,200,0] x24</text>
+	</string>
+	<string id="enc_assembly_wpn-l85">
+		<text>%c[255,0,255,0]Enfield L85A2\n%c[default]Необходимые детали:\n%c[255,0,255,255]Корпус:%c[255,0,200,0] x1,\n%c[255,0,255,255]Курок:%c[255,0,200,0] x1,\n%c[255,0,255,255]Затвор:%c[255,0,200,0] x1,\n%c[255,0,255,255]Деталь:%c[255,0,200,0] x16</text>
+	</string>
+	<string id="enc_assembly_wpn-sig550">
+		<text>%c[255,0,255,0]SIG SG-550\n%c[default]Необходимые детали:\n%c[255,0,255,255]Корпус:%c[255,0,200,0] x1,\n%c[255,0,255,255]Курок:%c[255,0,200,0] x1,\n%c[255,0,255,255]Затвор:%c[255,0,200,0] x1,\n%c[255,0,255,255]Деталь:%c[255,0,200,0] x34</text>
+	</string>
+	<string id="enc_assembly_wpn-lr300">
+		<text>%c[255,0,255,0]LR-300ML\n%c[default]Необходимые детали:\n%c[255,0,255,255]Корпус:%c[255,0,200,0] x1,\n%c[255,0,255,255]Курок:%c[255,0,200,0] x1,\n%c[255,0,255,255]Затвор:%c[255,0,200,0] x1,\n%c[255,0,255,255]Деталь:%c[255,0,200,0] x32</text>
+	</string>
+	<string id="enc_assembly_wpn-g36">
+		<text>%c[255,0,255,0]HK G36\n%c[default]Необходимые детали:\n%c[255,0,255,255]Корпус:%c[255,0,200,0] x1,\n%c[255,0,255,255]Курок:%c[255,0,200,0] x1,\n%c[255,0,255,255]Затвор:%c[255,0,200,0] x1,\n%c[255,0,255,255]Деталь:%c[255,0,200,0] x39</text>
+	</string>
+	<string id="enc_assembly_wpn-fn2000">
+		<text>%c[255,0,255,0]FN F2000\n%c[default]Необходимые детали:\n%c[255,0,255,255]Корпус:%c[255,0,200,0] x1,\n%c[255,0,255,255]Курок:%c[255,0,200,0] x1,\n%c[255,0,255,255]Затвор:%c[255,0,200,0] x1,\n%c[255,0,255,255]Деталь:%c[255,0,200,0] x56</text>
+	</string>
+	<string id="enc_assembly_wpn-bm16">
+		<text>%c[255,0,255,0]Обрез БМ16\n%c[default]Необходимые детали:\n%c[255,0,255,255]Корпус:%c[255,0,200,0] x1,\n%c[255,0,255,255]Курок:%c[255,0,200,0] x2,\n%c[255,0,255,255]Ствол:%c[255,0,200,0] x2,\n%c[255,0,255,255]Деталь:%c[255,0,200,0] x6</text>
+	</string>
+	<string id="enc_assembly_wpn-wincheaster1300">
+		<text>%c[255,0,255,0]Winchester 1300\n%c[default]Необходимые детали:\n%c[255,0,255,255]Корпус:%c[255,0,200,0] x1,\n%c[255,0,255,255]Курок:%c[255,0,200,0] x1,\n%c[255,0,255,255]Ствол:%c[255,0,200,0] x1,\n%c[255,0,255,255]Деталь:%c[255,0,200,0] x14</text>
+	</string>
+	<string id="enc_assembly_wpn-spas12">
+		<text>%c[255,0,255,0]Franchi SPAS-12\n%c[default]Необходимые детали:\n%c[255,0,255,255]Корпус:%c[255,0,200,0] x1,\n%c[255,0,255,255]Курок:%c[255,0,200,0] x1,\n%c[255,0,255,255]Ствол:%c[255,0,200,0] x1,\n%c[255,0,255,255]Деталь:%c[255,0,200,0] x25</text>
+	</string>
+	<string id="enc_assembly_wpn-vintorez">
+		<text>%c[255,0,255,0]ВСС "Винторез"\n%c[default]Необходимые детали:\n%c[255,0,255,255]Корпус:%c[255,0,200,0] x1,\n%c[255,0,255,255]Курок:%c[255,0,200,0] x1,\n%c[255,0,255,255]Нарезной ствол:%c[255,0,200,0] x1,\n%c[255,0,255,255]Запчасть:%c[255,0,200,0] x24</text>
+	</string>
+	<string id="enc_assembly_wpn-svu">
+		<text>%c[255,0,255,0]СВУ-АС\n%c[default]Необходимые детали:\n%c[255,0,255,255]Корпус:%c[255,0,200,0] x1,\n%c[255,0,255,255]Курок:%c[255,0,200,0] x1,\n%c[255,0,255,255]Затвор:%c[255,0,200,0] x1,\n%c[255,0,255,255]Запчасть:%c[255,0,200,0] x35</text>
+	</string>
+	<string id="enc_assembly_wpn-svd">
+		<text>%c[255,0,255,0]СВД\n%c[default]Необходимые детали:\n%c[255,0,255,255]Корпус:%c[255,0,200,0] x1,\n%c[255,0,255,255]Курок:%c[255,0,200,0] x1,\n%c[255,0,255,255]Затвор:%c[255,0,200,0] x1,\n%c[255,0,255,255]Запчасть:%c[255,0,200,0] x43</text>
+	</string>
+	<string id="enc_assembly_wpn-rg6">
+		<text>%c[255,0,255,0]6Г30\n%c[default]Необходимые детали:\n%c[255,0,255,255]Корпус:%c[255,0,200,0] x1,\n%c[255,0,255,255]Курок:%c[255,0,200,0] x1,\n%c[255,0,255,255]Барабан:%c[255,0,200,0] x1,\n%c[255,0,255,255]Запчасть:%c[255,0,200,0] x48</text>
+	</string>
+	<string id="enc_assembly_wpn-rpg7">
+		<text>%c[255,0,255,0]РПГ-7\n%c[default]Необходимые детали:\n%c[255,0,255,255]Корпус:%c[255,0,200,0] x1,\n%c[255,0,255,255]Курок:%c[255,0,200,0] x1,\n%c[255,0,255,255]Гайка:%c[255,0,200,0] x15,\n%c[255,0,255,255]Деталь:%c[255,0,200,0] x26</text>
+	</string>
+	<string id="enc_assembly_wpn-gauss">
+		<text>%c[255,0,255,0]ВГИ "Gauss" M72-GR\n%c[default]Необходимые детали:\n%c[255,0,255,255]Корпус:%c[255,0,200,0] x1,\n%c[255,0,255,255]Курок:%c[255,0,200,0] x1,\n%c[255,0,255,255]Катушка:%c[255,0,200,0] x4,\n%c[255,0,255,255]Аккумулятор:%c[255,0,200,0] x5</text>
+	</string>
+	<string id="instrumental_box_name">
+		<text>Инструментальный ящик</text>
+	</string>
+	<string id="instrumental_box_descr">
+		<text>Кейс с инструментами, необходимыми для сборки оружия.</text>
+	</string>
+	<string id="flash_assemb_wpn_knife">
+		<text>Флешка №31 (Нож)</text>
+	</string>
+	<string id="flash_assemb_wpn_knife_descr">
+		<text>Флешка с данными по изготовлению ножа.</text>
+	</string>
+	<string id="flash_assemb_wpn_pm">
+		<text>Флешка №1 (ПМ)</text>
+	</string>
+	<string id="flash_assemb_wpn_pm_descr">
+		<text>Флешка с данными по сборке пистолета ПМ</text>
+	</string>
+	<string id="flash_assemb_wpn_pb">
+		<text>Флешка №2 (ПБ)</text>
+	</string>
+	<string id="flash_assemb_wpn_pb_descr">
+		<text>Флешка с данными по сборке пистолета ПБ</text>
+	</string>
+	<string id="flash_assemb_wpn_fort">
+		<text>Флешка №3 (Форт-12)</text>
+	</string>
+	<string id="flash_assemb_wpn_fort_descr">
+		<text>Флешка с данными по сборке пистолета Форт-12</text>
+	</string>
+	<string id="flash_assemb_wpn_walther">
+		<text>Флешка №4 (Walther P99)</text>
+	</string>
+	<string id="flash_assemb_wpn_walther_descr">
+		<text>Флешка с данными по сборке пистолета Walther P99</text>
+	</string>
+	<string id="flash_assemb_wpn_colt1911">
+		<text>Флешка №5 (Colt M1911)</text>
+	</string>
+	<string id="flash_assemb_wpn_colt1911_descr">
+		<text>Флешка с данными по сборке пистолета Colt M1911</text>
+	</string>
+	<string id="flash_assemb_wpn_usp">
+		<text>Флешка №6 (HK USP .45)</text>
+	</string>
+	<string id="flash_assemb_wpn_usp_descr">
+		<text>Флешка с данными по сборке пистолета HK USP .45</text>
+	</string>
+	<string id="flash_assemb_wpn_desert_eagle">
+		<text>Флешка №7 (Desert Eagle (Mark VII))</text>
+	</string>
+	<string id="flash_assemb_wpn_desert_eagle_descr">
+		<text>Флешка с данными по сборке пистолета Desert Eagle (Mark VII)</text>
+	</string>
+	<string id="flash_assemb_wpn_sig220">
+		<text>Флешка №8 (SIG-Sauer P220)</text>
+	</string>
+	<string id="flash_assemb_wpn_sig220_descr">
+		<text>Флешка с данными по сборке пистолета SIG-Sauer P220</text>
+	</string>
+	<string id="flash_assemb_wpn_beretta">
+		<text>Флешка №9 (Beretta 92FS)</text>
+	</string>
+	<string id="flash_assemb_wpn_beretta_descr">
+		<text>Флешка с данными по сборке пистолета Beretta 92FS</text>
+	</string>
+	<string id="flash_assemb_wpn_hpsa">
+		<text>Флешка №10 (FN Browning HP-SA)</text>
+	</string>
+	<string id="flash_assemb_wpn_hpsa_descr">
+		<text>Флешка с данными по сборке пистолета FN Browning HP-SA</text>
+	</string>
+	<string id="flash_assemb_wpn_mp5">
+		<text>Флешка №11 (HK MP5A3)</text>
+	</string>
+	<string id="flash_assemb_wpn_mp5_descr">
+		<text>Флешка с данными по сборке пистолета-пулемёта HK MP5A3</text>
+	</string>
+	<string id="flash_assemb_wpn_ak74u">
+		<text>Флешка №12 (АКС-74У)</text>
+	</string>
+	<string id="flash_assemb_wpn_ak74u_descr">
+		<text>Флешка с данными по сборке автомата АКС-74У</text>
+	</string>
+	<string id="flash_assemb_wpn_ak74">
+		<text>Флешка №13 (АК-74М)</text>
+	</string>
+	<string id="flash_assemb_wpn_ak74_descr">
+		<text>Флешка с данными по сборке автомата АК-74М</text>
+	</string>
+	<string id="flash_assemb_wpn_abakan">
+		<text>Флешка №14 (АН-94 "Абакан")</text>
+	</string>
+	<string id="flash_assemb_wpn_abakan_descr">
+		<text>Флешка с данными по сборке автомата АН-94 "Абакан"</text>
+	</string>
+	<string id="flash_assemb_wpn_groza">
+		<text>Флешка №15 (OЦ-14-4 "Гроза")</text>
+	</string>
+	<string id="flash_assemb_wpn_groza_descr">
+		<text>Флешка с данными по сборке автоматно-гранатомётного комплекса OЦ-14-4 "Гроза"</text>
+	</string>
+	<string id="flash_assemb_wpn_val">
+		<text>Флешка №16 (АС "Вал")</text>
+	</string>
+	<string id="flash_assemb_wpn_val_descr">
+		<text>Флешка с данными по сборке спецавтомата "Вал"</text>
+	</string>
+	<string id="flash_assemb_wpn_l85">
+		<text>Флешка №17 (Enfield L85A2)</text>
+	</string>
+	<string id="flash_assemb_wpn_l85_descr">
+		<text>Флешка с данными по сборке штурмовой винтовки Enfield L85A2</text>
+	</string>
+	<string id="flash_assemb_wpn_lr300">
+		<text>Флешка №18 (LR-300ML)</text>
+	</string>
+	<string id="flash_assemb_wpn_lr300_descr">
+		<text>Флешка с данными по сборке штурмовой винтовки LR-300ML</text>
+	</string>
+	<string id="flash_assemb_wpn_sig550">
+		<text>Флешка №19 (SIG SG-550)</text>
+	</string>
+	<string id="flash_assemb_wpn_sig550_descr">
+		<text>Флешка с данными по сборке штурмовой винтовки SIG SG-550</text>
+	</string>
+	<string id="flash_assemb_wpn_g36">
+		<text>Флешка №20 (HK G36)</text>
+	</string>
+	<string id="flash_assemb_wpn_g36_descr">
+		<text>Флешка с данными по сборке штурмовой винтовки HK G36</text>
+	</string>
+	<string id="flash_assemb_wpn_fn2000">
+		<text>Флешка №21 (FN F2000)</text>
+	</string>
+	<string id="flash_assemb_wpn_fn2000_descr">
+		<text>Флешка с данными по сборке автоматно-гранатомётного комплекса FN F2000</text>
+	</string>
+	<string id="flash_assemb_wpn_bm16">
+		<text>Флешка №22 (Обрез БМ16)</text>
+	</string>
+	<string id="flash_assemb_wpn_bm16_descr">
+		<text>Флешка с данными по сборке обреза БМ16</text>
+	</string>
+	<string id="flash_assemb_wpn_wincheaster1300">
+		<text>Флешка №23 (Winchester 1300)</text>
+	</string>
+	<string id="flash_assemb_wpn_wincheaster1300">
+		<text>Флешка с данными по сборке гладкоствольного ружья Winchester 1300</text>
+	</string>
+	<string id="flash_assemb_wpn_spas12">
+		<text>Флешка №24 (Franchi SPAS-12)</text>
+	</string>
+	<string id="flash_assemb_wpn_spas12_descr">
+		<text>Флешка с данными по сборке гладкоствольного ружья Franchi SPAS-12</text>
+	</string>
+	<string id="flash_assemb_wpn_vintorez">
+		<text>Флешка №25 (ВСС "Винторез")</text>
+	</string>
+	<string id="flash_assemb_wpn_vintorez_descr">
+		<text>Флешка с данными по сборке винтовки специальной снайперской "Винторез"</text>
+	</string>
+	<string id="flash_assemb_wpn_svu">
+		<text>Флешка №26 (СВУ-АС)</text>
+	</string>
+	<string id="flash_assemb_wpn_svu_descr">
+		<text>Флешка с данными по сборке снайперской винтовки СВУ-АС</text>
+	</string>
+	<string id="flash_assemb_wpn_svd">
+		<text>Флешка №27 (СВД)</text>
+	</string>
+	<string id="flash_assemb_wpn_svd_descr">
+		<text>Флешка с данными по сборке снайперской винтовки СВД</text>
+	</string>
+	<string id="flash_assemb_wpn_rg-6">
+		<text>Флешка №28 (6Г30)</text>
+	</string>
+	<string id="flash_assemb_wpn_rg-6_descr">
+		<text>Флешка с данными по сборке гранатомёта револьверного типа 6Г30</text>
+	</string>
+	<string id="flash_assemb_wpn_rpg7">
+		<text>Флешка №29 (РПГ-7)</text>
+	</string>
+	<string id="flash_assemb_wpn_rpg7_descr">
+		<text>Флешка с данными по сборке ручного противотанкового гранатомёта РПГ-7</text>
+	</string>
+	<string id="flash_assemb_wpn_gauss">
+		<text>Флешка №30 (ВГИ "Gauss" M72-GR)</text>
+	</string>
+	<string id="flash_assemb_wpn_gauss_descr">
+		<text>Флешка с данными по сборке гравитационно-импульсной винтовки ВГИ "Gauss" M72-GR</text>
+	</string>
+	<string id="base_privod_name">
+		<text>Базовый сервопривод</text>
+	</string>
+	<string id="base_privod_descr">
+		<text>Механический привод с автоматической коррекцией состояния.\n \n
+		ХАРАКТЕРИСТИКИ:\n
+		•  Деталь \n
+		•  Технологическое приспособление \n
+		•  Используется для сборки предметов \n
+		</text>
+	</string>
+	<string id="exo_components_name">
+		<text>Компоненты экзоскелета</text>
+	</string>
+	<string id="exo_components_descr">
+		<text>Компоненты армейского экзоскелета.\n \n
+		ХАРАКТЕРИСТИКИ:\n
+		•  Деталь \n
+		•  Технологическое приспособление \n
+		•  Используется для сборки предметов \n
+		</text>
+	</string>
+	<string id="outfit_components_name">
+		<text>Компоненты комбенизона</text>
+	</string>
+	<string id="outfit_components_descr">
+		<text>Компоненты комбенизона "Заря".\n \n
+		ХАРАКТЕРИСТИКИ:\n
+		•  Деталь \n
+		•  Изношенный костюм \n
+		•  Используется для сборки предметов \n
+		</text>
+	</string>
+	<string id="exo_corpus_name">
+		<text>Корпус экзоскелета</text>
+	</string>
+	<string id="exo_corpus_descr">
+		<text>Спинной корпус экзоскелета.\n \n
+		ХАРАКТЕРИСТИКИ:\n
+		•  Деталь \n
+		•  Технологическое приспособление \n
+		•  Используется для сборки предметов \n
+		</text>
+	</string>
+	<string id="det_detail_name">
+		<text>Деталь</text>
+	</string>
+	<string id="det_detail_descr">
+		<text>Деталь, необходимая для сборки оружия.</text>
+	</string>
+	<string id="det_gun_butter_name">
+		<text>Оружейное масло</text>
+	</string>
+	<string id="det_gun_butter_descr">
+		<text>Смазка важна для исправной работы всех узлов оружия.</text>
+	</string>
+	<string id="det_spare_part_name">
+		<text>Запчасть</text>
+	</string>
+	<string id="det_spare_part_descr">
+		<text>Деталь, необходимая для сборки оружия.</text>
+	</string>
+	<string id="det_spring_name">
+		<text>Пружина</text>
+	</string>
+	<string id="det_spring_descr">
+		<text>Пружина, предназначенная для возврата затвора в исходное положение.</text>
+	</string>
+	<string id="det_shutter_name">
+		<text>Затвор</text>
+	</string>
+	<string id="det_shutter_descr">
+		<text>Затвор, одна из важнейших частей автоматического и полуавтоматического оружия.</text>
+	</string>
+	<string id="det_gun_stem_name">
+		<text>Ствол</text>
+	</string>
+	<string id="det_gun_stem_descr">
+		<text>Ствол от гладкоствольного оружия 12-го калибра.</text>
+	</string>
+	<string id="det_rifled_barrel_name">
+		<text>Нарезной ствол</text>
+	</string>
+	<string id="det_rifled_barrel_descr">
+		<text>Нарезной ствол с глушителем от винтоки ВСС "Винторез".</text>
+	</string>
+	<string id="det_revolver_name">
+		<text>Барабан</text>
+	</string>
+	<string id="det_revolver_descr">
+		<text>Магазин барабанного типа для револьверного гранатомёта 6Г30.</text>
+	</string>
+	<string id="det_nut_name">
+		<text>Гайка</text>
+	</string>
+	<string id="det_nut_descr">
+		<text>Обычная гайка с резьбой М6 под ключ х12.</text>
+	</string>
+	<string id="det_induction_coil_name">
+		<text>Индукционная катушка</text>
+	</string>
+	<string id="det_induction_coil_descr">
+		<text>Катушка индуктивности, важная деталь гравитационно-импульсной винтовки "Гаусс".</text>
+	</string>
+	<string id="det_battery_name">
+		<text>Аккумулятор</text>
+	</string>
+	<string id="det_induction_coil_descr">
+		<text>Аккумуляторная батарея, отличается большой ёмкостью, но при этом имеет небольшие размеры.</text>
+	</string>

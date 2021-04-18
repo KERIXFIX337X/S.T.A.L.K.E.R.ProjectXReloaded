@@ -1,0 +1,33 @@
+[logic]
+active = walker@stay_at_position
+combat_ignore = combat_ignore
+danger = danger_condition
+on_death = death
+ 
+[walker@stay_at_position]
+path_walk = mil_killer_leader_walk
+path_look = mil_killer_leader_look
+on_info = {+lets_raid_blockpost} walker@to_raid_atp
+def_state_standing = ward
+ 
+[walker@to_raid_atp]
+path_walk = mil_killer_leader_bp_walk
+path_look = mil_killer_leader_bp_look
+on_info = {+get_blockpost_killer} walker@to_raid_atp_comp
+def_state_standing = choose
+meet = no_meet
+
+[walker@to_raid_atp_comp]
+path_walk = mil_killer_leader_bp_walk
+path_look = mil_killer_leader_bp_look
+def_state_standing = choose
+
+[combat_ignore]
+combat_ignore_cond = always
+
+[danger_condition]
+ignore_distance = 100
+ignore_distance_corpse = 100
+
+[death]
+on_info = %+killer_leader_dead%

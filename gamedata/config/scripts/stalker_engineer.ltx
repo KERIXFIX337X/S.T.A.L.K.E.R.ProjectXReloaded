@@ -1,0 +1,16 @@
+[logic]
+active = walker@stay_at_position
+combat_ignore = combat_ignore
+danger = danger_condition
+ 
+[walker@stay_at_position]
+path_walk = stalker_engineer_walk
+path_look = stalker_engineer_look
+def_state_standing = sit_ass
+ 
+[combat_ignore]
+combat_ignore_cond = always
+ 
+[danger_condition]
+ignore_distance = 0
+ignore_distance_corpse = 0

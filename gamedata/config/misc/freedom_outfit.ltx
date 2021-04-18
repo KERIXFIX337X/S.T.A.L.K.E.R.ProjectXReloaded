@@ -1,0 +1,217 @@
+;---------------------------------------------------------------------------------------------
+;		ЛЕГКИЙ КОСТЮМ СВОБОДЫ
+;---------------------------------------------------------------------------------------------
+[svoboda_light_outfit]:outfit_base
+GroupControlSection	= spawn_group
+discovery_dependency = 
+$spawn 			= "outfit\svoboda_light_outfit"
+;$prefetch 		= 32
+class			= E_STLK
+cform           = skeleton
+visual          = equipments\svoboda_light_suit
+actor_visual	= actors\hero\stalker_svoboda_light.ogf
+
+ef_equipment_type	= 3
+
+inv_name			= svoboda_light_outfit_name
+inv_name_short		= svoboda_light_outfit_name
+description			= svoboda_light_outfit_description
+inv_weight			= 3.0
+inv_grid_width     = 2
+inv_grid_height    = 3
+inv_grid_x         = 27
+inv_grid_y         = 16
+full_icon_name		= npc_icon_svoboda_light_outfit
+
+cost				= 10000
+slot				= 6
+full_scale_icon		= 10,11			;иконка сталкера в костюме в полный рост
+
+immunities_sect			= sect_svoboda_light_outfit_immunities
+
+; LOW RESISTANCE
+burn_protection 				= 0.3
+strike_protection 				= 0.5
+shock_protection 				= 0.5
+wound_protection				= 0.3
+radiation_protection 			= 0.05
+telepatic_protection 			= 0.0
+chemical_burn_protection 		= 0.5
+explosion_protection 			= 0.25
+fire_wound_protection  			= 0.3
+
+power_loss = 0.77
+bones_koeff_protection = gilet_mask_damage
+
+[sect_svoboda_light_outfit_immunities]
+burn_immunity				= 0.04			;коэффициенты иммунитета самого костюма
+strike_immunity				= 0.01
+shock_immunity				= 0.04
+wound_immunity				= 0.020
+radiation_immunity			= 0.00
+telepatic_immunity			= 0.00
+chemical_burn_immunity		= 0.04
+explosion_immunity			= 0.04
+fire_wound_immunity			= 0.012
+
+;---------------------------------------------------------------------------------------------
+;		ТЯЖЕЛЫЙ КОСТЮМ СВОБОДЫ
+;---------------------------------------------------------------------------------------------
+[svoboda_heavy_outfit]:outfit_base
+GroupControlSection	= spawn_group
+discovery_dependency = 
+$spawn 			= "outfit\svoboda_heavy_outfit"
+;$prefetch 		= 32
+class			= E_STLK
+cform           = skeleton
+visual          = equipments\svoboda_heavy_suit
+actor_visual	= actors\hero\stalker_svoboda_light.ogf
+
+ef_equipment_type	= 3
+
+inv_name			= svoboda_heavy_outfit_name
+inv_name_short		= svoboda_heavy_outfit_name
+description			= svoboda_heavy_outfit_description
+inv_weight			= 6.0
+inv_grid_width     = 2
+inv_grid_height    = 3
+inv_grid_x         = 27
+inv_grid_y         = 22
+full_icon_name		= npc_icon_svoboda_heavy_outfit
+nightvision_sect	= effector_nightvision_bad
+
+cost				= 12500
+slot				= 6
+full_scale_icon		= 2,6			;иконка сталкера в костюме в полный рост
+
+immunities_sect			= sect_svoboda_heavy_outfit_immunities
+
+; MEDIUM RESISTANCE
+burn_protection 				= 0.5
+strike_protection 				= 0.6
+shock_protection 				= 0.5
+wound_protection				= 0.5
+radiation_protection 			= 0.05
+telepatic_protection 			= 0.0
+chemical_burn_protection 		= 0.5
+explosion_protection 			= 0.45
+fire_wound_protection  			= 0.4
+
+bones_koeff_protection = kombez_antigas_damage
+
+[sect_svoboda_heavy_outfit_immunities]
+burn_immunity				= 0.03			;коэффициенты иммунитета самого костюма
+strike_immunity				= 0.01
+shock_immunity				= 0.03
+wound_immunity				= 0.015
+radiation_immunity			= 0.00
+telepatic_immunity			= 0.00
+chemical_burn_immunity		= 0.03
+explosion_immunity			= 0.03
+fire_wound_immunity			= 0.01
+
+;---------------------------------------------------------------------------------------------
+;		ЭКЗОСКЕЛЕТ СВОБОДЫ
+;---------------------------------------------------------------------------------------------
+
+[svoboda_exoskeleton]:exo_outfit	;Модифицированный экзоскелет svoboda
+$spawn							= "outfit\uniq\outfit_exo_m1"
+inv_name						= svoboda_exoskeleton_name
+inv_name_short					= svoboda_exoskeleton_name
+description						= svoboda_exoskeleton_description
+inv_grid_width     = 2
+inv_grid_height    = 3
+inv_grid_x         = 33
+inv_grid_y         = 4
+
+visual          = equipments\outfit\svoboda_exo_suit
+actor_visual	= actors\svoboda\stalker_sv_exoskeleton.ogf
+full_icon_name		= npc_icon_svoboda_exo_outfit
+inv_weight			= 14.0
+cost				= 35000
+nightvision_sect	= effector_nightvision_good
+
+; MEDIUM RESISTANCE
+burn_protection 				= 0.45
+strike_protection 				= -0.35
+shock_protection 				= 0.45
+wound_protection				= 0.55
+radiation_protection 			= 0.75
+telepatic_protection			= 0.00
+chemical_burn_protection 		= 0.45
+explosion_protection 			= 0.65
+fire_wound_protection  			= 0.65
+
+immunities_sect			= sect_svoboda_exoskeleton_immunities
+sprint_allowed					= true
+bones_koeff_protection			= exo_helmet_damage
+additional_inventory_weight		= 20
+additional_inventory_weight2	= 20 
+
+[sect_svoboda_exoskeleton_immunities]
+; From exo_outfit v.1.1
+burn_immunity				= 0.03
+strike_immunity				= 0.01
+shock_immunity				= 0.03
+wound_immunity				= 0.01
+radiation_immunity			= 0.00
+telepatic_immunity			= 0.00
+chemical_burn_immunity			= 0.03
+explosion_immunity			= 0.03
+fire_wound_immunity			= 0.005
+
+;---------------------------------------------------------------------------------------------
+;		Scientific Freedom
+;---------------------------------------------------------------------------------------------
+[freedom_scientific_outfit]:outfit_base
+GroupControlSection	= spawn_group
+discovery_dependency = 
+$spawn 			= "outfit\dolg_scientific_outfit"
+$prefetch 		= 32
+class			= E_STLK
+cform           = skeleton
+visual          = equipments\outfit\freedom_scien_suit.ogf
+actor_visual	= actors\svoboda\stalker_sv_nauchniy	
+
+ef_equipment_type	= 4
+
+inv_name			= freedom_scientific_outfit_name
+inv_name_short		= freedom_scientific_outfit_name
+description			= freedom_scientific_outfit_description
+inv_weight			= 8.5
+slot				= 6
+inv_grid_width     = 2
+inv_grid_height    = 3
+inv_grid_x         = 27
+inv_grid_y         = 19
+full_icon_name		= npc_icon_freedom_scientific_outfit
+nightvision_sect	= effector_nightvision_good
+
+cost				= 25000
+full_scale_icon		= 8,6		;иконка сталкера в костюме в полный рост
+
+immunities_sect			= sect_freedom_scientific_outfit_immunities
+
+; MEDIUM RESISTANCE
+burn_protection 				= 0.9
+strike_protection 				= 0.5
+shock_protection 				= 0.9
+wound_protection				= 0.4
+radiation_protection 			= 0.9
+telepatic_protection 			= 0.0
+chemical_burn_protection 		= 0.6
+explosion_protection 			= 0.34
+fire_wound_protection  			= 0.3
+
+bones_koeff_protection = kombez_kupol_damage
+
+[sect_freedom_scientific_outfit_immunities]
+burn_immunity				= 0.03			;коэффициенты иммунитета самого костюма
+strike_immunity				= 0.01
+shock_immunity				= 0.03
+wound_immunity				= 0.015
+radiation_immunity			= 0.00
+telepatic_immunity			= 0.00
+chemical_burn_immunity		= 0.03
+explosion_immunity			= 0.03
+fire_wound_immunity			= 0.01

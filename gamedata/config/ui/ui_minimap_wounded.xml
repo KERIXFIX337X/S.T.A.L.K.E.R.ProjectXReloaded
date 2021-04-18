@@ -1,0 +1,4 @@
+<ui_texture>
+    <file_name>ui\ui_minimap_wounded</file_name>
+    <texture id="ui_minimap_wounded" x="0" y="0" width="6" height="6" />
+</ui_texture>

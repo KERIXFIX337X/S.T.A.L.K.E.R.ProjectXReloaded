@@ -1,0 +1,242 @@
+local nrg,med,cnt,gv,lv,w in_hide=false
+local sound_obj_right,sound_obj_left,snd_volume,snd_obj_eq
+sync_done=false
+amk_weather=false
+local dynlasthour
+zombied={}
+local weather_types= {
+	}
+	
+	
+local points={ { position={x=-24.2727108001709,y=-12.1660995483398,z=-100.200202941895}, gv=0, lv=73868 }, { position={x=159.56,y=4.72,z=88.60}, gv=155, lv=463808 }, { position={x=-4.11,y=2.90,z=108.09}, gv=85, lv=272619 } }
+function spawn_star(actor,npc,p1,p2) local a = points[math.random(table.getn(points))] local obj = alife():create("amk_af_night_star", vector():set(a.position.x,a.position.y,a.position.z), a.lv, a.gv) if (obj) then if is_debug==true then add_spot_on_map(obj.id, "red_location", "art") end end local m_where if news_main then m_where = news_main.get_point_description("l01_escape", vector():set(a.position.x,a.position.y,a.position.z)) else m_where = "Здесь, на Кордоне" end db.actor:give_talk_message(m_where.." скорее всего поискать стоит. Где-то там он, точно говорю.", "ui\\ui_iconstotal", Frect():set(0,0,10,10), "simple_answer_item") end 
+function on_game_start() math.randomseed (device ():time_global ()) end
+local tmp_intro=false 
+function first_run()
+	if amk.load_variable("x_first_run",true) then
+		amk.g_start_timer("gg_need_sleep",0,0,6)
+		amk.g_start_timer("show_news",0,0,10)
+		amk.spawn_item_in_inv("matras")
+		amk.save_variable("x_first_run",false)
+	end
+	if amk.load_variable("amk_12",0)==0 then
+		amk.spawn_item("amk_zapiska",vector():set(-126.96,-28.41,-379.12),27,125181)
+		amk.spawn_item("amk_zapiska",vector():set(21.6,-3.94,-18.28),1140,5991)
+		amk.spawn_item("amk_zapiska",vector():set(-126.92,23.27,-36.98),1543,7083)
+		sak.add_new_lcitem()
+		amk.save_variable("amk_12",1)
+	end
+	if amk.load_variable("amk_13",0)==0 then
+		local obj = alife():story_object(830)
+		if obj then
+			alife():release(obj)
+			alife():create(7789)
+		end
+		amk.save_variable("amk_13",1)
+	end
+	if amk.load_variable("amk_13",0)==0 then
+		local obj = alife():story_object(830)
+		if obj then
+			alife():release(obj) alife():create(7789)
+		end amk.save_variable("amk_13",1)
+	end
+	if amk.load_variable("amk_version",0)<1400 then
+			tmp_intro=true
+			amk.save_variable("amk_version",1400)
+			amk_anoms.pre_blow_off()
+			amk_anoms.after_blow_on()
+			spawn_military_btr()
+			spawn_fuel()
+	end
+end
+
+function check_spawn()
+	amk_anoms.init()
+	spawn_unspawned_respawners()
+	if news_main then news_main.init() end
+	if amk_offline_alife then amk_offline_alife.init() end
+	if (amk_corpses) then amk_corpses.init() end
+	if (amk_objects) then amk_objects.init() end
+	
+	local lname = level.name() local sname = amk.load_variable("level_on_save","")
+	amk_offline_alife.update_npc_tables()
+	if (amk_corpses) then amk_corpses.update_all_corpses() end
+	if lname ~= sname and amk_objects then amk_objects.update() end
+	if news_main then
+		if (lname ~= sname and sname ~= "") then
+			if (news_main.isIsolatedLevel(lname)== true and news_main.isIsolatedLevel(sname) == false) then
+				news_main.on_disconnect()
+			elseif (news_main.isIsolatedLevel(lname) == false and news_main.isIsolatedLevel(sname) == true) then
+				news_main.on_connect()
+			end
+		end
+	end
+
+	if weather_types[lname]==0 then
+		w=amk.load_variable("dynweather",nil) or level.get_weather()
+	else
+		w=level.get_weather()
+	end
+	if amk.load_variable("blowout",0)>0 then
+		amk.save_variable("weather",level.get_weather())
+	end
+	if db.actor and not has_alife_info("game_over") then
+		local flame = db.actor:object("wpn_flame")
+		if flame then
+			db.actor:iterate_inventory( function(dummy,item) if item:section()=="wpn_flame" then alife():release(alife():object(item:id())) end end , db.actor)
+		end
+	end
+end
+
+function freeplay()
+	amk.save_variable("freeplay",1)
+	local obj = alife():story_object(6001)
+	if not obj then alife():create(1) end
+	for a=1,5 do amk_anoms.after_blow_on() end
+end
+function show_news()
+	if (news_main and news_main.on_news) then
+		news_main.on_news()
+	end
+	local ln = level.name()
+	if (ln == "l03u_agr_underground" or ln == "l04u_labx18" or ln == "l08u_brainlab" or ln == "l10u_bunker") then
+	else
+		if math.random()>0.2 then
+			if math.random()>0.875 then
+				if amk_dolg and math.random()>0.5 then
+					local dolg_news=amk_dolg.get_strings()
+					db.actor:give_game_news(dolg_news, "ui\\ui_iconsTotal", Frect():set(498,141,83,47), 0, 15000)
+				elseif amk_freedom then
+					local freedom_news=amk_freedom.get_strings()
+					db.actor:give_game_news(freedom_news, "ui\\ui_iconsTotal", Frect():set(498,94,83,47), 0, 15000)
+				end
+			else
+				if math.random()>0.57 then
+				else
+				end
+			end
+		else
+		if amk_uniq_news_lists and math.random()>0.5 then
+			local uniq=amk_uniq_news_lists.get_strings()
+			local name,sname = amk_names_lists.get_strings()
+			amk.send_tip(uniq,name.." "..sname,nil,15,"uniq")
+		elseif amk_modders then
+			local mod_news=amk_modders.get_strings()
+			db.actor:give_game_news(mod_news, "ui\\ui_iconsTotal", Frect():set(498,47,83,47), 0, 15000)
+		end
+	end
+end
+amk.g_start_timer("show_news",0,0,math.random(40,80))
+end
+
+
+
+function check_hud()
+	local hudotf,actor
+	if db and db.actor then
+		actor=db.actor
+	else
+		return false
+	end
+	if amk.is_debug then
+		if lhup<time_global() then
+			lhup=time_global()+1000
+			local wnd
+			while true do
+				wnd=get_hud():GetCustomStatic("hud_coord") and get_hud():GetCustomStatic("hud_coord"):wnd()
+				if wnd then
+					break
+				end
+				get_hud():AddCustomStatic("hud_coord")
+			end
+			local dir=device().cam_dir
+			local a=vector()
+			a.x=math.atan2(-dir.y,dir.z)
+			a.y=math.atan2(-dir.x,dir.z)
+			a.z=math.atan2(-dir.y,dir.x)
+			local pos=device().cam_pos
+			local act_pos=actor:position()
+			local lvid=actor:level_vertex_id()
+			local gvid=actor:game_vertex_id()
+			local vdist=level.vertex_position(lvid):distance_to(actor:position())
+			local aid,apos,arad,adist=amk_anoms.get_nearest_anomaly(db.actor)
+			local msg
+			if aid then
+				local an=level.object_by_id(aid)
+				if an then
+					local anname=an:name()
+					local sid=an:story_id()
+					msg=string.format("actor: x %.2f y %.2f z %.2f lvid %d gvid %d lv_dist %.1f\\ncam pos: x %.2f y %.2f z %.2f\\ncam angles: %.2f %.2f %.2f\\nanom %s sid %d dist %.1f",act_pos.x,act_pos.y,act_pos.z,lvid,gvid,vdist,pos.x,pos.y,pos.z,a.x,a.y,a.z,anname,sid,adist)
+				end
+			else
+				msg=string.format("actor: x %.2f y %.2f z %.2f lvid %d gvid %d lv_dist %.1f\\ncam pos: x %.2f y %.2f z %.2f\\ncam angles: %.2f %.2f %.2f", act_pos.x,act_pos.y,act_pos.z,lvid,gvid,vdist,pos.x,pos.y,pos.z,a.x,a.y,a.z)
+			end
+			wnd:SetTextST(msg)
+		end
+	end
+	local hudotf=actor:get_current_outfit()
+	local hudotf_id="nil"
+	if hudotf then
+		hudotf_id=hudotf:section()
+	end
+	local tex
+	if hudotf_id then
+		tex = hud_tbl[hudotf_id]
+	end
+	curr_tex=tex
+	local act_it=db.actor:active_item()
+	if db.actor.health>0 and not (act_it and act_it:section()=="wpn_binoc" and device().fov<50) and device().fov>30 and amk.load_variable("option_hud",2)~=0 then
+		set_hud_tex(tex,true)
+	else
+		set_hud_tex(tex,false)
+	end
+	if (ui_rad and db.actor.health>0 and amk.load_variable("option_rad",1) ~= 0) then
+		if act_it and act_it:section()=="wpn_binoc" then
+			local zoom=67.5/device().fov
+			zoom=(zoom-1)*1.5+1
+			if zoom<1.001 then
+				zoom=1.001
+			end
+			if zoom > 1.3 then
+				ui_rad.update(false)
+			else
+				ui_rad.update(true)
+			end
+		else
+			ui_rad.update(true)
+		end
+	elseif (ui_rad) then
+		ui_rad.update(false)
+	end
+end 
+
+-- sept
+--[[dynweathers={
+	clear={ clear=0.5, pasmurno=0.5, rain=0, groza=0 },
+	pasmurno={ clear=0.45, pasmurno=0.25, rain=0.2, groza=0.1 },
+	rain={ clear=0, pasmurno=0.65, rain=0.15, groza=0.2 },
+	groza={ clear=0, pasmurno=0.8, rain=0.2, groza=0 }
+	}]]
+	
+	-- my normal
+dynweathers={
+	clear={ clear=0.5, pasmurno=0.5, rain=0, groza=0 },
+	pasmurno={ clear=0.45, pasmurno=0.25, rain=0.2, groza=0.1 },
+	rain={ clear=0, pasmurno=0.65, rain=0.55, groza=0.2 },
+	groza={ clear=0, pasmurno=0.7, rain=0.6, groza=0 }
+	}
+	
+--[[	-- my experimental
+dynweathers={
+	clear={ clear=0.7, pasmurno=0.5, rain=0, groza=0 },
+	pasmurno={ clear=0.5, pasmurno=0.7, rain=0.5, groza=0.1 },
+	rain={ clear=0, pasmurno=0.5, rain=0.75, groza=0.2 },
+	groza={ clear=0, pasmurno=0.7, rain=0.6, groza=0 }
+	}]]
+	
+-- dynweathers={ clear={ clear=1, pasmurno=0, rain=0, groza=0 }, pasmurno={ clear=0.45, pasmurno=0.25, rain=0.2, groza=0.1 }, rain={ clear=0, pasmurno=0.65, rain=0.15, groza=0.2 }, groza={ clear=0, pasmurno=0.8, rain=0.2, groza=0 } }
+
+-- oct
+-- dynweathers={ clear={ clear=0.35, pasmurno=0.65, rain=0, groza=0 }, pasmurno={ clear=0.3, pasmurno=0.4, rain=0.2, groza=0.1 }, rain={ clear=0, pasmurno=0.50, rain=0.25, groza=0.25 }, groza={ clear=0, pasmurno=0.70, rain=0.3, groza=0 } }
+-- sept
+-- dynweathers={ clear={ clear=0.5, pasmurno=0.5, rain=0, groza=0 }, pasmurno={ clear=0.45, pasmurno=0.25, rain=0.2, groza=0.1 }, rain={ clear=0, pasmurno=0.65, rain=0.15, groza=0.2 }, groza={ clear=0, pasmurno=0.8, rain=0.2, groza=0 } }

@@ -1,0 +1,32 @@
+	<ogsm_hide_spot_max>
+		<level_map spot="ogsm_crlc_small_max" pointer="quest_pointer"/>
+		<mini_map spot="ogsm_crlc_mini_spot_max" pointer="quest_pointer"/>
+	</ogsm_hide_spot_max>
+	<ogsm_crlc_small_max x="0" y="0" width="10" height="10" alignment="c" scale="1" stretch = "1">
+		<texture x="633" y="789" width="31" height="31">ui\ui_common</texture>
+	</ogsm_crlc_small_max>
+	<ogsm_crlc_mini_spot_max x="0" y="0" width="35" height="35" alignment="c" scale="1" stretch = "1">
+		<texture x="633" y="789" width="31" height="31">ui\ui_common</texture>
+	</ogsm_crlc_mini_spot_max>
+
+	<ogsm_hide_spot_mdl>
+		<level_map spot="ogsm_crlc_small_mdl" pointer="quest_pointer"/>
+		<mini_map spot="ogsm_crlc_mini_spot_mdl" pointer="quest_pointer"/>
+	</ogsm_hide_spot_mdl>
+	<ogsm_crlc_small_mdl x="0" y="0" width="6" height="6" alignment="c" scale="1" stretch = "1">
+		<texture x="633" y="789" width="31" height="31">ui\ui_common</texture>
+	</ogsm_crlc_small_mdl>
+	<ogsm_crlc_mini_spot_mdl x="0" y="0" width="18" height="18" alignment="c" scale="1" stretch = "1">
+		<texture x="633" y="789" width="31" height="31">ui\ui_common</texture>
+	</ogsm_crlc_mini_spot_mdl>
+
+	<ogsm_hide_spot_min>
+		<level_map spot="ogsm_crlc_small_min" pointer="quest_pointer"/>
+		<mini_map spot="ogsm_crlc_mini_spot_min" pointer="quest_pointer"/>
+	</ogsm_hide_spot_min>
+	<ogsm_crlc_small_min x="0" y="0" width="3" height="3" alignment="c" scale="1" stretch = "1">
+		<texture x="633" y="789" width="31" height="31">ui\ui_common</texture>
+	</ogsm_crlc_small_min>
+	<ogsm_crlc_mini_spot_min x="0" y="0" width="9" height="9" alignment="c" scale="1" stretch = "1">
+		<texture x="633" y="789" width="31" height="31">ui\ui_common</texture>
+	</ogsm_crlc_mini_spot_min>

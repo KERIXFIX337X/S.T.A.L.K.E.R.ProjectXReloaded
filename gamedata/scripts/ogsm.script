@@ -1,0 +1,9 @@
+local wthr
+
+function set_sun()
+-- get_console():execute("ogsm.set_sun")
+level.set_weather(wthr)
+-- get_console():execute("now sun should be restored")
+amk_weather.sync_done = false
+end
+

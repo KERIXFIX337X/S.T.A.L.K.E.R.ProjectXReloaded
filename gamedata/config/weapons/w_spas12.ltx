@@ -1,0 +1,196 @@
+[wpn_spas12]:identity_immunities
+GroupControlSection		= spawn_group
+discovery_dependency	= 
+$spawn                   	= "weapons\spas12"
+$npc					= on				
+$prefetch 				= 8
+scheduled				= off
+cform               	= skeleton
+class               	= WP_LR300
+min_radius          	= 30
+max_radius          	= 100
+description				= enc_weapons1_wpn-spas12
+	
+ef_main_weapon_type		= 2
+ef_weapon_type			= 6
+
+holder_range_modifier	= 1.0
+holder_fov_modifier		= 0.7
+
+cost					= 12000
+weapon_class			= assault_rifle
+	
+ammo_limit				= 210
+ammo_elapsed			= 5
+	
+ammo_mag_size			= 5
+fire_modes				= 1
+
+ammo_class				= ammo_12x70_buck, ammo_12x76_zhekan,ammo_12x76_dart
+
+hand_dependence			= 1
+single_handed			= 0
+	
+slot 					= 2
+animation_slot			= 2
+
+inv_name	        	= wpn-spas12
+inv_name_short			= wpn-spas12
+inv_weight			= 3.6
+
+inv_grid_width     = 5
+inv_grid_height    = 2
+inv_grid_x         = 22
+inv_grid_y         = 18
+
+kill_msg_x			= 0
+kill_msg_y			= 123
+kill_msg_width		= 69
+kill_msg_height		= 30
+
+fire_dispersion_base		= 0.31
+control_inertion_factor		= 1.25f
+
+cam_relax_speed 		= 3.0
+cam_relax_speed_ai         	= 120.75
+cam_dispersion 			= 1.5
+cam_dispersion_inc		= 0.75
+cam_dispertion_frac		= 1.0
+cam_max_angle			= 16.0
+cam_max_angle_horz		= 30.0
+cam_step_angle_horz		= 1.25
+
+fire_dispersion_condition_factor= 5
+misfire_probability 		= 0.004
+misfire_condition_k		= 0.05
+condition_shot_dec 		= 0.0003
+
+fire_point             		=  0.0, 0.262, 0.647
+
+flame_particles				= weapons\generic_weapon05
+smoke_particles				= weapons\generic_shoot_00
+grenade_flame_particles		= weapons\generic_weapon01
+	
+shell_point		 			= 0.00, -100.262, 0.189;0.00, 0.262, 0.189
+shell_particles	 			= amik\weapons\12x70\12x70_r_1
+
+PDM_disp_base 				= 1.0
+PDM_disp_vel_factor 			= 0.95
+PDM_disp_accel_factor 			= 0.95
+PDM_crouch	 			= 1.0
+PDM_crouch_no_acc 			= 1.0
+
+hit_power               = 0.95
+hit_impulse		 		= 100
+hit_type 				= fire_wound
+
+fire_distance            		= 50
+bullet_speed				= 400
+rpm                      		= 200
+
+use_aim_bullet				= true
+time_to_aim					= 1.0	
+
+silencer_hit_power       		= 0.32
+silencer_hit_impulse	 		= 120
+silencer_fire_distance   		= 250
+silencer_bullet_speed	 		= 600
+
+hud                      	= wpn_spas12_hud
+
+position         	        = -0.026,-0.215,0
+orientation      	        = 0,0,0
+
+strap_position         		= -0.18,-0.45,0.2
+strap_orientation      		= -10,-5,10
+strap_bone0					= bip01_spine2
+strap_bone1					= bip01_spine1
+
+visual                   	= weapons\spas12\wpn_spas12.ogf
+
+light_color					= 0.6,0.5,0.3
+light_range					= 5
+light_var_color				= 0.05						
+light_var_range				= 0.5
+light_time 					= 0.2						
+
+ph_mass						= 5
+
+scope_status				= 0	
+silencer_status				= 0
+grenade_launcher_status		= 0
+
+zoom_enabled				= true
+scope_zoom_factor	    	= 65
+
+silencer_name  			= wpn_addon_silencer
+silencer_x 				= 168
+silencer_y 				= -3					
+
+snd_draw					= weapons\saiga\draw
+snd_holster					= weapons\saiga\hide
+snd_shoot					= weapons\saiga\shoot
+snd_empty					= weapons\saiga\empty
+snd_reload					= weapons\saiga\reload_full
+snd_reload_partly			= weapons\saiga\reload
+snd_reload_jammed			= weapons\saiga\reload_jammed
+snd_shoot_grenade			= weapons\gen_grenshoot
+snd_reload_grenade			= weapons\gen_grenload, 1.0, 0.8
+snd_switch					= weapons\groza_switch, 1.0, 0.5
+
+silencer_smoke_particles 	= weapons\generic_shoot_00
+
+snd_silncer_shot			= weapons\w_ak74_shot1 
+
+silencer_light_color		= 0.6,0.5,0.3
+silencer_light_range		= 0.01
+silencer_light_var_color	= 0.05
+silencer_light_var_range	= 0.5
+silencer_light_time 		= 0.2
+
+[wpn_spas12_hud]
+shell_point          		= 0.00, -0.08, -0.01
+shell_dir			 		= 0.0, 0.0, 0.0
+fire_point               	= 0.0,-0.035,0.1
+fire_bone                	= slide
+orientation              	= 3,1.5,0
+position                 	= 0.01,-0.01,-0.15
+visual                   	= weapons\spas12\wpn_spas12_hud.ogf
+
+anim_idle					= idle
+anim_idle_aim				= idle_aim
+anim_reload					= reload_empty
+anim_reload_partly			= reload
+anim_reload_jammed          = reload_jammed
+anim_draw					= draw
+anim_holster				= holster
+anim_shoot					= shoot
+anim_idle_sprint			= idle_sprint
+anim_idle_moving		    = idle_moving
+
+zoom_offset					= -0.064,0.014,0.0
+zoom_rotate_x				= 0.011
+zoom_rotate_y				= 0.05
+
+zoom_hide_crosshair	= true
+
+\\\\\\\\\\\\\\
+\\Upgrade's\\\
+\\\\\\\\\\\\\\
+
+[wpn_spas12_m1]:wpn_spas12	    ;Сайга12 "Хантер"
+$spawn             				= "weapons\uniq\wpn_spas12_m1"	
+description						= enc_weapons1_wpn-spas12_m1
+ammo_class				        = ammo_12x76_zhekan, ammo_12x76_dart 
+fire_dispersion_base			= 0.25
+condition_shot_dec 				= 0.00015
+inv_weight			= 3.7
+inv_grid_width     = 6
+inv_grid_height    = 2
+inv_grid_x         = 17
+inv_grid_y         = 20
+cam_max_angle			= 4.0
+visual                   	= weapons\spas12\wpn_spas12_m1.ogf
+hud                      	= wpn_spas12_hud_m1
+[wpn_spas12_hud_m1]:wpn_spas12_hud
+visual                   	= weapons\spas12\wpn_spas12_hud_m1.ogf

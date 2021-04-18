@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="windows-1251" ?>
+
+<sleeping_bag_wnd> 
+	<back_video x="0" y="0" width="704" height="430">
+		<texture x="80" y="0" width="704" height="430">ui\ui_mm_window_back_crop</texture>
+	</back_video>
+
+	<background x="-25" y="-17" width="738" height="455" stretch="1">
+		<texture x="0" y="0" width="505" height="460">ui\ui_win_sleep.dds</texture>
+	</background>
+
+	<caption_1 x="375" y="30" width="50" height="35">
+		<text>sleep_title_1</text>
+	</caption_1>
+
+	<caption_2 x="375" y="30" width="50" height="35">
+		<text>sleep_title_2</text>
+	</caption_2>
+
+	<caption_3 x="375" y="30" width="50" height="35">
+		<text>sleep_title_3</text>
+	</caption_3>
+
+	<caption_4 x="375" y="30" width="50" height="35">
+		<text>sleep_title_4</text>
+	</caption_4>
+
+	<caption_5 x="375" y="30" width="50" height="35">
+		<text>sleep_title_5</text>
+	</caption_5>
+	
+	<btn_1 x="272" y="80" width="256" height="35">
+		<texture_e>ui\ui_btn_mm_e</texture_e>
+		<texture_t>ui\ui_btn_mm_t</texture_t>
+		<texture_h>ui\ui_btn_mm_h</texture_h>
+		<text>sleep_1_hour</text>
+	</btn_1>
+
+	<btn_2 x="272" y="80" width="256" height="35">
+		<texture_e>ui\ui_btn_mm_e</texture_e>
+		<texture_t>ui\ui_btn_mm_t</texture_t>
+		<texture_h>ui\ui_btn_mm_h</texture_h>
+		<text>sleep_2_hours</text>
+	</btn_2>
+
+	<btn_3 x="272" y="130" width="256" height="35">
+		<texture_e>ui\ui_btn_mm_e</texture_e>
+		<texture_t>ui\ui_btn_mm_t</texture_t>
+		<texture_h>ui\ui_btn_mm_h</texture_h>
+		<text>sleep_3_hours</text>
+	</btn_3>
+
+	<btn_4 x="272" y="130" width="256" height="35">
+		<texture_e>ui\ui_btn_mm_e</texture_e>
+		<texture_t>ui\ui_btn_mm_t</texture_t>
+		<texture_h>ui\ui_btn_mm_h</texture_h>
+		<text>sleep_4_hours</text>
+	</btn_4>
+
+	<btn_5 x="272" y="180" width="256" height="35">
+		<texture_e>ui\ui_btn_mm_e</texture_e>
+		<texture_t>ui\ui_btn_mm_t</texture_t>
+		<texture_h>ui\ui_btn_mm_h</texture_h>
+		<text>sleep_5_hours</text>
+	</btn_5>
+
+	<btn_6 x="272" y="180" width="256" height="35">
+		<texture_e>ui\ui_btn_mm_e</texture_e>
+		<texture_t>ui\ui_btn_mm_t</texture_t>
+		<texture_h>ui\ui_btn_mm_h</texture_h>
+		<text>sleep_6_hours</text>
+	</btn_6>
+	
+	<btn_7 x="272" y="230" width="256" height="35">
+		<texture_e>ui\ui_btn_mm_e</texture_e>
+		<texture_t>ui\ui_btn_mm_t</texture_t>
+		<texture_h>ui\ui_btn_mm_h</texture_h>
+		<text>sleep_7_hours</text>
+	</btn_7>
+
+	<btn_9 x="272" y="280" width="256" height="35">
+		<texture_e>ui\ui_btn_mm_e</texture_e>
+		<texture_t>ui\ui_btn_mm_t</texture_t>
+		<texture_h>ui\ui_btn_mm_h</texture_h>
+		<text>sleep_9_hours</text>
+	</btn_9>
+
+	<btn_cancel x="550" y="375" width="117" height="29">
+		<texture_e>ui_button_ordinary_e</texture_e>
+		<texture_t>ui_button_ordinary_t</texture_t>
+		<texture_h>ui_button_ordinary_h</texture_h>
+		<text>ui_inv_exit</text>
+	</btn_cancel>
+
+</sleeping_bag_wnd>

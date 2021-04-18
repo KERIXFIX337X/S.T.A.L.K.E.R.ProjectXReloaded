@@ -1,0 +1,278 @@
+
+--[[
+Как это работает(коротко):
+- алгоритм сделан так, чтобы спавн артов был распредён равномерно по локации, распределение наиболее сильно зависит от расположения аномалий
+	на локациях, поэтому динамические аномалии дают лучший эффект случайности. Также влияет позиция точек входа в локацию и настраиваемые 
+	параметры, описанные ниже.
+- спавн происходит после наступления условия "срабатывания таймера", при этом арты спавнятся на локации в которой находится
+	актор, имя локации заносится в массив и запоминается в псторе актора до следующего срабатывания таймера и так для всех локаций,
+	которые актор посетит после таймера. Преимущества такого механизма в непереполнении локаций артефактами, отсутствии фризов при спавне.
+- позиции спавна артов - это позиции аномалий, присутствующих на локации плюс задаваемое смещение.
+- около каждой аномалии спавнится именно тот артефакт, который ей свойственен по описаниям из игры, причём артефакт для спавна выбирается
+	с учётом его редкости, исходя из заданной вероятности.
+	
+Как подключить скрипт:
+- для начала нужно определиться с таймером спавна артов, т.е. прикрутить проверку какой-нибудь переменной на подобие как
+	сделано для выброса АМК или ОГСМ.
+- подключить вызов функции exec() в биндер актёра
+
+Какие настройки:
+- r = math.random(25,60) - радиус ограничивающий спавн артов вокруг актора, чтобы не спавнились перед глазами
+- lev = {["l01_escape"] = {dist=math.random(100,250),qtt=4},.. - массив распределения артов по локациям, dist - предельное расстояние
+	м/у аномалиями в которых возможен спавн артефактов, qtt - максимальное количество артефактов на локацию(не более, но может заспавнится меньше).
+- arts = {["buzz"] = {af_ameba_slime=60, af_ameba_slug=20, af_ameba_mica=15, af_dummy_pellicle=5},... - массив для задания аномалиям
+	видов артефактов и вероятностей спавна того или иного вида.
+- off_x, off_y, off_z - смещения позиции спавна артефакта относительно позиции аномалии
+
+kstn
+]]
+
+function printf(fmt, ...)
+	local msg = string.format(fmt, ...)
+	local msg_no_ws = string.gsub(msg, "%s", "_")
+	-- get_console():execute("dbg:" .. msg_no_ws)
+end
+
+local show_art = false	-- дебаг-режим(вывод сообщений в консоль, отображение артов на карте PDA)
+local lastrespawntime = nil
+local repspawninterval = 360000 -- 1*60*60*1000 -- hh*mm*ss*ms
+
+local art_t
+function reset() -- обнулить информацию о том что артефакты были заспавнены и соответственно они начнут спавниться снова
+	xr_logic.pstor_store(actor, "levs", "")
+	xr_logic.pstor_store(actor, "leva", "")
+end
+
+-- start - added by XiaNi for FreeplayStart mod
+function update()
+	local time = time_global()
+	-- if there was no arts respawn before do it in 1 hour
+	if lastrespawntime == nil then lastrespawntime = time - 1 end -- + 360000 end
+	-- check if it is time to respawn artefacts
+	if lastrespawntime<time then
+		spawn_art.reset()
+		lastrespawntime = lastrespawntime + repspawninterval
+	end
+	spawn_art.exec()
+end
+
+function save(packet)
+	-- xiani.xlog('saving spawnart time')
+	-- xiani.xlog('lastrespawntime=' .. tostring(lastrespawntime))
+	if lastrespawntime == nil then
+		packet:w_u8(0)
+	else
+		packet:w_u8(1)
+		packet:w_u32(lastrespawntime)
+		--utils.w_CTime(packet, lastrespawntime)
+	end
+end
+function load(packet)
+	xiani.xlog('loading spawnart time')
+	local flag = packet:r_u8()
+	if flag == 1 then
+		lastrespawntime = packet:r_u32()
+		-- lastrespawntime = utils.r_CTime(packet)
+	end
+	-- xiani.xlog('lastrespawntime=' .. tostring(lastrespawntime))
+end
+-- end - added by XiaNi for FreeplayStart mod
+
+function exec()
+	local time = time_global()
+	if art_t == nil then
+		art_t = time + 14000
+	elseif art_t < time then
+		art_t = time + 14000
+		local actor = db.actor
+		local level_cur = level.name()
+		local level_sav = xr_logic.pstor_retrieve(actor, "levs", "")
+		local blowout = false
+		
+		-- blowout = amk.load_variable("blowout",0) > 0					--<< проверка на выброс AMK
+		-- blowout = db.Flag2==1 											--<< проверка на выброс OGSM
+		-- if blowout then
+		--	reset()
+		-- end
+		
+		if level_sav ~= level_cur then
+			local level_all = xr_logic.pstor_retrieve(actor, "leva", "")
+			if not blowout and not string.find(level_all, level_cur) then			--<< проверка на выброс
+				local dist, qtt, id, n
+				local sim = alife()
+				local a_list = {}
+				local sm_list = {}
+				local lev_list = {}
+				local r = math.random(25,60)
+				local default_prob = 80
+				local lev = {
+				["l01_escape"] = {dist=math.random(100,250),qtt=4, prob=60},
+				["l02_garbage"] = {dist=math.random(100,250),qtt=4},
+				["l03_agroprom"] = {dist=math.random(100,200),qtt=4},
+				["l03u_agr_underground"] = {dist=math.random(25,50),qtt=4},
+				["l04_darkvalley"] = {dist=math.random(100,250),qtt=4},
+				["l04u_labx18"] = {dist=math.random(25,50),qtt=4},
+				["l05_bar"] = {},
+				["l06_rostok"] = {dist=math.random(50,100),qtt=3},
+				["l07_military"] = {dist=math.random(100,200),qtt=4},
+				["l08_yantar"] = {dist=math.random(50,100),qtt=4},
+				["l08u_brainlab"] = {},
+				["l10_radar"] = {dist=math.random(100,250),qtt=5, prob=80},
+				["l10u_bunker"] = {},
+				["l11_pripyat"] = {dist=math.random(100,200),qtt=6},
+				["l12_stancia"] = {dist=math.random(100,200),qtt=7},
+				["l12u_sarcofag"] = {},
+				["l12u_control_monolith"] = {},
+				["l12_stancia_2"] = {}
+				}
+				
+				if lev[level_cur] then
+					dist = lev[level_cur].dist
+					qtt = lev[level_cur].qtt
+					prob = lev[level_cur].prob
+				end
+				
+				if dist == nil or qtt == nil then
+					dist = 0
+					qtt = 0
+					prob = 0
+				elseif prob == nil then
+					prob = default_prob
+				end
+				
+				table.insert(lev_list, level_cur)
+				table.insert(lev_list, level_all)
+				for k,v in pairs(lev_list) do
+					if k == 1 then
+						lv_name = v
+					else
+						lv_name = level_cur..", "..v
+					end
+				end
+				xr_logic.pstor_store(actor, "leva", lv_name)
+				xr_logic.pstor_store(actor, "levs", level_cur)
+				
+				-- заполнение массива id стандартных аномалий на локе с учётом предельнодопустимого расстояния
+				for id=1,65534 do
+					local obj = level.object_by_id(id)
+					if obj then
+						local class = obj:clsid()
+						if
+							class == clsid.zone_bfuzz_s or
+							class == clsid.zone_galant_s or
+							class == clsid.zone_mbald_s or
+							class == clsid.zone_mincer_s
+						then
+							if distance_between_safe(actor, obj) > r then
+								table.insert(a_list, obj:id())
+								table.insert(sm_list, obj:id())
+							else
+								table.insert(a_list, obj:id())
+							end
+							for i,j in pairs(sm_list) do
+								if distance_between_safe(level.object_by_id(j), obj) > 0 and distance_between_safe(level.object_by_id(j), obj) < dist then
+									table.remove(sm_list, sm_list[table.getn(sm_list)])
+								end
+							end
+						end
+					end
+				end
+				if dist > 0 and qtt > 0 and prob > 0 then
+					for n=1,qtt do
+						local cnt = table.getn(sm_list)
+						if cnt > 0 then
+							if math.random(100) <= prob then
+								local id = math.random(cnt)
+								local obj = level.object_by_id(sm_list[id])
+								table.remove(sm_list, id)
+								create_art(obj)
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+-- создаём артефаки
+function create_art(obj)
+	if obj == nil then
+		return
+	end
+	
+	-- задаём каждому виду аномалии соответствующие артефакты и вероятности
+	local arts = {
+	["buzz"] = {af_ameba_slime=60, af_ameba_slug=20, af_ameba_mica=15, af_dummy_pellicle=5},
+	["zharka"] = {af_drops=50, af_fireball=40, af_cristall=5, af_dummy_dummy=5},
+	["mosquito"] = {af_medusa=60, af_cristall_flower=30, af_night_star=5, af_dummy_spring=5},
+	["mincer"] = {af_blood=55, af_mincer_meat=30, af_soul=10, af_dummy_spring=5},
+	["gravi"] = {af_vyvert=60, af_gravi=30, af_gold_fish=5, af_dummy_spring=5},
+	["witches"] = {af_electra_sparkler=50, af_electra_flash=40, af_electra_moonlight=5, af_dummy_battery=5},
+	["hair"] = {af_rusty_thorn=60, af_rusty_kristall=30, af_fuzz_kolobok=5, af_dummy_glassbeads=5}
+	}
+	
+	--af_rusty_sea-urchin=5 <- хренов ёж, придётся его убрать(некорректное имя секции)
+	
+	local key
+	local sect = obj:section()
+	if string.find(sect, "buzz") then
+		key = "buzz"
+	elseif string.find(sect, "zharka") then
+		key = "zharka"
+	elseif string.find(sect, "mosquito") then
+		key = "mosquito"
+	elseif string.find(sect, "mincer") then
+		key = "mincer"
+	elseif string.find(sect, "gravi") then
+		key = "gravi"
+	elseif string.find(sect, "witches") then
+		key = "witches"
+	elseif string.find(sect, "hair") then
+		key = "hair"
+	else
+		key = false
+	end
+
+	if key == false then
+		-- do not spawn anything
+	else
+		local lv = obj:level_vertex_id()
+		local gv = obj:game_vertex_id()
+		local pos = obj:position()
+		local off_x = 2
+		local off_y = 1
+		local off_z = 2
+		pos.x = pos.x + off_x
+		pos.y = pos.y + off_y
+		pos.z = pos.z + off_z
+		
+		if lv and gv and pos and pos.x and pos.y and pos.z then
+			local sec = rcw(arts[key])
+			local art = alife():create(sec, pos, lv, gv)
+			if show_art == true then
+				local artf = game.translate_string(system_ini():r_string(art:section_name(), "inv_name"))
+				local text = "Аномалия:"..obj:section()..", артефакт:"..artf
+				level.map_add_object_spot(art.id, "red_location", text)
+			end
+		else
+			printf("!!!!!!!!!!FUCK MY BRAIN!!!!!!!!!!")
+			get_console():execute("flush")
+		end
+	end
+end
+
+-- вероятностный выбор
+function rcw(tbl)
+	local sum = 0
+	local r = math.random(100)
+	for k,w in pairs(tbl) do
+		sum = sum + w
+		if r <= sum then
+			if show_art == true then
+				printf("RND=[%s], Artefact section:[%s]", r, tostring(k))
+			end
+			return k
+		end
+	end
+end

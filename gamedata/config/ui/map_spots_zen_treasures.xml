@@ -1,0 +1,247 @@
+	<treasure_1_1>
+		<level_map spot="treasure_spot_1_1" pointer="quest_pointer"/>
+	</treasure_1_1>
+	<treasure_1_2>
+		<level_map spot="treasure_spot_1_2" pointer="quest_pointer"/>
+	</treasure_1_2>
+	<treasure_1_3>
+		<level_map spot="treasure_spot_1_3" pointer="quest_pointer"/>
+	</treasure_1_3>
+	<treasure_1_4>
+		<level_map spot="treasure_spot_1_4" pointer="quest_pointer"/>
+	</treasure_1_4>
+	<treasure_1_5>
+		<level_map spot="treasure_spot_1_5" pointer="quest_pointer"/>
+	</treasure_1_5>
+	<treasure_1_6>
+		<level_map spot="treasure_spot_1_6" pointer="quest_pointer"/>
+	</treasure_1_6>
+	<treasure_1_7>
+		<level_map spot="treasure_spot_1_7" pointer="quest_pointer"/>
+	</treasure_1_7>
+	<treasure_1_8>
+		<level_map spot="treasure_spot_1_8" pointer="quest_pointer"/>
+	</treasure_1_8>
+	<treasure_1_9>
+		<level_map spot="treasure_spot_1_9" pointer="quest_pointer"/>
+	</treasure_1_9>
+	<treasure_1_10>
+		<level_map spot="treasure_spot_1_10" pointer="quest_pointer"/>
+	</treasure_1_10>
+	<treasure_1_11>
+		<level_map spot="treasure_spot_1_11" pointer="quest_pointer"/>
+	</treasure_1_11>
+	<treasure_1_12>
+		<level_map spot="treasure_spot_1_12" pointer="quest_pointer"/>
+	</treasure_1_12>
+	<treasure_1_13>
+		<level_map spot="treasure_spot_1_13" pointer="quest_pointer"/>
+	</treasure_1_13>
+	<treasure_1_14>
+		<level_map spot="treasure_spot_1_14" pointer="quest_pointer"/>
+	</treasure_1_14>
+	<treasure_1_15>
+		<level_map spot="treasure_spot_1_15" pointer="quest_pointer"/>
+	</treasure_1_15>
+	<treasure_1_16>
+		<level_map spot="treasure_spot_1_16" pointer="quest_pointer"/>
+	</treasure_1_16>
+
+	<treasure_2_1>
+		<level_map spot="treasure_spot_2_1" pointer="quest_pointer"/>
+	</treasure_2_1>
+	<treasure_2_2>
+		<level_map spot="treasure_spot_2_2" pointer="quest_pointer"/>
+	</treasure_2_2>
+	<treasure_2_3>
+		<level_map spot="treasure_spot_2_3" pointer="quest_pointer"/>
+	</treasure_2_3>
+	<treasure_2_4>
+		<level_map spot="treasure_spot_2_4" pointer="quest_pointer"/>
+	</treasure_2_4>
+	<treasure_2_5>
+		<level_map spot="treasure_spot_2_5" pointer="quest_pointer"/>
+	</treasure_2_5>
+	<treasure_2_6>
+		<level_map spot="treasure_spot_2_6" pointer="quest_pointer"/>
+	</treasure_2_6>
+	<treasure_2_7>
+		<level_map spot="treasure_spot_2_7" pointer="quest_pointer"/>
+	</treasure_2_7>
+	<treasure_2_8>
+		<level_map spot="treasure_spot_2_8" pointer="quest_pointer"/>
+	</treasure_2_8>
+
+	<treasure_3_1>
+		<level_map spot="treasure_spot_3_1" pointer="quest_pointer"/>
+	</treasure_3_1>
+	<treasure_3_2>
+		<level_map spot="treasure_spot_3_2" pointer="quest_pointer"/>
+	</treasure_3_2>
+	<treasure_3_3>
+		<level_map spot="treasure_spot_3_3" pointer="quest_pointer"/>
+	</treasure_3_3>
+	<treasure_3_4>
+		<level_map spot="treasure_spot_3_4" pointer="quest_pointer"/>
+	</treasure_3_4>
+	<treasure_3_5>
+		<level_map spot="treasure_spot_3_5" pointer="quest_pointer"/>
+	</treasure_3_5>
+	<treasure_3_6>
+		<level_map spot="treasure_spot_3_6" pointer="quest_pointer"/>
+	</treasure_3_6>
+	<treasure_3_7>
+		<level_map spot="treasure_spot_3_7" pointer="quest_pointer"/>
+	</treasure_3_7>
+	<treasure_3_8>
+		<level_map spot="treasure_spot_3_8" pointer="quest_pointer"/>
+	</treasure_3_8>
+
+	<treasure_4_1>
+		<level_map spot="treasure_spot_4_1" pointer="quest_pointer"/>
+	</treasure_4_1>
+	<treasure_4_2>
+		<level_map spot="treasure_spot_4_2" pointer="quest_pointer"/>
+	</treasure_4_2>
+	<treasure_4_3>
+		<level_map spot="treasure_spot_4_3" pointer="quest_pointer"/>
+	</treasure_4_3>
+	<treasure_4_4>
+		<level_map spot="treasure_spot_4_4" pointer="quest_pointer"/>
+	</treasure_4_4>
+	<treasure_4_5>
+		<level_map spot="treasure_spot_4_5" pointer="quest_pointer"/>
+	</treasure_4_5>
+	<treasure_4_6>
+		<level_map spot="treasure_spot_4_6" pointer="quest_pointer"/>
+	</treasure_4_6>
+	<treasure_4_7>
+		<level_map spot="treasure_spot_4_7" pointer="quest_pointer"/>
+	</treasure_4_7>
+	<treasure_4_8>
+		<level_map spot="treasure_spot_4_8" pointer="quest_pointer"/>
+	</treasure_4_8>
+
+	<treasure_spot_1_1	x="0" y="0" width="25" height="25" alignment="c" stretch="1" scale="1">
+		<texture>ui_mapQuest_gold_1</texture>
+	</treasure_spot_1_1>
+	<treasure_spot_1_2	x="0" y="0" width="25" height="25" alignment="c" stretch="1" scale="1">
+		<texture>ui_mapQuest_gold_2</texture>
+	</treasure_spot_1_2>
+	<treasure_spot_1_3	x="0" y="0" width="25" height="25" alignment="c" stretch="1" scale="1">
+		<texture>ui_mapQuest_gold_3</texture>
+	</treasure_spot_1_3>
+	<treasure_spot_1_4	x="0" y="0" width="25" height="25" alignment="c" stretch="1" scale="1">
+		<texture>ui_mapQuest_gold_4</texture>
+	</treasure_spot_1_4>
+	<treasure_spot_1_5	x="0" y="0" width="25" height="25" alignment="c" stretch="1" scale="1">
+		<texture>ui_mapQuest_gold_5</texture>
+	</treasure_spot_1_5>
+	<treasure_spot_1_6	x="0" y="0" width="25" height="25" alignment="c" stretch="1" scale="1">
+		<texture>ui_mapQuest_gold_6</texture>
+	</treasure_spot_1_6>
+	<treasure_spot_1_7	x="0" y="0" width="25" height="25" alignment="c" stretch="1" scale="1">
+		<texture>ui_mapQuest_gold_7</texture>
+	</treasure_spot_1_7>
+	<treasure_spot_1_8	x="0" y="0" width="25" height="25" alignment="c" stretch="1" scale="1">
+		<texture>ui_mapQuest_gold_8</texture>
+	</treasure_spot_1_8>
+	<treasure_spot_1_9	x="0" y="0" width="25" height="25" alignment="c" stretch="1" scale="1">
+		<texture>ui_mapQuest_gold_9</texture>
+	</treasure_spot_1_9>
+	<treasure_spot_1_10	x="0" y="0" width="25" height="25" alignment="c" stretch="1" scale="1">
+		<texture>ui_mapQuest_gold_10</texture>
+	</treasure_spot_1_10>
+	<treasure_spot_1_11	x="0" y="0" width="25" height="25" alignment="c" stretch="1" scale="1">
+		<texture>ui_mapQuest_gold_11</texture>
+	</treasure_spot_1_11>
+	<treasure_spot_1_12	x="0" y="0" width="25" height="25" alignment="c" stretch="1" scale="1">
+		<texture>ui_mapQuest_gold_12</texture>
+	</treasure_spot_1_12>
+	<treasure_spot_1_13	x="0" y="0" width="25" height="25" alignment="c" stretch="1" scale="1">
+		<texture>ui_mapQuest_gold_13</texture>
+	</treasure_spot_1_13>
+	<treasure_spot_1_14	x="0" y="0" width="25" height="25" alignment="c" stretch="1" scale="1">
+		<texture>ui_mapQuest_gold_14</texture>
+	</treasure_spot_1_14>
+	<treasure_spot_1_15	x="0" y="0" width="25" height="25" alignment="c" stretch="1" scale="1">
+		<texture>ui_mapQuest_gold_15</texture>
+	</treasure_spot_1_15>
+	<treasure_spot_1_16	x="0" y="0" width="25" height="25" alignment="c" stretch="1" scale="1">
+		<texture>ui_mapQuest_gold_16</texture>
+	</treasure_spot_1_16>
+
+	<treasure_spot_2_1	x="0" y="0" width="20" height="20" alignment="c" stretch="1" scale="1">
+		<texture>ui_mapQuest_gold_1</texture>
+	</treasure_spot_2_1>
+	<treasure_spot_2_2	x="0" y="0" width="20" height="20" alignment="c" stretch="1" scale="1">
+		<texture>ui_mapQuest_gold_2</texture>
+	</treasure_spot_2_2>
+	<treasure_spot_2_3	x="0" y="0" width="20" height="20" alignment="c" stretch="1" scale="1">
+		<texture>ui_mapQuest_gold_3</texture>
+	</treasure_spot_2_3>
+	<treasure_spot_2_4	x="0" y="0" width="20" height="20" alignment="c" stretch="1" scale="1">
+		<texture>ui_mapQuest_gold_4</texture>
+	</treasure_spot_2_4>
+	<treasure_spot_2_5	x="0" y="0" width="20" height="20" alignment="c" stretch="1" scale="1">
+		<texture>ui_mapQuest_gold_5</texture>
+	</treasure_spot_2_5>
+	<treasure_spot_2_6	x="0" y="0" width="20" height="20" alignment="c" stretch="1" scale="1">
+		<texture>ui_mapQuest_gold_6</texture>
+	</treasure_spot_2_6>
+	<treasure_spot_2_7	x="0" y="0" width="20" height="20" alignment="c" stretch="1" scale="1">
+		<texture>ui_mapQuest_gold_7</texture>
+	</treasure_spot_2_7>
+	<treasure_spot_2_8	x="0" y="0" width="20" height="20" alignment="c" stretch="1" scale="1">
+		<texture>ui_mapQuest_gold_8</texture>
+	</treasure_spot_2_8>
+
+	<treasure_spot_3_1	x="0" y="0" width="15" height="15" alignment="c" stretch="1" scale="1">
+		<texture>ui_mapQuest_gold_1</texture>
+	</treasure_spot_3_1>
+	<treasure_spot_3_2	x="0" y="0" width="15" height="15" alignment="c" stretch="1" scale="1">
+		<texture>ui_mapQuest_gold_2</texture>
+	</treasure_spot_3_2>
+	<treasure_spot_3_3	x="0" y="0" width="15" height="15" alignment="c" stretch="1" scale="1">
+		<texture>ui_mapQuest_gold_3</texture>
+	</treasure_spot_3_3>
+	<treasure_spot_3_4	x="0" y="0" width="15" height="15" alignment="c" stretch="1" scale="1">
+		<texture>ui_mapQuest_gold_4</texture>
+	</treasure_spot_3_4>
+	<treasure_spot_3_5	x="0" y="0" width="15" height="15" alignment="c" stretch="1" scale="1">
+		<texture>ui_mapQuest_gold_5</texture>
+	</treasure_spot_3_5>
+	<treasure_spot_3_6	x="0" y="0" width="15" height="15" alignment="c" stretch="1" scale="1">
+		<texture>ui_mapQuest_gold_6</texture>
+	</treasure_spot_3_6>
+	<treasure_spot_3_7	x="0" y="0" width="15" height="15" alignment="c" stretch="1" scale="1">
+		<texture>ui_mapQuest_gold_7</texture>
+	</treasure_spot_3_7>
+	<treasure_spot_3_8	x="0" y="0" width="15" height="15" alignment="c" stretch="1" scale="1">
+		<texture>ui_mapQuest_gold_8</texture>
+	</treasure_spot_3_8>
+
+	<treasure_spot_4_1	x="0" y="0" width="10" height="10" alignment="c" stretch="1" scale="1">
+		<texture>ui_mapQuest_gold_1</texture>
+	</treasure_spot_4_1>
+	<treasure_spot_4_2	x="0" y="0" width="10" height="10" alignment="c" stretch="1" scale="1">
+		<texture>ui_mapQuest_gold_2</texture>
+	</treasure_spot_4_2>
+	<treasure_spot_4_3	x="0" y="0" width="10" height="10" alignment="c" stretch="1" scale="1">
+		<texture>ui_mapQuest_gold_3</texture>
+	</treasure_spot_4_3>
+	<treasure_spot_4_4	x="0" y="0" width="10" height="10" alignment="c" stretch="1" scale="1">
+		<texture>ui_mapQuest_gold_4</texture>
+	</treasure_spot_4_4>
+	<treasure_spot_4_5	x="0" y="0" width="10" height="10" alignment="c" stretch="1" scale="1">
+		<texture>ui_mapQuest_gold_5</texture>
+	</treasure_spot_4_5>
+	<treasure_spot_4_6	x="0" y="0" width="10" height="10" alignment="c" stretch="1" scale="1">
+		<texture>ui_mapQuest_gold_6</texture>
+	</treasure_spot_4_6>
+	<treasure_spot_4_7	x="0" y="0" width="10" height="10" alignment="c" stretch="1" scale="1">
+		<texture>ui_mapQuest_gold_7</texture>
+	</treasure_spot_4_7>
+	<treasure_spot_4_8	x="0" y="0" width="10" height="10" alignment="c" stretch="1" scale="1">
+		<texture>ui_mapQuest_gold_8</texture>
+	</treasure_spot_4_8>

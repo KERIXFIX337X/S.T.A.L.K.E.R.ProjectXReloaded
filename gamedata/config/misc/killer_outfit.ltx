@@ -1,0 +1,162 @@
+;---------------------------------------------------------------------------------------------
+;		КОСТЮМ НАЕМНИКА
+;---------------------------------------------------------------------------------------------
+[killer_outfit]:outfit_base
+GroupControlSection	= spawn_group
+discovery_dependency = 
+$spawn 			= "outfit\killer_outfit"
+;$prefetch 		= 32
+class			= E_STLK
+cform           = skeleton
+visual          = equipments\stalker_killer_suit
+actor_visual	= actors\killer\stalker_ki_antigas.ogf	
+
+ef_equipment_type	= 4
+
+inv_name			= killer_outfit_name
+inv_name_short		= killer_outfit_name
+description			= killer_outfit_description
+inv_weight			= 5.0
+slot				= 6
+inv_grid_width     = 2
+inv_grid_height    = 3
+inv_grid_x         = 39
+inv_grid_y         = 33
+full_icon_name		= npc_icon_killer_outfit
+
+cost				= 10000
+full_scale_icon		= 4,11			;иконка сталкера в костюме в полный рост
+
+immunities_sect			= sect_killer_outfit_immunities
+
+; LOW RESISTANCE
+burn_protection 				= 0.3
+strike_protection 				= 0.2
+shock_protection 				= 0.3
+wound_protection				= 0.3
+radiation_protection 			= 0.3
+telepatic_protection 			= 0.0
+chemical_burn_protection 		= 0.2
+explosion_protection 			= 0.25
+fire_wound_protection  			= 0.2
+
+bones_koeff_protection = gilet_antigas_damage
+
+[sect_killer_outfit_immunities]
+burn_immunity				= 0.04			;коэффициенты иммунитета самого костюма
+strike_immunity				= 0.01
+shock_immunity				= 0.04
+wound_immunity				= 0.020
+radiation_immunity			= 0.00
+telepatic_immunity			= 0.00
+chemical_burn_immunity		= 0.04
+explosion_immunity			= 0.04
+fire_wound_immunity			= 0.012
+
+;---------------------------------------------------------------------------------------------
+;		;Модифицированный экзоскелет killer
+;---------------------------------------------------------------------------------------------
+[killer_blue_exoskeleton]:exo_outfit	
+
+$spawn							= "outfit\uniq\outfit_exo_m1"
+inv_name						= killer_blue_exoskeleton_name
+inv_name_short					= killer_blue_exoskeleton_name
+description						= killer_blue_exoskeleton_description
+inv_grid_width     = 2
+inv_grid_height    = 3
+inv_grid_x         = 33
+inv_grid_y         = 19
+
+
+visual          = equipments\outfit\killer_exo_suit
+actor_visual	= actors\killer\stalker_ki_exoskeleton.ogf
+full_icon_name		= npc_icon_killer_blue_exoskeleton
+
+inv_weight			= 11.0
+cost				= 40000
+
+nightvision_sect	= effector_nightvision_good
+immunities_sect			= sect_killer_blue_exoskeleton_immunities
+; MEDIUM RESISTANCE
+burn_protection 				= 0.3
+strike_protection 				= 0.4
+shock_protection 				= -0.3
+wound_protection				= 0.7
+radiation_protection 			= 0.75
+telepatic_protection			= 0.00
+chemical_burn_protection 		= 0.3
+explosion_protection 			= 0.7
+fire_wound_protection  			= 0.7
+
+sprint_allowed					= false
+bones_koeff_protection			= exo_helmet_damage
+additional_inventory_weight		= 30
+additional_inventory_weight2	= 30
+
+[sect_killer_blue_exoskeleton_immunities]
+; From exo_outfit v.1.1
+burn_immunity				= 0.03
+strike_immunity				= 0.01
+shock_immunity				= 0.03
+wound_immunity				= 0.01
+radiation_immunity			= 0.00
+telepatic_immunity			= 0.00
+chemical_burn_immunity			= 0.03
+explosion_immunity			= 0.03
+fire_wound_immunity			= 0.005
+
+;---------------------------------------------------------------------------------------------
+;		;Научный костюм Наёмников
+;---------------------------------------------------------------------------------------------
+[merc_scientific_outfit]:outfit_base
+GroupControlSection	= spawn_group
+discovery_dependency = 
+$spawn 			= "outfit\dolg_scientific_outfit"
+$prefetch 		= 32
+class			= E_STLK
+cform           = skeleton
+visual          = equipments\outfit\killer_scien_suit.ogf
+actor_visual	= actors\killer\stalker_ki_nauchniy
+
+ef_equipment_type	= 4
+
+inv_name			= merc_scientific_outfit_name
+inv_name_short		= merc_scientific_outfit_name
+description			= merc_scientific_outfit_description
+inv_weight			= 8.0
+slot				= 6
+inv_grid_width     = 2
+inv_grid_height    = 3
+inv_grid_x         = 33
+inv_grid_y         = 16
+full_icon_name		= npc_icon_merc_scientific_outfit
+nightvision_sect	= effector_nightvision_good
+
+cost				= 25000
+full_scale_icon		= 8,6		;иконка сталкера в костюме в полный рост
+
+immunities_sect			= sect_merc_scientific_outfit_immunities
+
+; MEDIUM RESISTANCE
+burn_protection 				= 0.8
+strike_protection 				= 0.7
+shock_protection 				= 0.8
+wound_protection				= 0.4
+radiation_protection 			= 0.9
+telepatic_protection 			= 0.0
+chemical_burn_protection 		= 0.6
+explosion_protection 			= 0.4
+fire_wound_protection  			= 0.35
+
+bones_koeff_protection = kombez_kupol_damage
+
+[sect_merc_scientific_outfit_immunities]
+burn_immunity				= 0.03			;коэффициенты иммунитета самого костюма
+strike_immunity				= 0.01
+shock_immunity				= 0.03
+wound_immunity				= 0.015
+radiation_immunity			= 0.00
+telepatic_immunity			= 0.00
+chemical_burn_immunity		= 0.03
+explosion_immunity			= 0.03
+fire_wound_immunity			= 0.01

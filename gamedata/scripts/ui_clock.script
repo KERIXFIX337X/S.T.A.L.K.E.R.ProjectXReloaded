@@ -1,0 +1,16 @@
+-- added for on-hud clock display code by steelrat
+function show_time()
+local hud = get_hud()
+local cs = hud:GetCustomStatic("hud_show_time")
+if cs == nil then
+hud:AddCustomStatic("hud_time_static", true)
+hud:AddCustomStatic("hud_show_time", true)
+cs = hud:GetCustomStatic("hud_show_time")
+end
+local time_h = level.get_time_hours()
+local time_m = level.get_time_minutes()
+local msg
+--msg = string.format("%02d:%02d\\n", time_h, time_m)
+msg = string.format("%02d:%02d", time_h, time_m)
+if cs ~= nil then cs:wnd():SetText(msg) end
+end

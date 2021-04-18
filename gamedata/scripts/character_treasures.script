@@ -1,0 +1,15 @@
+local text = "give_treasure"
+function wolf_treasure()
+news_manager.send_tip(db.actor, text, 0, "treasure", 5000)
+alife():create("wolf_taynik",vector():set(-252.446,-13.04733,-9.268),9123,67)
+end
+
+function borov_treasure()
+news_manager.send_tip(db.actor, text, 0, "treasure", 5000)
+alife():create("borov_taynik",vector():set(107.395,-2.958852291072,-33.818),408763,124)
+end
+
+function ambal_treasure()
+news_manager.send_tip(db.actor, text, 0, "treasure", 5000)
+alife():create("ambal_taynik",vector():set(530.704,-49.54288482666,-240.298),180658,2061)
+end

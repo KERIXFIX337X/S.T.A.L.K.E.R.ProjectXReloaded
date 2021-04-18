@@ -1,0 +1,18 @@
+[logic]
+active = {-yan_brain_off -yan_labx16_switcher_primary_off} ph_idle@activate, ph_idle@deactivate
+
+[ph_button@active]
+anim = lab_primary_switcher_idle
+tooltip = tip_switch_off
+on_press = {+yan_labx16_switcher_1_off +yan_labx16_switcher_2_off +yan_labx16_switcher_3_off} ph_idle@deactivate %=play_snd_from_obj(911:ambient\switch_2) =play_snd(ambient\x16\x16_brain_death)%, %+yan_labx16_switcher_primary_try%
+
+[ph_idle@activate]
+on_timer = 1 | ph_button@active %-yan_brain_off -yan_labx16_switcher_primary_off =turn_off(911) =turn_off(913) =turn_off(915)%
+
+[ph_idle@deactivate]
+on_timer = 1 | ph_button@inactive %+yan_brain_off +yan_labx16_switcher_primary_off =turn_on(911) =turn_on(913) =turn_on(915)%
+
+[ph_button@inactive]
+anim = lab_primary_switcher_off
+tooltip = tip_switch_on
+on_press = ph_idle@activate %=play_snd_from_obj(911:ambient\switch_2) =play_snd(ambient\x16\x16_brain_death)%

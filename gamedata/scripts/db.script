@@ -1,0 +1,114 @@
+--[[------------------------------------------------------------------------------------------------
+База данных живых онлайновых объектов, зон и рестрикторов, актёра
+Чугай Александр
+--------------------------------------------------------------------------------------------------]]
+
+Flag2 = 0
+Flag3 = 0
+Dead2 = 0
+FlagEsc = 0
+
+zone_by_name        = {}
+sl_by_name          = {}
+storage             = {}
+sound               = {}
+actor               = nil
+actor_proxy         = actor_proxy.actor_proxy()
+heli                = {}
+turret              = {}
+creature	    = {}	-- true - человек, false - животное (исключая торговца)
+camp_storage        = {}
+story_by_id	    = {}
+smart_terrain_by_id = {}
+trader		    = nil
+info_restr          = {}
+strn_by_respawn     = {}
+
+function add_obj( obj )
+	if IsStalker(obj) then
+		creature[obj:id()] = true
+	elseif IsMonster(obj) then
+		creature[obj:id()] = false
+	end
+end
+
+function del_obj( obj )
+	storage   [obj:id()] = nil
+	if IsStalker(obj) or IsMonster(obj) then
+		creature[obj:id()] = nil
+	end
+end
+
+
+function add_zone( zone )
+	zone_by_name[zone:name()] = zone
+	add_obj( zone )
+end
+
+function del_zone( zone )
+	zone_by_name[zone:name()] = nil
+	del_obj( zone )
+end
+
+
+function add_sl( sl )
+	sl_by_name[sl:name()] = sl
+	add_obj( sl )
+end
+
+function del_sl( sl )
+	sl_by_name[sl:name()] = nil
+	del_obj( sl )
+end
+
+
+function add_actor( obj )
+	actor = obj
+	actor_proxy:net_spawn( obj )
+	add_obj( obj )
+end
+
+function del_actor()
+	del_obj( actor )
+	actor_proxy:net_destroy()
+	actor = nil
+end
+
+function add_m( obj )
+	actor = obj
+	actor_proxy:net_spawn( obj )
+	add_obj( obj )
+end
+
+function del_actor()
+	del_obj( actor )
+	actor_proxy:net_destroy()
+	actor = nil
+end
+
+function add_heli(obj)	
+	heli[obj:id()] = obj
+end	
+function del_heli(obj)
+	heli[obj:id()] = nil
+end	
+
+
+function add_turret(obj)
+	turret[obj:id()] = obj
+	-- нах не надо, но пусть будет.
+	add_obj(obj)
+end
+
+function del_turret(obj)
+	turret[obj:id()] = nil
+	del_obj(obj)
+end
+
+function add_smart_terrain( obj )
+	smart_terrain_by_id[obj.id] = obj
+end
+
+function del_smart_terrain( obj )
+	smart_terrain_by_id[obj.id] = nil
+end

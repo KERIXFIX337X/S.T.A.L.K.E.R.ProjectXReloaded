@@ -1,0 +1,81 @@
+--
+-- XiaNi maptools v2.3 ... part of EyeOfChernobil2
+-- ---------------------------------
+
+function test()
+end
+
+marked_objects = {}
+
+function markBySection(section, searchSubs)
+	if tostring(section) == '' then return false end
+	xiani.xlog("mAll: by_section start (subs:" .. tostring(searchSubs) .. ")")
+	local sim = alife()
+	local objsTotal = 0
+	local obj_section = ''
+	if sim then
+		for i=0,65535 do
+			local obj = sim:object(i)
+			-- local obj = level.object_by_id(i)
+			-- local obj = sim:story_object(i)
+			if obj then
+				obj_section = obj:section_name()
+				if obj_section and 
+				(
+					obj_section == section
+					or (searchSubs and string.find(obj_section, section))
+				)
+				then
+					marked_objects[i]=i
+					local str = tostring(obj:name()) .. ":[" .. tostring(obj_section) .. "]"
+					level.map_add_object_spot(obj.id, "anomaly_zone_location", str)
+					objsTotal=objsTotal+1
+				end
+			end
+		end
+	end
+	str = 'mAll: marked ' .. tostring(objsTotal) .. ' objects with section'
+	if searchSubs then
+		str = str .. ' containing '
+	else
+		str = str .. ' = '
+	end
+	str = str .. "'" .. tostring(section) .. "'"
+	xiani.xlog(str)
+	xiani.xlog("mAll: end")
+end
+
+function markByName(name, searchSubs)
+	if tostring(name) == '' then return false end
+	xiani.xlog("mAll: by_name start (subs:" .. tostring(searchSubs) .. ")")
+	local sim = alife()
+	local objsTotal = 0
+	if sim then
+		for i=0,65534 do
+			local obj = sim:object(i)
+			-- local obj = level.object_by_id(i)
+			-- local obj = sim:story_object(i)
+			if obj then
+				-- string.find(npc_info.name, gulag.name)
+				if obj:name() == name
+					or (searchSubs and string.find(obj:name(), name))
+				then
+					marked_objects[i]=i
+					local str = tostring(obj:name()) .. ":[" .. tostring(obj.section) .. "]"
+					level.map_add_object_spot_ser(obj.id, "anomaly_zone_location", str)
+					objsTotal=objsTotal+1
+				end
+			end
+		end
+	end
+	str = 'mAll: marked ' .. tostring(objsTotal) .. ' objects with name'
+	if searchSubs then
+		str = str .. ' containing '
+	else
+		str = str .. ' = '
+	end
+	str = str .. "'" .. tostring(name) .. "'"
+	xiani.xlog(str)
+	xiani.xlog("mAll: end")
+end
+

@@ -1,0 +1,38 @@
+function spawn_yantar ()
+alife():create("stalker_yantar",vector():set(30.57,0.292,-71.78),310688,112) end
+
+function proverka_stalker(actor,npc)
+   return has_alife_info("stalker_tec")
+end
+
+function proverka_finish(actor,npc)
+   return has_alife_info("buldog_death")
+end
+
+function proverka_vstrecha(actor,npc)
+   return has_alife_info("get_dialog_yantar_1")
+end
+
+function yantar_death(actor,npc)
+   return has_alife_info("yantar_death")
+end
+
+function proverka_otkaz(actor,npc)
+   return has_alife_info("raid_atp_close")
+end
+
+local obj = alife():story_object( 9900 )
+local obj_id = obj.id
+function add_spot_on_map(obj_id,type,text)
+    if obj_id then
+        if not text then text = "no_text" end
+        level.map_add_object_spot_ser(obj_id, type, text)
+    end
+end
+
+function add_metka_position(obj_id,type,text)
+    army.add_spot_on_map(obj.id,"blue_location","янтарь")
+end
+
+function spawn_buldog ()
+alife():create("bandit_buldog",vector():set(112.52,-2.842,-2.332),414726,117) end

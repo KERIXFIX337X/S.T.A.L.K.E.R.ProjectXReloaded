@@ -1,0 +1,32 @@
+[logic]
+active = {+bun_antenna_off} sr_idle, {-bun_antenna_off} sr_psy_antenna@good_helmet
+
+[sr_psy_antenna@no_helmet]
+eff_intensity = 40
+hit_intensity = 10
+on_info = {=good_psy_immunity} sr_psy_antenna@good_helmet, {=bad_psy_immunity} sr_psy_antenna@bad_helmet
+on_info2 = {+bun_antenna_off} sr_idle
+phantom_prob = 70
+min_phantom_idle = 10000
+max_phantom_idle = 15000
+
+[sr_psy_antenna@bad_helmet]
+eff_intensity = 20
+hit_intensity = 0
+on_info = {=bad_psy_immunity}, {=good_psy_immunity} sr_psy_antenna@good_helmet, sr_psy_antenna@no_helmet
+on_info2 = {+bun_antenna_off} sr_idle
+phantom_prob = 60
+min_phantom_idle = 15000
+max_phantom_idle = 20000
+
+[sr_psy_antenna@good_helmet]
+eff_intensity = 10
+hit_intensity = 0
+on_info = {=good_psy_immunity}, {=bad_psy_immunity} sr_psy_antenna@bad_helmet, sr_psy_antenna@no_helmet
+on_info2 = {+bun_antenna_off} sr_idle
+phantom_prob = 45
+min_phantom_idle = 7000
+max_phantom_idle = 15000
+
+[sr_idle]
+on_info = {-bun_antenna_off} sr_psy_antenna@no_helmet

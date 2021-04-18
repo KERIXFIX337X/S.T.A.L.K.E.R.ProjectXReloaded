@@ -1,0 +1,108 @@
+class "evaluator_killer" (property_evaluator)
+
+function evaluator_killer:__init(npc, name) super(nil, name)
+  self.npc=npc
+  self.sobj=alife():object(npc:id())
+end
+
+function evaluator_killer:kill_actor()
+  if db and db.actor then
+    actor=db.actor
+  else
+    return false
+  end
+  xiani.xlog('kill_actor[start] to ' .. self.npc:character_name())
+  if self.npc:relation(actor)~=game_object.enemy then
+    xiani.xlog('kill_actor[go!] ' .. self.npc:character_name())
+    
+    self.npc:set_goodwill(-5000,actor)
+    -- для верности еще и больно пнём сталкера от имени игрока =)
+    local h = hit()
+    h.power = 0.01
+    h.direction = self.npc:direction()
+    h.draftsman = actor 
+    h.impulse = 1
+    h.type = hit.wound
+    self.npc:hit(h)
+    
+  end
+end
+
+function evaluator_killer:evaluate()
+  --xiani.xlog('kill_actor[eval_start] to ' .. self.npc:character_name())
+  if db and db.actor then
+    actor=db.actor
+  else
+    return false
+  end
+  -- если ГГ уже враг то и думать нечего
+  if self.npc:relation(actor)==game_object.enemy then
+    return false
+  end
+  
+  --xiani.xlog('kill_actor[eval_proc] to ' .. self.npc:character_name())
+  
+  local activedist = 10  -- "рабочая" дистанция
+  local killerprob = 0.1 -- вероятность что мы начнем думать о том чтоб вообще напасть на ГГ
+  local attackprob = 0.2 -- стартовая вероятность того что мы нападем
+  
+  local dist=actor:position():distance_to(self.npc:position())
+  
+  -- если мы:
+  -- 1 на достаточном расстоянии
+  -- 2 в настроении когонибудь убить
+  -- то будем решать напасть всёже или нет
+  if (dist < activedist and (killerprob>math.random())) then
+    --xiani.xlog('[' .. self.npc:character_name() .. ']: actor in active distance ' .. tostring(activedist) .. 'and we want to kill him')
+    -- модификаторы решения (старт)
+    
+    --xiani.xlog('[' .. self.npc:character_name() .. ']: attackprob=' .. tostring(attackprob) .. ' before checks')
+    
+    if isWeapon(actor:active_item()) then
+      -- xiani.xlog('[' .. self.npc:character_name() .. ']: actor armed')
+      -- если ГГ держит в руках оружие то меньше хочется начать с ним бой
+      attackprob = attackprob - 0.1
+    else
+      -- если ГГ не вооружен
+      attackprob = attackprob + 0.1
+    end
+    --xiani.xlog('[' .. self.npc:character_name() .. ']: attackprob=' .. tostring(attackprob) .. ' ')
+    --if self.npc:see(actor) then
+    if actor:see(self.npc) then
+      -- если ГГ нас видит
+      xiani.xlog('[' .. self.npc:character_name() .. ']: actor see me')
+      attackprob = attackprob - 0.1
+      --xiani.xlog('[' .. self.npc:character_name() .. ']: attackprob=' .. tostring(attackprob) .. ' ')
+      if not self.npc:see(actor) then
+        xiani.xlog('[' .. self.npc:character_name() .. ']: i do not see him')
+        -- а мы его не видим.. то лучше не начинать рыпаться.. подождем
+        attackprob = attackprob - 0.2
+      end
+    else
+      -- если ГГ нас не видит то напасть очень даже было бы не плохо
+      xiani.xlog('[' .. self.npc:character_name() .. ']: actor do not see me')
+      attackprob = attackprob + 0.1
+      --xiani.xlog('[' .. self.npc:character_name() .. ']: attackprob=' .. tostring(attackprob) .. ' ')
+      if self.npc:see(actor) then
+        -- а если при это мы видим ГГ то тем более
+        xiani.xlog('[' .. self.npc:character_name() .. ']: but i see him')
+        attackprob = attackprob + 0.2
+      end
+    end
+    
+    xiani.xlog('[' .. self.npc:character_name() .. ']: attackprob=' .. tostring(attackprob))
+    -- тут еще надо будет позже дописать оценку ранга относительно нас
+    -- и может быть оценку крутости оружия, чтоб не совершать самоубийственных аттак
+    
+    -- модификаторы решения (конец)
+    
+    -- решение
+    if (attackprob>math.random()) then
+      self:kill_actor()
+      xiani.xlog('we will attack actor!!!')
+    else
+      xiani.xlog('we will not attack actor')
+    end
+  end
+  return false
+end

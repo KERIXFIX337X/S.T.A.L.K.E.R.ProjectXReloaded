@@ -1,0 +1,410 @@
+class "evaluator_outfit" (property_evaluator)
+
+function evaluator_outfit:__init(npc, name) super(nil, name)
+  self.npc=npc
+  init_enemy_friend_values()
+  self.sobj=alife():object(npc:id())
+  self.proc_enemy=this.process_enemy(npc,self)
+  npc:set_enemy_callback(self.proc_enemy.enemy_callback,self.proc_enemy)
+--  -- mylog("enemy callback set for " .. npc:character_name())
+end
+
+local enemy_val=nil
+local friend_val=nil
+local neutral_val=nil
+local enemy_threshold=nil
+
+function r_float_def(ini,sect,name,def)
+  if ini:line_exist(sect,name) then
+    return ini:r_float(sect,name), true
+  else
+    return def, false
+  end
+end
+
+function init_enemy_friend_values()
+  if enemy_val==nil then
+    -- mylog("initialising game_rel")
+    local ini=ini_file("creatures\\game_relations.ltx")
+    enemy_val=r_float_def(ini,"game_relations","goodwill_enemy",-1000)
+    friend_val=r_float_def(ini,"game_relations","goodwill_friend",1000)
+    neutral_val=r_float_def(ini,"game_relations","goodwill_neutal",0)
+    enemy_threshold=r_float_def(ini,"game_relations","attitude_neutal_threshold",-400)
+  end
+end
+
+local actor_outfit_id="nil"
+local actor_seems_as=nil
+
+-- здесь будут храниться реакции энписей на переодевания ГГ
+-- 0 - ГГ был во вражеской одежке, но уже снял её
+-- 1 - ГГ во вражеской одёжке
+-- 2 - ГГ был во вражеской одёжке и снял ёё, но успел получить пулю от энпися
+-- 3 - ГГ во вражеской одёжке, и успел получить пулю от энпися
+-- 1000 - пункт 0, ГГ уже говорил с энписём, сейчас не во вражьей броне
+-- 1001 - пункт 0, ГГ уже говорил с энписём, сейчас во вражьей броне
+-- 1100 - пункт 1, ГГ уже говорил с энписём, сейчас не во вражьей броне
+-- 1101 - пункт 1, ГГ уже говорил с энписём, сейчас во вражьей броне
+-- 1200 - пункт 2, ГГ уже говорил с энписём, сейчас не во вражьей броне
+-- 1201 - пункт 2, ГГ уже говорил с энписём, сейчас во вражьей броне
+-- 1300 - пункт 3, ГГ уже говорил с энписём, сейчас не во вражьей броне
+-- 1301 - пункт 3, ГГ уже говорил с энписём, сейчас во вражьей броне
+local dialog_option={} 
+
+local actor
+
+function next_dialog_opt_for_no_enemy_outfit(nid)
+  if dialog_option[nid]==nil then
+    -- ничего не делаем. сталкер не видел ГГ во вражеской одежде
+--    dialog_option[nid]=0
+  elseif odd(dialog_option[nid]) then
+    dialog_option[nid]=dialog_option[nid]-1
+  end
+end
+
+function next_dialog_opt_for_enemy_outfit(nid)
+  if dialog_option[nid]==nil then
+    dialog_option[nid]=1
+  elseif not odd(dialog_option[nid]) then
+    dialog_option[nid]=dialog_option[nid]+1
+  end
+end
+
+function evaluator_outfit:restore_default_rel_no_enemy()
+  -- xiani.xlog('restore_default_rel_no_enemy to ' .. self.npc:character_name() .. " " .. tostring(self.sobj.default_goodwill))
+  local nid=self.npc:id()
+  if self.sobj.default_rel then
+    -- mylog("restoring def rel " .. self.npc:character_name() .. " " .. tostring(self.sobj.default_goodwill))
+    self.npc:set_goodwill(self.sobj.default_goodwill or 0, actor)
+    self.npc:set_relation(self.sobj.default_rel,actor)
+    self.sobj.default_rel=nil
+    self.sobj.default_goodwill=nil
+    next_dialog_opt_for_no_enemy_outfit(nid)
+  end
+  self.sobj.cover_blown=true
+end
+
+function evaluator_outfit:restore_default_rel_enemy()
+  -- xiani.xlog('restore_default_rel_enemy to ' .. self.npc:character_name() .. " " .. tostring(self.sobj.default_goodwill))
+  local nid=self.npc:id()
+  if self.sobj.default_rel then
+    -- mylog("restoring def rel " .. self.npc:character_name() .. " " .. tostring(self.sobj.default_goodwill))
+    self.npc:set_goodwill(self.sobj.default_goodwill or 0, actor)
+    self.npc:set_relation(self.sobj.default_rel,actor)
+    self.sobj.default_rel=nil
+    self.sobj.default_goodwill=nil
+    next_dialog_opt_for_enemy_outfit(nid)
+  end
+  self.sobj.cover_blown=true
+end
+
+function evaluator_outfit:set_rel_no_enemy()
+  -- xiani.xlog('srne:set_rel_no_enemy to ' .. self.npc:character_name())
+  local nid=self.npc:id()
+  local cur_rel=self.npc:relation(actor)
+  -- xiani.xlog('srne:cur_rel = ' .. tostring(cur_rel) .. ' default_rel=' .. tostring(self.sobj.default_rel))
+  if self.sobj.default_rel==nil then
+    -- xiani.xlog('srne:default_rel == nil ')
+  -- энписи ещё не видел ГГ, так что принимает его за своего
+    if cur_rel==game_object.enemy then
+      -- xiani.xlog('srne:cur_rel==game_object.enemy')
+      -- промоем врагу мозги, чтобы не дергался
+      self.npc:enable_memory_object(actor,false)
+      local def_gw=self.npc:goodwill(actor)
+      self.npc:set_goodwill(5000,actor)
+      self.sobj.default_rel=cur_rel
+      if def_gw==0 then
+        self.sobj.default_goodwill=nil
+      else
+        self.sobj.default_goodwill=def_gw
+      end
+      -- mylog("calming " .. self.npc:character_name() .. " " .. tostring(self.sobj.default_goodwill))
+    else
+    -- xiani.xlog('srne:npc not en enemy --- do nothing')
+    -- энписи и так не враг - не делаем ничего
+    end
+  else
+  -- xiani.xlog('srne:npc brainwashed or was not an enemy')
+  -- Так, мозги врагу уже промыты или это не враг.
+  end
+end
+
+function evaluator_outfit:set_rel_enemy()
+  -- xiani.xlog('set_rel_enemy to ' .. self.npc:character_name())
+  local nid=self.npc:id()
+  local cur_rel=self.npc:relation(actor)
+  if self.sobj.default_rel==nil then
+  -- НПС ещё не видел ГГ и принимает его за врага
+    if cur_rel~=game_object.enemy then
+      local def_gw=self.npc:goodwill(actor)
+      self.npc:set_goodwill(-5000,actor)
+      self.sobj.default_rel=cur_rel
+      if def_gw==0 then
+        self.sobj.default_goodwill=nil
+      else
+        self.sobj.default_goodwill=def_gw
+      end
+      next_dialog_opt_for_enemy_outfit(nid)
+      -- mylog("frenzying " .. self.npc:character_name() .. " " .. tostring(self.sobj.default_goodwill))
+    else
+    -- энписи враг - записываем в табличку, чтобы его нельзя было обмануть переодеванием
+    -- хм, а наверное всё-таки получится обмануть. ладно потом проверю
+      self.sobj.default_rel=cur_rel
+    end
+  else
+  -- Так, мозги друзьям и сочувствующим уже промыты или это враг
+  end
+end
+
+function evaluator_outfit:evaluate()
+  local nid=self.npc:id()
+  if db and db.actor then
+    actor=db.actor
+  else
+    return false
+  end
+  local cur_outfit=actor:get_current_outfit()
+  local cur_outfit_id="nil"
+  if cur_outfit then
+    cur_outfit_id=cur_outfit:section()
+  end
+  if actor_outfit_id~=cur_outfit_id then
+    actor_outfit_id=cur_outfit_id
+    actor_seems_as=outfit2community(actor_outfit_id)
+    if cur_outfit then
+      -- mylog(cur_outfit:name() .. " " .. cur_outfit:section() .. " actor seems as " .. actor_seems_as)
+      -- xiani.xlog(cur_outfit:name() .. " " .. cur_outfit:section() .. " actor seems as " .. actor_seems_as)
+    end
+  end
+--  local see1,see2,see3=self.npc:see(actor)
+  if not self.npc:see(actor) then
+    -- сталкер не видит ГГ.
+    if self.sobj.restore_func then
+    --' если враг должен стать другом он не должен видеть ГГ из-за проблем с индикатором видимости
+      -- mylog(self.npc:character_name() .. " rest func " .. self.sobj.restore_func) 
+      if self.sobj.restore_func==1 then
+        self:restore_default_rel_no_enemy()
+      elseif self.sobj.restore_func==2 then
+        self:restore_default_rel_enemy()      
+      elseif self.sobj.restore_func==3 then
+        self:set_rel_no_enemy()      
+      end
+      self.sobj.restore_func=nil
+    end
+    return false
+  end
+  return self:process_npc()
+end
+
+function evaluator_outfit:process_npc()
+  local nid=self.npc:id()
+  if actor_seems_as=="nil" then
+  -- ГГ выглядит как ГГ. восстанавливаем дефолтное отношение
+    -- mylog("protagonist seems as nil")
+    -- xiani.xlog("protagonist seems as nil")
+    if self.sobj.default_rel~=nil then
+    -- устанавливаем функцию для последующего выполнения
+      self.sobj.restore_func=1
+    end
+    self.sobj.cover_blown=true
+    return false
+  end
+  local rel=comm_to_comm_rel(self.npc:character_community(),actor_seems_as)
+  if rel==nil then
+  -- сталкер ни фига не понял, но ГГ узнал... восстанавливаем отношение
+    -- mylog("community rel undefined for " .. self.npc:character_name())
+    if self.sobj.default_rel~=nil then
+    -- устанавливаем функцию для последующего выполнения
+      self.sobj.restore_func=1
+    end
+    self.sobj.cover_blown=true
+    return false
+  end
+  local dist_friend
+  local dist_enemy
+  local noweapon
+  if isWeapon(actor:active_item()) then
+    dist_friend=20
+    dist_enemy=10
+    noweapon=false
+  else
+    dist_friend=40
+    dist_enemy=2
+    noweapon=true
+  end
+  local dist=actor:position():distance_to(self.npc:position())
+  local actor_seems_as_enemy=rel<enemy_threshold
+--   -- mylog(self.npc:character_name() .. " distance " .. dist .. " s_a_enemy " .. tostring(actor_seems_as_enemy) .. " cb " .. tostring(self.sobj.cover_blown))
+  -- xiani.xlog(self.npc:character_name() .. " distance " .. dist .. " s_a_enemy " .. tostring(actor_seems_as_enemy) .. " cb " .. tostring(self.sobj.cover_blown))
+  if actor_seems_as_enemy then
+    -- xiani.xlog('seems as enemy: enemy outfit working')
+    if dist>dist_friend and not self.sobj.cover_blown and not noweapon then
+        -- ГГ слишком далеко, сталкер принял его за врага
+      self:set_rel_enemy()
+    else
+      -- xiani.xlog('enemy outfit no more enemy')
+    -- Встреча друзей. энписи таки разобрался кто там прёт
+      if self.sobj.default_rel~=nil then
+      -- устанавливаем функцию для последующего выполнения
+        self.sobj.restore_func=2
+      end
+      self.sobj.cover_blown=true
+    end
+  else
+    -- xiani.xlog('actor seems as friend')
+    if dist>dist_enemy and not self.sobj.cover_blown then
+      -- xiani.xlog('outfit still covers')
+    -- враг пока ещё не узнал нашего героя
+      if self.sobj.default_rel==nil then
+      -- устанавливаем функцию для последующего выполнения
+        self.sobj.restore_func=3
+      end
+    else
+    -- ГГ таки провалил маскарад...
+      -- xiani.xlog('outfit no longer covers')
+      self:restore_default_rel_no_enemy()
+    end
+  end
+  return false
+end
+
+function strhas(str,substr)
+  return str:find(substr)~=nil
+end
+
+function outfit2community(secname)
+  if strhas(secname,"novice") or strhas(secname,"stalker") 
+        or strhas(secname,"scientific") or strhas(secname,"exo_outfit") then
+    return "stalker"
+  elseif strhas(secname,"monolith") then
+    return "monolith"
+  elseif strhas(secname,"specops") or strhas(secname,"military")
+         or strhas(secname,"specnaz") or strhas(secname,"soldier") then
+    return "military"
+  elseif strhas(secname,"killer") then
+    return "killer"
+  elseif strhas(secname,"ecolog") or strhas(secname,"protection_outfit") then
+    return "ecolog"
+  elseif strhas(secname,"dolg") then
+    return "dolg"
+  elseif strhas(secname,"svoboda") then
+    return "freedom"
+  elseif strhas(secname,"bandit") then
+    return "bandit"
+  end
+  return "nil"
+end
+
+local comrel={
+  stalker={ stalker=0,
+            monolith=-5000,
+            military=-5000,
+            killer=-5000,
+            ecolog=0,
+            dolg=0,
+            freedom=0,
+            bandit=-5000},
+  monolith={ stalker=-5000,
+            monolith=5000,
+            military=-5000,
+            killer=-5000,
+            ecolog=-5000,
+            dolg=-5000,
+            freedom=-5000,
+            bandit=-5000},
+  military={stalker=-5000,
+            monolith=-5000,
+            military=5000,
+            killer=-5000,
+            ecolog=0,
+            dolg=-5000,
+            freedom=-5000,
+            bandit=-5000},
+  killer={stalker=-5000,
+            monolith=-5000,
+            military=-5000,
+            killer=0,
+            ecolog=-5000,
+            dolg=-5000,
+            freedom=0,
+            bandit=0},
+  ecolog={stalker=0,
+            monolith=-5000,
+            military=0,
+            killer=-5000,
+            ecolog=5000,
+            dolg=0,
+            freedom=-5000,
+            bandit=-5000},
+  dolg={stalker=0,
+            monolith=-5000,
+            military=-5000,
+            killer=-5000,
+            ecolog=0,
+            dolg=5000,
+            freedom=-5000,
+            bandit=-5000},
+  freedom={stalker=0,
+            monolith=-5000,
+            military=-5000,
+            killer=-1500,
+            ecolog=-5000,
+            dolg=-5000,
+            freedom=5000,
+            bandit=0},
+  bandit={stalker=-5000,
+            monolith=-5000,
+            military=-5000,
+            killer=-500,
+            ecolog=-5000,
+            dolg=-5000,
+            freedom=0,
+            bandit=0}}
+
+function comm_to_comm_rel(com1,com2)
+  if comrel[com1] then
+    return comrel[com1][com2]
+  end
+  return nil
+end
+
+local xr_cic={} -- combar ignore callback
+
+function set_enemy_callback(npc,func,obj)
+  local nid=npc:id()
+  if func==nil then
+    xr_cic[nid]=nil
+  else
+    xr_cic[nid]={func=func,object=obj}
+  end
+end
+
+class "process_enemy"
+
+function process_enemy:__init(npc,eval)
+  self.npc=npc
+  self.eval=eval
+end
+
+function process_enemy:enemy_callback(obj,enemy)
+  local nid=self.npc:id()
+--  -- mylog("enemy callback for " .. obj:character_name() .. " evaluator for " .. self.npc:character_name() )
+  local ret=true
+  if xr_cic[nid] then
+    ret=xr_cic[nid].func(xr_cic[nid].object,obj,enemy)
+    if not ret then
+      return ret
+    end
+  end
+--  -- mylog("enemy callback for " .. obj:character_name() .. " evaluator for " .. self.npc:character_name() )
+--  self.eval:process_npc()
+  if enemy and db.actor and enemy:id()==db.actor:id() then
+    if self.eval.sobj.restore_func or obj:relation(enemy)~=game_object.enemy then
+      obj:enable_memory_object(enemy,false)
+      return false
+    end
+    return not (self.eval.sobj.default_rel==nil and (not self.eval.sobj.cover_blown))
+  else
+    return ret
+  end
+end

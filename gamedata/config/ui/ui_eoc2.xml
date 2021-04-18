@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="windows-1251" ?>
+
+<window>
+	<form x="115" y="168" width="558" height="460">
+		<texture>ui_menu_options_dlg</texture>
+		<caption x="65" y="10" width="500" height="25" complex_mode="0">
+			<text font="graffiti22" r="184" g="168" b="131">EyeOfChernobil 2</text>
+		</caption>
+		
+		
+		<static_section_name x="175" y="230" width="100" height="24">
+			<text font="letterica16" r="129" g="123" b="113" complex_mode="0">Section name</text>
+		</static_section_name>
+		<edit_section_name x="275" y="230" width="215" height="24" max_symb_count="30">
+			<text font="letterica18" r="235" g="219" b="185"/>
+			<texture>ui_linetextSmall_e</texture>
+		</edit_section_name>
+		
+		<static_object_name x="175" y="330" width="100" height="24">
+			<text font="letterica16" r="129" g="123" b="113" complex_mode="0">Object name</text>
+		</static_object_name>
+		<edit_object_name x="275" y="330" width="215" height="24" max_symb_count="30">
+			<text font="letterica18" r="235" g="219" b="185"></text>
+			<texture>ui_linetextSmall_e</texture>
+		</edit_object_name>
+		
+		<cap_searchSubs x="205" y="360" width="143" height="21">
+			<text font="letterica16" r="129" g="123" b="113" complex_mode="0">Search for sub-strings</text>
+		</cap_searchSubs>
+		<check_searchSubs x="175" y="360" width="30" height="21">
+		</check_searchSubs>
+		
+		<btn_start x="50" y="400" width="117" height="29">
+			<texture_e>ui_button_ordinary_e</texture_e>
+			<texture_t>ui_button_ordinary_t</texture_t>
+			<texture_h>ui_button_ordinary_h</texture_h>
+			<text r="235" g="219" b="185">ui_inv_ok</text>
+		</btn_start>
+		
+		<btn_cancel x="170" y="400" width="117" height="29">
+			<texture_e>ui_button_ordinary_e</texture_e>
+			<texture_t>ui_button_ordinary_t</texture_t>
+			<texture_h>ui_button_ordinary_h</texture_h>
+			<text r="235" g="219" b="185">ui_inv_cancel</text>
+		</btn_cancel>
+		
+	</form>
+	<static_version x="15" y="740" width="100" height="30">
+		<text align="l" font="graffiti19" r="135" g="123" b="116" complex_mode="0" /> 
+	</static_version>
+</window>

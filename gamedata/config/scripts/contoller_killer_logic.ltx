@@ -1,0 +1,10 @@
+[logic]
+active = mob_walker@stay_at_position
+on_death = death
+
+[mob_walker@stay_at_position]
+path_walk = mil_raid_controller_walk
+path_look = mil_raid_controller_look
+
+[death]
+on_info = %+controller_killer_dead%

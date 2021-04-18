@@ -1,0 +1,22 @@
+[logic]
+active = sr_idle1
+
+[sr_idle1]
+on_actor_inside = sr_idle2
+on_info = {+mil_fblockpost_quest} sr_idle2
+;on_info2 = {+mil_fblockpost_commander_dead} sr_idle2
+
+[sr_idle2]
+on_timer = 15000 | sr_idle3 %+mil_fblockpost_rush_wave1 +mil_fblockpost_alarm%
+
+[sr_idle3] 
+on_timer = 40000 | sr_idle4 %+mil_fblockpost_rush_wave2%
+
+[sr_idle4] 
+on_timer = 50000 | sr_idle5 %+mil_fblockpost_rush_wave3%
+
+[sr_idle5] 
+on_timer = 5000 | sr_idle6 %+mil_fblockpost_rush_wave4%
+
+[sr_idle6]
+on_info = {=gulag_population_le(mil_monolit:4)} %-mil_fblockpost_alarm +mil_fblockpost_quest_complete% nil

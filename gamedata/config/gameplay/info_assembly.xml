@@ -1,0 +1,128 @@
+<?xml version='1.0' encoding="windows-1251"?>
+
+<game_information_portions>
+	<info_portion id="info_assembly_wpn_knife">
+		<article>assembly_wpn_knife</article>
+		<article>weapons1_wpn-knife</article>
+	</info_portion>
+	<info_portion id="info_assembly_wpn_pm">
+		<article>assembly_wpn_pm</article>
+		<article>weapons1_wpn-pm</article>
+	</info_portion>
+	<info_portion id="info_assembly_wpn_pb">
+		<article>assembly_wpn_pb</article>
+		<article>weapons1_wpn-pb</article>
+	</info_portion>
+	<info_portion id="info_assembly_wpn_fort">
+		<article>assembly_wpn_fort</article>
+		<article>weapons1_wpn-fort</article>
+	</info_portion>
+	<info_portion id="info_assembly_wpn_walther">
+		<article>assembly_wpn_walther</article>
+		<article>weapons1_wpn-walther</article>
+	</info_portion>
+	<info_portion id="info_assembly_wpn_colt1911">
+		<article>assembly_wpn_colt1911</article>
+		<article>weapons1_wpn-colt1911</article>
+	</info_portion>
+	<info_portion id="info_assembly_wpn_usp">
+		<article>assembly_wpn_usp</article>
+		<article>weapons1_wpn-usp</article>
+	</info_portion>
+	<info_portion id="info_assembly_wpn_desert_eagle">
+		<article>assembly_wpn_desert_eagle</article>
+		<article>weapons1_wpn-desert_eagle</article>
+	</info_portion>
+	<info_portion id="info_assembly_wpn_sig220">
+		<article>assembly_wpn_sig220</article>
+		<article>weapons1_wpn-sig220</article>
+	</info_portion>
+	<info_portion id="info_assembly_wpn_beretta">
+		<article>assembly_wpn_beretta</article>
+		<article>weapons1_wpn-beretta</article>
+	</info_portion>
+	<info_portion id="info_assembly_wpn_hpsa">
+		<article>assembly_wpn_hpsa</article>
+		<article>weapons1_wpn-hpsa</article>
+	</info_portion>
+	<info_portion id="info_assembly_wpn_mp5">
+		<article>assembly_wpn_mp5</article>
+		<article>weapons1_wpn-mp5</article>
+	</info_portion>
+	<info_portion id="info_assembly_wpn_ak74u">
+		<article>assembly_wpn_ak74u</article>
+		<article>weapons1_wpn-ak74u</article>
+	</info_portion>
+	<info_portion id="info_assembly_wpn_ak74">
+		<article>assembly_wpn_ak74</article>
+		<article>weapons1_wpn-ak74</article>
+	</info_portion>
+	<info_portion id="info_assembly_wpn_abakan">
+		<article>assembly_wpn_abakan</article>
+		<article>weapons1_wpn-abakan</article>
+	</info_portion>
+	<info_portion id="info_assembly_wpn_groza">
+		<article>assembly_wpn_groza</article>
+		<article>weapons1_wpn-groza</article>
+	</info_portion>
+	<info_portion id="info_assembly_wpn_val">
+		<article>assembly_wpn_val</article>
+		<article>weapons1_wpn-val</article>
+	</info_portion>
+	<info_portion id="info_assembly_wpn_l85">
+		<article>assembly_wpn_l85</article>
+		<article>weapons1_wpn-l85</article>
+	</info_portion>
+	<info_portion id="info_assembly_wpn_lr300">
+		<article>assembly_wpn_lr300</article>
+		<article>weapons1_wpn-lr300</article>
+	</info_portion>
+	<info_portion id="info_assembly_wpn_sig550">
+		<article>assembly_wpn_sig550</article>
+		<article>weapons1_wpn-sig550</article>
+	</info_portion>
+	<info_portion id="info_assembly_wpn_g36">
+		<article>assembly_wpn_g36</article>
+		<article>weapons1_wpn-g36</article>
+	</info_portion>
+	<info_portion id="info_assembly_wpn_fn2000">
+		<article>assembly_wpn_fn2000</article>
+		<article>weapons1_wpn-fn2000</article>
+	</info_portion>
+	<info_portion id="info_assembly_wpn_bm16">
+		<article>assembly_wpn_bm16</article>
+		<article>weapons1_wpn-bm16</article>
+	</info_portion>
+	<info_portion id="info_assembly_wpn_wincheaster1300">
+		<article>assembly_wpn_wincheaster1300</article>
+		<article>weapons1_wpn-wincheaster1300</article>
+	</info_portion>
+	<info_portion id="info_assembly_wpn_spas12">
+		<article>assembly_wpn_spas12</article>
+		<article>weapons1_wpn-spas12</article>
+	</info_portion>
+	<info_portion id="info_assembly_wpn_vintorez">
+		<article>assembly_wpn_vintorez</article>
+		<article>weapons1_wpn-vintorez</article>
+	</info_portion>
+	<info_portion id="info_assembly_wpn_svu">
+		<article>assembly_wpn_svu</article>
+		<article>weapons1_wpn-svu</article>
+	</info_portion>
+	<info_portion id="info_assembly_wpn_svd">
+		<article>assembly_wpn_svd</article>
+		<article>weapons1_wpn-svd</article>
+	</info_portion>
+	<info_portion id="info_assembly_wpn_rg-6">
+		<article>assembly_wpn_rg6</article>
+		<article>weapons1_wpn-rg-6</article>
+	</info_portion>
+	<info_portion id="info_assembly_wpn_rpg7">
+		<article>assembly_wpn_rpg7</article>
+		<article>weapons1_wpn-rpg7</article>
+	</info_portion>
+	<info_portion id="info_assembly_wpn_gauss">
+		<article>assembly_wpn_gauss</article>
+		<article>weapons1_wpn-gauss</article>
+	</info_portion>
+</game_information_portions>

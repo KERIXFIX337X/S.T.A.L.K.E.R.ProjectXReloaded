@@ -1,0 +1,217 @@
+-- инициализация
+class "spawner" (CUIScriptWnd)
+
+function spawner:__init(owner,action) super()
+	self.action = action
+	self.owner = owner
+	self:InitControls()
+	self:InitCallBacks()
+end
+
+function spawner:__finalize() end
+
+function spawner:InitControls()
+	-- здесь определяем координаты левого верхнего угла и ширину-высоту
+	self:Init(50,50,550,450)
+
+	-- файл-описатель наших элементов
+	local xml = CScriptXmlInit()
+	xml:ParseFile("ui_dots_wnd.xml")
+
+	-- видео на заднем плане
+	xml:InitStatic("back_video", self)
+
+	-- рамка
+	xml:InitStatic("background", self)
+
+	-- кнопки
+	self:Register(xml:Init3tButton("caption", self),"caption")
+	self:Register(xml:Init3tButton("btn_1", self),"btn_1")
+	-- кнопка выхода
+	self:Register(xml:Init3tButton("btn_quit", self),"btn_quit")
+	self:Register(xml:InitEditBox("edit_box", 	self), "edit_box")
+
+  local caption = self:GetButton("caption")
+  local btn_1 = self:GetButton("btn_1")
+  if self.action == "spawn" then
+    caption:SetText("Секция желаемого объекта, количество")
+    btn_1:SetText("Spawn!")
+  elseif self.action == "info" then
+    caption:SetText("Инфа для добавления")
+    btn_1:SetText("Дать инфу!")
+  elseif self.action == "find" then
+    caption:SetText("Часть имени объекта для поиска")
+    btn_1:SetText("Искать!")
+  elseif self.action == "remove" then
+    caption:SetText("Часть имени объекта для удаления")
+    btn_1:SetText("KKND!")
+  end
+end
+
+function spawner:InitCallBacks()
+	-- тут интерактивные элементы, при определенном действии выполняется заданная ф-ия
+	self:AddCallback("btn_1", ui_events.BUTTON_CLICKED, self.dots1, self)
+	self:AddCallback("btn_quit", ui_events.BUTTON_CLICKED, self.on_quit, self)
+end
+
+function spawner:OnKeyboard(dik, keyboard_action)
+	CUIScriptWnd.OnKeyboard(self,dik,keyboard_action)
+	if keyboard_action == ui_events.WINDOW_KEY_PRESSED then
+-- на выход повесим Esc
+		if dik == DIK_keys.DIK_ESCAPE then
+			self:on_quit()
+		end
+		if dik == DIK_keys.DIK_RETURN then
+			self:dots1()
+		end
+	end
+	return true
+end
+
+function show_actor_position()
+  if level.present() and (db.actor ~= nil) then
+	  local text
+	  local vid, gvid
+	  local a = vector()
+	  a = db.actor:position()
+	  vid = db.actor:level_vertex_id()
+	  gvid = db.actor:game_vertex_id()
+	  text = "Позиция:\\nX= "..a.x.."\\nY= "..a.y.."\\nZ= "..a.z.."\\nlevel_vertex= "..vid.."\\ngame_vertex_id= "..gvid
+	  news_manager.send_tip(db.actor, text, nil, nil, 30000)
+	  get_console():execute(string.format("(%.3f,%.3f,%.3f),%d,%d",a.x,a.y,a.z,vid,gvid))
+	  get_console():execute("flush")
+	end
+end
+
+function spawner:spawn(text)
+	local type = text
+	local vid, gvid
+	local a = vector()
+	a = db.actor:position()
+	a.z = a.z + 2
+	a.y = a.y + 0.5
+	vid = db.actor:level_vertex_id()
+	gvid = db.actor:game_vertex_id()
+
+  local n = 1
+	local sf = string.find(text,",")
+	if sf then
+	  n = string.sub(text,sf+1)+0
+	  if n==nil then
+	    n = 0
+	  elseif n>999 then
+	    n = 999
+	  end
+	  type = string.sub(text,1,sf-1)
+	end
+
+	if not system_ini():section_exist(type) then
+	  amk.send_tip("Секция "..type.." не существует!","Cheat: Spawner",0,10,"gen_info")
+	  return false
+	end
+
+  for i=1,n do
+    alife():create(type,vector():set(a.x-1+math.random()*2,a.y,a.z-1+math.random()*2),vid,gvid,65535)
+  end
+
+  amk.send_tip("Создал "..type.." в количестве "..n.." штук.","Cheat: Spawner",0,10,"gen_info")
+  return true
+end
+
+-- amk_zone_
+
+function spawner:remove_all (name)
+    local obj
+    local n=0
+    for a=1,65535 do
+	    obj = alife():object(a)
+		  if obj and string.find(obj:name(),name) then
+        alife():release(obj,true)
+        n = n+1
+	  	end
+  	end
+  	amk.send_tip("Удалено "..n.." объектов.","Cheat: Clear",0,10,"gen_info")
+end
+
+function spawner:find_closest (type)
+    local min = 999999
+    local dist
+    local closest = -1
+    local obj
+    for a=1,65535,1 do
+	    obj = alife():object(a)
+		  if obj and string.find(obj:name(),type) then
+        dist = obj.position:distance_to(db.actor:position())
+        if dist < min then
+          min = dist
+          closest = a
+        end
+	  	end
+  	end
+
+  	if closest>0 then
+  	  obj = alife():object(closest)
+  	  local map = alife():level_name(game_graph():vertex(obj.m_game_vertex_id):level_id())
+  	  local text = obj:name().."; уровень="..game.translate_string(map)
+  	  if map == level.name() then
+  	    local p1 = db.actor:position()
+  	    local p2 = obj.position
+  	    dist = obj.position:distance_to(db.actor:position())
+  	    local dx = p2.x - p1.x
+  	    local dy = p2.y - p1.y
+  	    local dz = p2.z - p1.z
+  	    text = string.format("%s; расстояние=%.2fм; dX=%.2f, dY=%.2f, dZ=%.2f", text, dist, dx,dy,dz)
+  	  end
+		  amk.send_tip(text,"Cheat: Find Object",0,30,"gen_info")
+		  return true
+  	else
+  	  amk.send_tip(type.." не найден!","Cheat: Find Object",0,10,"gen_info")
+  	  return false
+  	end
+end
+
+function set_npc_health(obj, health)
+	if (obj and health <=2) then
+		if (_g.IsStalker(obj)) then
+			local tbl = amk.read_stalker_params(obj)
+			tbl.health = health
+			tbl.updhealth = health
+			amk.write_stalker_params(tbl, obj)
+		end
+	end
+end
+
+function deadman_to_life()
+	for a=1,10000,1 do
+		local obj=alife():object(a)
+		if  (obj and IsStalker(obj) and not obj:alive()) then
+			local posobj=obj.position
+			local actorpos=db.actor:position()
+			if (posobj:distance_to(actorpos) < 2) then
+			set_npc_health(obj, 1)
+			end
+		end
+	end
+end
+
+function spawner:dots1()
+	local text = self:GetEditBox("edit_box"):GetText()
+	if text ~= "" then
+	  if self.action == "spawn" then
+  	  self:spawn(text)
+  	elseif self.action == "info" then
+  	  db.actor:give_info_portion(text)
+  	  amk.send_tip(text.." добавлено.","Cheat: Add Info",0,15,"gen_info")
+  	elseif self.action == "find" then
+  	  self:find_closest(text)
+  	elseif self.action == "remove" then
+  	  self:remove_all(text)
+  	end
+	end
+	self:on_quit()
+end
+
+function spawner:on_quit()
+	self:GetHolder():start_stop_menu (self,true)
+end
+

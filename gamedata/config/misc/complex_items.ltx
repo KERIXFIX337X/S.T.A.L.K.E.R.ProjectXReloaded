@@ -1,0 +1,46 @@
+[wolf_pda]:identity_immunities
+GroupControlSection	= spawn_group
+discovery_dependency =
+$spawn 			= "food and drugs\antirad"
+$prefetch 		= 32
+class			= II_ANTIR
+cform           = skeleton
+visual          = equipments\items\pda_shared.ogf
+description		= treasure_pda_descr
+
+inv_name			= wolf_pda
+inv_name_short		= wolf_pda
+inv_weight			= 0.1
+
+inv_grid_width     = 1
+inv_grid_height    = 1
+inv_grid_x         = 33
+inv_grid_y         = 0
+cost				= 0
+
+eat_health = 0
+eat_satiety = 0
+eat_power = 0
+eat_radiation = 0.0
+wounds_heal_perc = 0
+eat_portions_num = 1
+
+animation_slot		= 4
+
+hud = wpn_vodka_hud
+
+[borov_pda]:wolf_pda
+inv_name			= borov_pda
+inv_name_short		= borov_pda
+inv_grid_width     = 1
+inv_grid_height    = 1
+inv_grid_x         = 32
+inv_grid_y         = 0
+
+[ambal_pda]:wolf_pda
+inv_name			= ambal_pda
+inv_name_short		= ambal_pda
+inv_grid_width     = 1
+inv_grid_height    = 1
+inv_grid_x         = 34
+inv_grid_y         = 0

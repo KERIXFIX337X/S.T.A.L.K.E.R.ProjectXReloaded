@@ -1,0 +1,668 @@
+--[[-------------------------------------------------------------------------------
+	File		:	assembly.script
+	Description	:	Сборка оружия из деталей через CUI-интерфейс
+	Author		:	naxac
+	Created		:	25.12.2013
+--]]-------------------------------------------------------------------------------
+-- ALEX, удали потом комментарии, ok?
+local wpn_details = {
+-- Сюда пишем "рецепты" в таком виде:
+--	["секция_оружия"] = {info = "info_assembly_секция_оружия",
+--						det = {["секция_детали"] = количество,
+--						    ["секция_детали"] = количество}} - пишем четыре вида деталей (для ножа сделал исключение), количество не ограничено
+-- Холодное
+	["wpn_knife"] = {info = "info_assembly_wpn_knife",
+					 det = {["det_metall_plate"] = 1,
+						    ["det_blade"] = 1}
+					},
+-- Пистолеты
+	["wpn_pm"] = {info = "info_assembly_wpn_pm",
+				  det = {["det_body"] = 1,
+						 ["det_cock"] = 1,
+						 ["det_detail"] = 5,
+						 ["det_gun_butter"] = 1}
+				  },
+	["wpn_pb"] = {info = "info_assembly_wpn_pb",
+				  det = {["det_body"] = 1,
+						 ["det_cock"] = 1,
+						 ["det_detail"] = 4,
+						 ["det_spare_part"] = 2}
+				  },
+	["wpn_fort"] = {info = "info_assembly_wpn_fort",
+				  det = {["det_body"] = 1,
+						 ["det_cock"] = 1,
+						 ["det_detail"] = 8,
+						 ["det_gun_butter"] = 2}
+				  },
+	["wpn_walther"] = {info = "info_assembly_wpn_walther",
+				  det = {["det_body"] = 1,
+						 ["det_cock"] = 1,
+						 ["det_detail"] = 5,
+						 ["det_spare_part"] = 6}
+				  },
+	["wpn_colt1911"] = {info = "info_assembly_wpn_colt1911",
+				  det = {["det_body"] = 1,
+						 ["det_cock"] = 1,
+						 ["det_detail"] = 13,
+						 ["det_spare_part"] = 7}
+				  },
+	["wpn_usp"] = {info = "info_assembly_wpn_usp",
+				  det = {["det_body"] = 1,
+						 ["det_cock"] = 1,
+						 ["det_detail"] = 11,
+						 ["det_gun_butter"] = 2}
+				  },
+	["wpn_desert_eagle"] = {info = "info_assembly_wpn_desert_eagle",
+				  det = {["det_body"] = 1,
+						 ["det_cock"] = 1,
+						 ["det_detail"] = 18,
+						 ["det_spare_part"] = 8}
+				  },
+	["wpn_sig220"] = {info = "info_assembly_wpn_sig220",
+				  det = {["det_body"] = 1,
+						 ["det_cock"] = 1,
+						 ["det_detail"] = 13,
+						 ["det_gun_butter"] = 2}
+				  },
+	["wpn_beretta"] = {info = "info_assembly_wpn_beretta",
+				  det = {["det_body"] = 1,
+						 ["det_cock"] = 1,
+						 ["det_detail"] = 16,
+						 ["det_spring"] = 1}
+				  },
+	["wpn_hpsa"] = {info = "info_assembly_wpn_hpsa",
+				  det = {["det_body"] = 1,
+						 ["det_cock"] = 1,
+						 ["det_detail"] = 12,
+						 ["det_gun_butter"] = 5}
+				  },
+-- ПП
+	["wpn_mp5"] = {info = "info_assembly_wpn_mp5",
+				  det = {["det_body"] = 1,
+						 ["det_cock"] = 1,
+						 ["det_shutter"] = 1,
+						 ["det_gun_butter"] = 3}
+				  },
+-- Штурмовые винтовки
+	["wpn_ak74u"] = {info = "info_assembly_wpn_ak74u",
+				  det = {["det_body"] = 1,
+						 ["det_cock"] = 1,
+						 ["det_shutter"] = 1,
+						 ["det_detail"] = 3}
+				  },
+	["wpn_ak74"] = {info = "info_assembly_wpn_ak74",
+				  det = {["det_body"] = 1,
+						 ["det_cock"] = 1,
+						 ["det_shutter"] = 1,
+						 ["det_detail"] = 7}
+				  },
+	["wpn_abakan"] = {info = "info_assembly_wpn_abakan",
+				  det = {["det_body"] = 1,
+						 ["det_cock"] = 1,
+						 ["det_shutter"] = 1,
+						 ["det_detail"] = 18}
+				  },
+	["wpn_groza"] = {info = "info_assembly_wpn_groza",
+				  det = {["det_body"] = 1,
+						 ["det_cock"] = 1,
+						 ["det_shutter"] = 1,
+						 ["det_detail"] = 29}
+				  },
+	["wpn_val"] = {info = "info_assembly_wpn_val",
+				  det = {["det_body"] = 1,
+						 ["det_cock"] = 1,
+						 ["det_shutter"] = 1,
+						 ["det_detail"] = 24}
+				  },
+	["wpn_l85"] = {info = "info_assembly_wpn_l85",
+				  det = {["det_body"] = 1,
+						 ["det_cock"] = 1,
+						 ["det_shutter"] = 1,
+						 ["det_detail"] = 16}
+				  },
+	["wpn_lr300"] = {info = "info_assembly_wpn_lr300",
+				  det = {["det_body"] = 1,
+						 ["det_cock"] = 1,
+						 ["det_shutter"] = 1,
+						 ["det_detail"] = 32}
+				  },
+	["wpn_sig550"] = {info = "info_assembly_wpn_sig550",
+				  det = {["det_body"] = 1,
+						 ["det_cock"] = 1,
+						 ["det_shutter"] = 1,
+						 ["det_detail"] = 34}
+				  },
+	["wpn_g36"] = {info = "info_assembly_wpn_g36",
+				  det = {["det_body"] = 1,
+						 ["det_cock"] = 1,
+						 ["det_shutter"] = 1,
+						 ["det_detail"] = 39}
+				  },
+	["wpn_fn2000"] = {info = "info_assembly_wpn_fn2000",
+				  det = {["det_body"] = 1,
+						 ["det_cock"] = 1,
+						 ["det_shutter"] = 1,
+						 ["det_detail"] = 56}
+				  },
+-- Гладкоствольные
+	["wpn_bm16"] = {info = "info_assembly_wpn_bm16",
+				  det = {["det_body"] = 1,
+						 ["det_cock"] = 2,
+						 ["det_gun_stem"] = 2,
+						 ["det_detail"] = 6}
+				  },
+	["wpn_wincheaster1300"] = {info = "info_assembly_wpn_wincheaster1300",
+				  det = {["det_body"] = 1,
+						 ["det_cock"] = 1,
+						 ["det_gun_stem"] = 1,
+						 ["det_detail"] = 14}
+				  },
+	["wpn_spas12"] = {info = "info_assembly_wpn_spas12",
+				  det = {["det_body"] = 1,
+						 ["det_cock"] = 1,
+						 ["det_gun_stem"] = 1,
+						 ["det_detail"] = 25}
+				  },
+-- Снайперские
+	["wpn_vintorez"] = {info = "info_assembly_wpn_vintorez",
+				  det = {["det_body"] = 1,
+						 ["det_cock"] = 1,
+						 ["det_rifled_barrel"] = 1,
+						 ["det_spare_part"] = 24}
+				  },
+	["wpn_svu"] = {info = "info_assembly_wpn_svu",
+				  det = {["det_body"] = 1,
+						 ["det_cock"] = 1,
+						 ["det_shutter"] = 1,
+						 ["det_spare_part"] = 35}
+				  },
+	["wpn_svd"] = {info = "info_assembly_wpn_svd",
+				  det = {["det_body"] = 1,
+						 ["det_cock"] = 1,
+						 ["det_shutter"] = 1,
+						 ["det_spare_part"] = 43}
+				  },
+-- Тяжелое
+	["wpn_rg-6"] = {info = "info_assembly_wpn_rg-6",
+				  det = {["det_body"] = 1,
+						 ["det_cock"] = 1,
+						 ["det_revolver"] = 1,
+						 ["det_spare_part"] = 48}
+				  },
+	["wpn_rpg7"] = {info = "info_assembly_wpn_rpg7",
+				  det = {["det_body"] = 1,
+						 ["det_cock"] = 1,
+						 ["det_nut"] = 15,
+						 ["det_detail"] = 26}
+				  },
+	["wpn_gauss"] = {info = "info_assembly_wpn_gauss",
+				  det = {["det_body"] = 1,
+						 ["det_cock"] = 1,
+						 ["det_induction_coil"] = 4,
+						 ["det_battery"] = 5}
+				  },
+	}
+
+local btns_params = {
+	-- В инвентаре
+	inv = {space = 120,		-- Интервал между кнопками
+		   st_x = 13,		-- Начальная координата X кнопки
+		   st_y = 98,		-- Начальная координата Y кнопки
+		   len_x = 3},		-- Максимальное количество кнопок по X
+	-- В слотах
+	slt = {space = 113,
+		   st_x = 467,
+		   st_y = 57,
+		   len_x = 4}	-- не менять!
+	}
+--	Дальше лучше ничего не трогай
+local all_details = {}
+local det_in_inv = {}
+local det_in_slot = {}
+local assemb_det = 0
+local assemb_menu
+
+class "list_item" (CUIListItemEx)
+
+function list_item:__init() super()
+	self:SetWndRect		(0,0,416,22)
+	
+	self.itn					= CUIStatic	()
+	self.itn:SetAutoDelete	(true)
+	self:AttachChild		(self.itn)
+	self.itn:SetWndRect		(0,0,230,22)
+	self.itn:SetText			("item_name")
+	self.itn:SetFont			(GetFontLetterica18Russian())
+	self.itn:SetTextColor	(255,216,186,140)
+
+	self.its				= CUIStatic	()
+	self.its:SetAutoDelete	(true)
+	self:AttachChild		(self.its)
+	self.its:SetWndRect	(250,0,150,22)
+	self.its:SetText		("item_section")
+	self.its:SetFont		(GetFontLetterica16Russian())
+	self.its:SetTextColor	(0,0,0,0)
+end
+
+class "ui_assembly" (CUIScriptWnd)
+
+function ui_assembly:__init() super()
+	assemb_menu = self
+	self.tbl_buttons = {}
+	self.tbl_buttons_s = {}
+	self:InitControls()
+	self:InitCallBacks()
+	self:FillList()
+end
+
+function ui_assembly:FillList()
+	self.list:RemoveAll()
+	for k,v in pairs(wpn_details) do
+		if has_alife_info(v.info) then
+			self:AddItemToList(k)
+		end
+	end
+end
+
+function ui_assembly:AddItemToList(section)
+	local _itm = list_item()
+	local itm_name = game.translate_string(news_manager.get_inv_name(section))
+	_itm.itn:SetText(itm_name)
+	_itm.its:SetText(section)
+	
+	self.list:AddItem(_itm)
+end
+
+function ui_assembly:__finalize() end
+
+function ui_assembly:InitControls()
+	self:Init(0,0,1024,768)
+	local xml = CScriptXmlInit()
+	xml:ParseFile("ui_assembly.xml")
+	
+	xml:InitStatic("background",self)
+	xml:InitStatic("assemb_window",self)
+	xml:InitStatic("caption",self)
+	
+	self:Register(xml:Init3tButton("btn_assembly",self), "btn_assembly")
+	self:Register(xml:Init3tButton("btn_quit",self), "btn_quit")
+	
+	xml:InitFrame("frame_details", self)
+	xml:InitFrame("frame_weapon", self)
+	xml:InitFrame("frame_list", self)
+	xml:InitStatic("list_caption",self)
+	xml:InitStatic("inv_caption",self)
+	xml:InitStatic("wpn_caption",self)
+	
+	self.list = xml:InitList("list", self)
+	self.list:ShowSelectedItem(true)
+	self:Register(self.list, "list_assemb")
+	
+	self.comes_short_det = xml:InitStatic("comes_short",self)
+	
+	self.clean_slots = CUIButton()
+	self.clean_slots:Init("ui\\ui_assembly",455,130,30,45)
+	self.clean_slots:SetOriginalRect(13,780,30,45)
+	self:Register(self.clean_slots, "clean_slots")
+	self:AttachChild(self.clean_slots)
+	self:AddCallback("clean_slots", ui_events.BUTTON_CLICKED, self.OnButtonClean, self)
+	
+	self:AttachButtons()
+end
+
+function ui_assembly:OnButtonClean()
+	if self.wpn_icon then
+		self:DetachChild(self.wpn_icon)
+		self.wpn_icon = nil
+	end
+	if #det_in_slot>0 then
+		update_tables()
+		self:AttachButtons()
+	end
+end
+
+function ui_assembly:AttachButtons()
+	self.comes_short_det:SetText("")
+	local bpi = 1
+	local bps = 1
+	if #all_details>0 then
+		for a=1,#all_details do
+			if det_in_inv[a] then
+				self:NewBtnCreate("inv",a,all_details[a].section,det_in_inv[a],bpi)
+				if det_in_inv[a]>0 then bpi = bpi + 1 end
+			end
+			if det_in_slot[a] then
+				self:NewBtnCreate("slt",a,all_details[a].section,det_in_slot[a],bps)
+				if det_in_slot[a]>0 then bps = bps + 1 end
+			end
+		end
+	end
+end
+
+function ui_assembly:NewBtnCreate(type,i,sect,kol,pos)
+	local tbl
+	if type == "inv" then tbl = self.tbl_buttons
+	else tbl = self.tbl_buttons_s end
+	
+	local b
+	local tb = btns_params[type]
+	local sizes = give_icon_params(sect)
+	local pl_x = tb.st_x+(tb.space*math.mod(pos-1,tb.len_x))
+	local pl_y = tb.st_y+(tb.space*math.floor((pos-1)/tb.len_x))
+	local but_x = pl_x+(100-(sizes.width/2))
+	local but_y = pl_y+(100-(sizes.height/2))
+	b = tbl[i]
+	if not b and kol>0 then
+		tbl[i] = CUIButton()
+		b = tbl[i]
+		b:SetWindowName("btn_"..type..i)
+		b:SetAutoDelete(true)
+		b:InitTexture("ui\\ui_icon_equipment")
+		b:SetOriginalRect(sizes.x,sizes.y,sizes.width,sizes.height)
+		if kol and kol>1 then
+			b:SetText("x"..kol)
+		else
+			b:SetText("")
+		end
+		b:SetTextColor(255,240,165,25)
+		b:SetFont(GetFontGraffiti19Russian())
+		b:Init(but_x,but_y,sizes.width,sizes.height)
+		self:AttachChild(b)
+		self:AddCallback(b:WindowName(), ui_events.BUTTON_CLICKED, loadstring("assembly.btn_"..type.."_click("..i..")"), self)
+		
+		b:Show(kol>0)
+	elseif b and kol==0 then
+		b:Show(false)
+	elseif b then
+		b:SetWndPos(but_x,but_y)
+		if kol>1 then b:SetText("x"..kol)
+		else b:SetText("") end
+		b:Show(true)
+	end
+	if type == "inv" then self.tbl_buttons = tbl
+	else self.tbl_buttons_s = tbl end
+end
+
+function ui_assembly:InitCallBacks()
+	self:AddCallback("list_assemb", ui_events.LIST_ITEM_CLICKED, self.OnListItemClicked, self)
+	self:AddCallback("btn_assembly", ui_events.BUTTON_CLICKED, self.OnButton_assembly, self)
+	self:AddCallback("btn_quit", ui_events.BUTTON_CLICKED, self.OnButton_exit, self)
+end
+
+function ui_assembly:OnButton_exit()
+	self:GetHolder():start_stop_menu(self, true)
+end
+
+function ui_assembly:OnButton_assembly()
+	if assemb_det == 0 then
+		self.comes_short_det:SetText("Детали в слотах отсутствуют!")
+		self.comes_short_det:SetTextColor(255,255,0,0)
+		return
+	end
+	local created_section
+	local del_details
+	local nb = false
+	local del_indexes = {}
+	for sect,tbl in pairs(wpn_details) do
+		local a = 0
+		for i=1,#det_in_slot do
+			if det_in_slot[i] > 0 then
+				local ds = all_details[i].section
+				if tbl.det[ds] and tbl.det[ds] == det_in_slot[i] then
+					a = a + 1
+					table.insert(del_indexes,{i,det_in_slot[i]})
+				end
+				if a == 4 or (a == 2 and sect == "wpn_knife") then	-- если в "рецепте" менее 4-х видов деталей, то здесь добавляем предусловие
+					del_details = tbl.det
+					created_section = sect
+					nb = true
+					break
+				end
+			end
+		end
+		if nb == true then break end
+		del_indexes = {}
+	end
+	
+	if created_section and del_details then
+		for k,v in pairs(del_details) do
+			del_item_section(k,v)
+		end
+		for n=1,#del_indexes do
+			local del_it = del_indexes[n]
+			all_details[del_it[1]].num = all_details[del_it[1]].num - del_it[2]
+		end
+		update_tables()
+		
+		local sizes = give_icon_params(created_section)
+		if self.wpn_icon then self:DetachChild(self.wpn_icon) end
+		self.wpn_icon = CUIStatic()
+		self.wpn_icon:SetAutoDelete(true)
+		self.wpn_icon:InitTexture("ui\\ui_icon_equipment")
+		local px = 805-(sizes.width/2)
+		local py = 383-(sizes.height/2)
+		self.wpn_icon:SetOriginalRect(sizes.x,sizes.y,sizes.width,sizes.height)
+		self.wpn_icon:Init(px,py,sizes.width,sizes.height)
+		self:AttachChild(self.wpn_icon)
+		
+		spawn_inv_item(created_section)
+		self:AttachButtons()
+		
+		self.comes_short_det:SetText("Оружие собрано!")
+		self.comes_short_det:SetTextColor(255,0,255,255)
+	else
+		if self.wpn_icon then self.wpn_icon:Show(false) end
+		
+		self.comes_short_det:SetText("Из этих деталей невозможно собрать оружие!")
+		self.comes_short_det:SetTextColor(255,255,0,0)
+	end
+end
+
+function ui_assembly:OnListItemClicked()
+	update_tables()
+	if self.list:GetSize() == 0 then return end
+	local itm_index = self.list:GetSelectedItem()
+	local item = self.list:GetItem(itm_index)
+	if item == nil then return end
+	
+	local section = item.its:GetText()
+	if not wpn_details[section] then return end
+	local td = wpn_details[section].det
+	local comes_short = {}
+	for k,v in pairs(td) do
+		local ins = false
+		for i=1,#all_details do
+			if k == all_details[i].section then
+				if all_details[i].num>=v then
+					det_in_slot[i] = v
+					det_in_inv[i] = det_in_inv[i] - v
+					assemb_det = assemb_det+1
+					ins = true
+					break
+				else
+					det_in_slot[i] = all_details[i].num
+					det_in_inv[i] = 0
+					table.insert(comes_short,{k,v-det_in_slot[i]})
+					assemb_det = assemb_det+1
+					ins = true
+					break
+				end
+			end
+		end
+		if ins == false then
+			table.insert(comes_short,{k,v})
+		end
+	end
+	self:AttachButtons()
+	
+	local text
+	if #comes_short>0 then
+		text = "Не хватает деталей:"
+		for i=1,#comes_short do
+			local det_n = news_manager.get_inv_name(comes_short[i][1])
+			text = text.." "..game.translate_string(det_n).." ("..tostring(comes_short[i][2]).." шт.)"
+		end
+		self.comes_short_det:SetText(text)
+		self.comes_short_det:SetTextColor(255,255,0,0)
+	else
+		text = "Нажмите кнопку \"Собрать\" для сборки"
+		self.comes_short_det:SetText(text)
+		self.comes_short_det:SetTextColor(255,0,255,0)
+	end
+end
+
+function ui_assembly:OnKeyboard(dik, keyboard_action)
+	if keyboard_action == ui_events.WINDOW_KEY_PRESSED then
+		if dik == DIK_keys.DIK_ESCAPE then
+			self:OnButton_exit()
+		end
+	end
+	return true
+end
+
+--------------------------------------------------------------------------------------
+function btn_inv_click(n)
+	local max_len = btns_params.slt.len_x
+	if det_in_inv[n]>0 then
+		if assemb_det<max_len then
+			if det_in_slot[n]==0 then assemb_det = assemb_det+1 end
+			det_in_inv[n] = det_in_inv[n]-1
+			det_in_slot[n] = det_in_slot[n]+1
+		elseif assemb_det==max_len and det_in_slot[n]>0 then
+			det_in_inv[n] = det_in_inv[n]-1
+			det_in_slot[n] = det_in_slot[n]+1
+		end
+		assemb_menu:AttachButtons()
+	end
+end
+
+function btn_slt_click(n)
+	if det_in_slot[n]>0 then
+		det_in_slot[n] = det_in_slot[n]-1
+		det_in_inv[n] = det_in_inv[n]+1
+		if det_in_slot[n] == 0 then assemb_det = assemb_det-1 end
+		assemb_menu:AttachButtons()
+	end
+end
+
+function use_inv_obj(item)
+	if not item then return end
+	local sect = item:section()
+	if string.find(sect,"flash_assemb_") then
+		local str_info = string.sub(sect,14,-1)
+		if not has_alife_info("info_assembly_"..str_info) then
+			db.actor:give_info_portion("info_assembly_"..str_info)
+			local wpn_name = news_manager.get_inv_name(str_info)
+			news_manager.send_tip(db.actor,"Найдена информация по сборке оружия:%c[255,0,255,255] "..game.translate_string(wpn_name),nil,nil,15000)
+		else
+			news_manager.send_tip(db.actor,"Информация с этой флешки уже загружена!",nil,nil,10000)
+		end
+		spawn_inv_item(sect)
+	elseif sect == "instrumental_box" then
+		all_details = get_details_in_inv()
+		local hud = assembly.ui_assembly(get_hud())
+		level.start_stop_menu(hud, true)
+		spawn_inv_item("instrumental_box")
+	end
+end
+
+function use_craft()
+    all_details = get_details_in_inv()
+	local hud = assembly.ui_assembly(get_hud())
+	level.start_stop_menu(hud, true)
+end
+
+function get_details_in_inv()
+	det_in_inv = {}
+	det_in_slot = {}
+	assemb_det = 0
+	local t = {}
+	db.actor:iterate_inventory(function(npc,item)
+				local sect = item:section()
+				if sect and string.find(sect,"det_") then
+					if t[sect] then t[sect] = t[sect]+1
+					else t[sect] = 1 end
+				end
+			end
+			,db.actor)
+
+	local tbl_det = {}
+	if t == {} then return {} end
+	for k,v in pairs(t) do
+		local tbl = {}
+		tbl.section = k
+		tbl.num = v
+		table.insert(tbl_det,tbl)
+	end
+	for i=1,#tbl_det do
+		det_in_inv[i] = tbl_det[i].num
+		det_in_slot[i] = 0
+	end
+	return tbl_det
+end
+
+function update_tables()
+	assemb_det = 0
+	if #all_details>0 then
+		for i=1,#all_details do
+			det_in_inv[i] = all_details[i].num
+			det_in_slot[i] = 0
+		end
+	end
+end
+
+function give_icon_params(sect)
+	local ini = system_ini()
+	local t = {}
+	if ini and ini:section_exist(sect) then
+		t.width = ini:r_float(sect, "inv_grid_width")*50
+		t.height = ini:r_float(sect, "inv_grid_height")*50
+		t.x = ini:r_float(sect, "inv_grid_x")*50
+		t.y = ini:r_float(sect, "inv_grid_y")*50
+	else
+		mylog("give_icon_params: section ["..sect.."] not exist")
+		t.width = 0
+		t.height = 0
+		t.x = 0
+		t.y = 0
+	end
+	return t
+end
+
+function spawn_item_count(section,kol)
+	if not section then return end
+	if kol == nil then kol = 1 end
+	for i=1,kol do
+		spawn_inv_item(section)
+	end
+end
+function spawn_inv_item(item)
+	if not item then return end
+	alife():create(item, db.actor:position(), db.actor:level_vertex_id(), db.actor:game_vertex_id(), db.actor:id())
+end
+function del_item_section(sect,count)
+	if not sect then return end
+	if count == nil then count = 1 end
+	db.actor:iterate_inventory(function(npc,item)
+			local s = item:section()
+			if count>0 and s == sect then
+				alife():release(alife():object(item:id()),true)
+				count = count-1
+			end
+		end
+	,db.actor)
+end
+
+function mylog(msg)
+	if not msg or type(msg) ~= "string" then return end
+	get_console():execute("load ~#~"..msg)
+end
+
+function test()
+	for k,v in pairs(wpn_details) do
+		local inf = v.info
+		if not has_alife_info(inf) then
+			db.actor:give_info_portion(inf)
+		end
+	end
+end

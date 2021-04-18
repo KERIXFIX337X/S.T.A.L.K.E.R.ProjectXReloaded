@@ -1,0 +1,20 @@
+[logic]
+active = {-yan_labx16_switcher_2_off} ph_sound, sr_idle
+
+[ph_sound]
+snd = x16_hum_2
+looped = true
+on_info = {+yan_labx16_switcher_2_off} ph_idle@off
+
+[ph_idle@off]
+snd = x16_switch_1
+looped = false
+on_signal = sound_end | sr_idle
+
+[ph_idle@on]
+snd = x16_switch_1
+looped = false
+on_signal = sound_end | ph_sound
+
+[sr_idle]
+on_info = {-yan_labx16_switcher_2_off} ph_idle@on

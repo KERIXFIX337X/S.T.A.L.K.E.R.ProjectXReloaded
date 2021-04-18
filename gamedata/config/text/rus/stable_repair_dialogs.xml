@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="windows-1251" ?>
+<string_table>
+
+	<string id="list_trader_repair_0">
+		<text>Стоимость ремонта оружия в первом слоте:</text>
+	</string>
+	<string id="list_trader_repair_1">
+		<text>Стоимость ремонта оружия во втором слоте:</text>
+	</string>
+	<string id="list_trader_repair_2">
+		<text>Стоимость ремонта костюма:</text>
+	</string>
+	
+	<string id="common_repair_dialog_0">
+		<text>Отремонтировать экипировку сможешь?</text>
+	</string>
+	<string id="common_repair_dialog_01">
+		<text>Извини, я ничего в этом не понимаю.</text>
+	</string>
+	<string id="common_repair_dialog_1">
+		<text>Да, помаленьку. Давай к делу, что починить нужно?\n \nСписок доступных для ремонта предметов:</text>
+	</string>
+	<string id="common_repair_dialog_2">
+		<text>Пистолет.</text>
+	</string>
+	<string id="common_repair_dialog_3">
+		<text>Основное оружие.</text>
+	</string>
+	<string id="common_repair_dialog_4">
+		<text>Костюм.</text>
+	</string>
+	<string id="common_repair_dialog_5">
+		<text>Да, вижу, - дорого это... пока таких денег нет, так что давай чуть позже к тебе подойду.</text>
+	</string>
+	<string id="common_repair_dialog_6">
+		<text>Почти готово...</text>
+	</string>
+	<string id="common_repair_dialog_7">
+		<text>Вот, держи.</text>
+	</string>
+	<string id="common_repair_dialog_8">
+		<text>Выглядит как новый... Спасибо!</text>
+	</string>
+	<string id="common_repair_dialog_9">
+		<text>Да, отличная работа.</text>
+	</string>
+	<string id="common_repair_dialog_10">
+		<text>А ещё кое-что сможешь подлатать?</text>
+	</string>
+	<string id="common_repair_dialog_11">
+		<text>Конечно.\n \nСписок доступных для ремонта предметов:</text>
+	</string>
+#include "text\rus\stable_items_dialogs.xml"		
+</string_table>

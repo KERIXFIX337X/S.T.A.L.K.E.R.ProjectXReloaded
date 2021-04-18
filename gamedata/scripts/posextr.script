@@ -1,0 +1,86 @@
+---------------------------------------------------
+-- script for posExtracter ver.1.2. Final
+--by SmanxX1
+--------------------------------------------------
+class "pe" (CUIScriptWnd)
+
+function pe:__init(owner,objid) super()
+	self.owner = owner
+	self:InitControls()
+	self:InitCallBacks()
+end
+
+function pe:__finalize() end
+
+function pe:InitControls()
+	self:Init(300,200,550,450)
+	local xml = CScriptXmlInit()
+	xml:ParseFile("ui_pe.xml")
+	xml:InitStatic("background", self)
+	self:Register(xml:Init3tButton("caption", self),"caption")
+	self:Register(xml:Init3tButton("caption2", self),"caption2")
+	self:Register(xml:Init3tButton("btn_1", self),"btn_1")
+	self:Register(xml:Init3tButton("btn_quit", self),"btn_quit")
+	self:Register(xml:InitEditBox("edit_box", 	self), "edit_box")
+end
+
+function pe:InitCallBacks()
+	self:AddCallback("btn_1", ui_events.BUTTON_CLICKED, self.pe1, self)
+	self:AddCallback("btn_quit", ui_events.BUTTON_CLICKED, self.on_quit, self)
+end
+
+function pe:OnKeyboard(dik, keyboard_action)
+	CUIScriptWnd.OnKeyboard(self,dik,keyboard_action)
+	if keyboard_action == ui_events.WINDOW_KEY_PRESSED then
+		if dik == DIK_keys.DIK_ESCAPE then
+			self:on_quit()
+		end
+		if dik == DIK_keys.DIK_RETURN then
+			self:pe1()
+		end
+	end
+	return true
+end
+
+function pe:pe1()
+	local edit_box=self:GetEditBox("edit_box")
+	local str=edit_box:GetText()
+	local qt=true
+	if self:check_game() then
+		if ((string.len(str)>30) or (string.len(str)==0)) then 
+			edit_box:SetText("Ошибка!!! Незадано назваеие либо символов больше 30!!!")
+			qt=false
+		else
+			str=string.gsub(str, "%s", "_")
+			str=string.gsub(str, "|", "/")
+			local pos=db.actor:position()
+			local dir=db.actor:direction()
+			get_console():execute("pe_log>>"..str.."|"..level.name().."|_X="..pos.x.."_Y="..pos.y.."_Z="..pos.z.."_lvid="..db.actor:level_vertex_id().."_gvid="..db.actor:game_vertex_id())
+			get_console():execute("xiani_log>>"..str.."|"..level.name().."|DIR|_X="..dir.x.."_Y="..dir.y.."_Z="..dir.z)
+			
+			qt=true
+		end
+	else
+		edit_box:SetText("Ошибка!!! Игра не загружена!")
+		qt=false
+	end
+	if qt then self:on_quit() end
+end
+
+function pe:on_quit()
+	local console = get_console()
+	self:GetHolder():start_stop_menu (self.owner, true)
+	self:GetHolder():start_stop_menu (self,true)
+	self.owner:Show	(true)
+	if self:check_game() then
+		console:execute("main_menu off")
+	end
+end
+
+function pe:check_game()
+	if level.present() and (db.actor ~= nil) and db.actor:alive() then
+		return true
+	else
+		return false
+	end
+end

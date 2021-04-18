@@ -1,0 +1,145 @@
+<?xml version='1.0' encoding="windows-1251"?>
+
+<game_information_portions>
+
+    <!-- treasures -->
+    <info_portion id="wolf_treasure">
+        <action>character_treasures.wolf_treasure</action>
+    </info_portion>
+	<info_portion id="wolf_treasure_target">
+        <article>wolf_treasure</article>
+    </info_portion>
+	
+	<info_portion id="borov_treasure">
+        <action>character_treasures.borov_treasure</action>
+    </info_portion>
+	<info_portion id="borov_treasure_target">
+        <article>borov_treasure</article>
+    </info_portion>
+	
+	<info_portion id="ambal_treasure">
+        <action>character_treasures.ambal_treasure</action>
+    </info_portion>
+	<info_portion id="ambal_treasure_target">
+        <article>ambal_treasure</article>
+    </info_portion>
+	
+	<info_portion id="get_craft">
+        <action>assembly.use_craft</action>
+    </info_portion>
+	
+	<!-- engineer_spots -->
+	<info_portion id="engineer_bd_spot">
+        <action>bandit_engineer_spot.add_metka_technic</action>
+    </info_portion>
+	<!-- trader_spots -->
+	<info_portion id="trader_bd_spot">
+        <action>bandit_trader_spot.add_metka_trader</action>
+    </info_portion>
+	
+	<!-- leaders_spots -->
+	<info_portion id="leader_bd_spot">
+        <action>bandit_leader_spot.add_metka_commander</action>
+    </info_portion>
+	
+    <!-- game start -->
+    <info_portion id="single_game_start" />
+    <info_portion id="freeplay_actor_setup" />
+    <info_portion id="freeplay_actor_setup2" />
+    <info_portion id="freeplay_actor_start" />
+    <info_portion id="sidr_returned_weapon" />
+    
+    <!-- for freedom arsenal guard -->
+    <info_portion id="arsenal_guard_backoff" />
+    
+    <!-- for zombied immunity to radar psy emission -->
+    <info_portion id="zombied_psy_immunity" />
+    
+    <!-- for yantar psy emission -->
+    <info_portion id="yan_brain_off" />
+    
+    
+    
+    <info_portion id="esc_attack1_prepare" />
+    <info_portion id="esc_attack1_go" />
+	
+	<info_portion id="killer_dlg_stop_0" />
+	<info_portion id="killer_dlg_stop_1" />
+	<info_portion id="killer_dlg_stop_2" />
+	<info_portion id="killer_dlg_stop_3" />
+	<info_portion id="killer_dlg_stop_4" />
+	<info_portion id="killer_dlg_stop_5" />
+	<info_portion id="killer_dlg_stop_6" />
+	
+	<info_portion id="actor_killer" />
+	
+	<info_portion id="controller_killer_dead" />
+	<info_portion id="killer_leader_dead" />
+	
+	<info_portion id="lets_raid_blockpost">
+        <task>raid_blockpost_final</task>
+    </info_portion>
+	<info_portion id="where_blockpost_killer" />
+	<info_portion id="get_blockpost_killer" />
+	 <info_portion id="show_engineer">
+        <action>killer.show_msg</action>
+    </info_portion>
+	
+	<info_portion id="quest_raid_killer_controller_start">
+        <task>raid_kill_controller</task>
+    </info_portion>
+    <info_portion id="quest_raid_killer_controller_finish"></info_portion>
+	
+	<info_portion id="killer_blockpost_complete"></info_portion>
+	
+	
+	<info_portion id="self_duty_technic">
+        <action>dolg_tec.add_metka_technic</action>
+    </info_portion>
+	
+    <info_portion id="closed_test">
+        <action>xr_robbie.cbt</action>
+    </info_portion>
+	
+	<info_portion id="test_info_p">
+        <action>xr_robbie.cbt</action>
+    </info_portion>
+	
+	<info_portion id="self_killer_leader">
+        <action>killer_leader.add_metka_commander</action>
+    </info_portion>
+	<info_portion id="self_killer_spots">
+        <action>killer.process_info_portion</action>
+    </info_portion>
+	
+	<info_portion id="ecolog_x16_done" />
+	<info_portion id="ecolog_x18_done" />
+	
+		<info_portion id="ecolog_invite_prec">
+        <action>ecolog.has_ecolog_setup</action>
+    </info_portion>
+	
+	<!--  kostya level  -->
+	<info_portion id="controler_spawn"></info_portion>
+	<info_portion id="polter_spawn"></info_portion>
+	<info_portion id="polter2_spawn"></info_portion>
+	<info_portion id="peshera_code_door_unlocked"></info_portion>
+	<info_portion id="peshera_code_door_unlocked2"></info_portion>
+	<info_portion id="peshera_code_door_unlocked3"></info_portion>
+	<info_portion id="peshera_code_door_unlocked4"></info_portion>
+	<info_portion id="spawn_teleport_exit"></info_portion>
+	<info_portion id="spawn_teleport_hospital"></info_portion>
+	<info_portion id="krovosos_spawn"></info_portion>
+	<info_portion id="krovosos_spawn2"></info_portion>
+	<info_portion id="generators_code_door_unlocked"></info_portion>
+	<info_portion id="red_forest_open"></info_portion>
+	<info_portion id="red_forest_open2"></info_portion>
+	<info_portion id="red_polter_spawn"></info_portion>
+	<info_portion id="red_krovosos_spawn"></info_portion>
+	
+	<!--  setup_actor_portions  -->	
+	<info_portion id="actor_loner" />
+	
+	<info_portion id="ecolog_invite_setup" />
+	
+</game_information_portions>

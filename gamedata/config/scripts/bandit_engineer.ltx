@@ -1,0 +1,23 @@
+[logic]
+active = walker@stay_at_position
+combat_ignore = combat_ignore
+danger = danger_condition
+ 
+[walker@stay_at_position]
+path_walk = bandit_engineer_walk
+path_look = bandit_engineer_look
+def_state_standing = idle
+meet = meet@engineer
+
+[meet@engineer]
+use = true
+use_wpn = false
+
+[combat_ignore]
+combat_ignore_cond = always
+ 
+[danger_condition]
+ignore_distance = 100
+ignore_distance_corpse = 100
+
+

@@ -1,0 +1,91 @@
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;                 Инструментальный ящиик
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+[instrumental_box]:identity_immunities
+GroupControlSection	= spawn_group
+discovery_dependency =
+$spawn 					= "food and drugs\instrumental_box"
+$prefetch 				= 32
+class					= II_ANTIR
+cform          			= skeleton
+visual                  = equipments\craft\instrumental_box.ogf
+cost					= 12400
+inv_name				= instrumental_box_name
+inv_name_short			= instrumental_box_name
+description				= instrumental_box_descr
+inv_weight				= 4.6
+inv_grid_width     = 2
+inv_grid_height    = 2
+inv_grid_x         = 24
+inv_grid_y         = 1
+
+; eatable item
+eat_health = 0
+eat_satiety = 0
+eat_power = 0
+eat_radiation = 0
+wounds_heal_perc = 0
+eat_portions_num = 1
+
+; food item
+animation_slot		= 4
+
+;hud item
+hud = wpn_vodka_hud
+
+
+[det_assemb_base]:identity_immunities
+GroupControlSection		= spawn_group
+discovery_dependency	=
+$spawn					= "food and drugs\guitar_a"
+cform                   = skeleton
+class					= II_ATTCH
+inv_name_short			= "det assemb base"
+attach_angle_offset		= -1.651084, -1.341824, 1.200789
+attach_position_offset	= 0.077492, -0.030020, 0.090059
+attach_bone_name		= bip01_l_hand
+auto_attach				= false
+
+[det_base_privod]:det_assemb_base		;Базовый сервопривод
+visual                  = equipments\craft\base_privod.ogf
+cost					= 500
+inv_name				= base_privod_name
+description				= base_privod_descr
+inv_weight				= 1.0
+inv_grid_width     = 1
+inv_grid_height    = 1
+inv_grid_x         = 20
+inv_grid_y         = 0
+
+[det_exo_components]:det_assemb_base		;Компоненты экзоскелета
+visual                  = equipments\craft\exo_components.ogf
+cost					= 750
+inv_name				= exo_components_name
+description				= exo_components_descr
+inv_weight				= 2.0
+inv_grid_width     = 2
+inv_grid_height    = 1
+inv_grid_x         = 21
+inv_grid_y         = 0
+
+[det_outfit_components]:det_assemb_base		;Компоненты костюма
+visual                  = equipments\craft\outfit_components.ogf
+cost					= 1000
+inv_name				= outfit_components_name
+description				= outfit_components_descr
+inv_weight				= 3.0
+inv_grid_width     = 2
+inv_grid_height    = 2
+inv_grid_x         = 20
+inv_grid_y         = 1
+
+[det_exo_corpus]:det_assemb_base		;Корпус экзоскелета
+visual                  = equipments\craft\exo_corpus.ogf
+cost					= 1000
+inv_name				= exo_corpus_name
+description				= exo_corpus_descr
+inv_weight				= 3.5
+inv_grid_width     = 2
+inv_grid_height    = 2
+inv_grid_x         = 22
+inv_grid_y         = 1

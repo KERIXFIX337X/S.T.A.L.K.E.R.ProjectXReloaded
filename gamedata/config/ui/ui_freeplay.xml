@@ -1,0 +1,6 @@
+<ui_texture>
+    <file_name>ui\ui_freeplay</file_name>
+    <texture id="ui_linetextSmallfreeplay_b" x="114" y="377" width="9" height="21" />
+    <texture id="ui_linetextSmallfreeplay_back" x="123" y="377" width="33" height="21" />
+    <texture id="ui_linetextSmallfreeplay_e" x="155" y="377" width="9" height="21" />
+</ui_texture>

@@ -1,0 +1,55 @@
+; Набор инструментов для работы с пистолетами
+[pistol_box]:identity_immunities
+GroupControlSection	= spawn_group
+discovery_dependency = 
+$spawn 				= "devices\quest_items\dar_document1"
+;$prefetch 			= 32
+class				= II_ATTCH
+cform				= skeleton
+visual				= equipments\instrument\pistol_box.ogf
+radius				= 1
+
+description			= pistol_box_desc
+
+inv_name			= pistol_box_name
+inv_name_short		= pistol_box_name
+inv_weight			= 1
+
+inv_grid_width     = 2
+inv_grid_height    = 2
+inv_grid_x         = 26
+inv_grid_y         = 1
+cost				= 1500
+
+; Набор инструментов для работы с винтовками
+[rifle_box]:pistol_box
+visual				= equipments\instrument\rifle_box.ogf
+
+description			= rifle_box_desc
+
+inv_name			= rifle_box_name
+inv_name_short		= rifle_box_name
+
+inv_grid_width     = 2
+inv_grid_height    = 2
+inv_grid_x         = 28
+inv_grid_y         = 1
+
+cost				= 1500
+
+; Набор инструментов для работы с ПП
+
+[smg_box]:pistol_box
+visual				= equipments\instrument\smg_box.ogf
+
+description			= smg_box_desc
+
+inv_name			= smg_box_name
+inv_name_short		= smg_box_name
+
+inv_grid_width     = 2
+inv_grid_height    = 2
+inv_grid_x         = 30
+inv_grid_y         = 1
+
+cost				= 1500

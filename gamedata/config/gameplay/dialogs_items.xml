@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="windows-1251" ?>
+<game_dialogs>
+    <dialog id="borov_choose_items">
+        <phrase_list>
+                <phrase id="0">
+                        <text>choose_items</text>
+                        <next>1</next>
+                </phrase>
+                <phrase id="1">
+                        <text>preview_items</text>
+						<next>2</next>
+						<next>8</next>
+						<next>16</next>
+                </phrase>
+				<phrase id="2">
+				        <dont_has_info>borov_item_stop_1</dont_has_info>
+				        <precondition>bandit.proverka_doc_x18</precondition>
+                        <text>choose_docs_x18</text>
+						<next>3</next>
+                </phrase>
+				<phrase id="3">
+                        <text>borov_talk_docs_x18</text>
+						<next>4</next>
+						<next>5</next>
+                </phrase>
+				<phrase id="4">
+                        <text>item_accept_1</text>
+						<action>bandit.peredacha_x18</action>
+						<action>army.money_reward</action>
+						<give_info>bandit_trade_up_x18</give_info>
+						<give_info>borov_item_stop_1</give_info>
+						<next>7</next>
+                </phrase>
+				<phrase id="5">
+                        <text>item_fail_1</text>
+						<next>6</next>
+                </phrase>
+				<phrase id="6">
+                        <text>borov_not_item</text>
+                </phrase>
+				<phrase id="7">
+                        <text>borov_apply_item</text>
+                </phrase>
+				<phrase id="8">
+				        <dont_has_info>borov_item_stop_2</dont_has_info>
+				        <precondition>bandit.proverka_doc_x16</precondition>
+                        <text>choose_docs_x16</text>
+						<next>9</next>
+                </phrase>
+				<phrase id="9">
+                        <text>borov_talk_docs_x16</text>
+						<next>10</next>
+						<next>5</next>
+                </phrase>
+				<phrase id="10">
+                        <text>item_accept_1</text>
+						<action>bandit.peredacha_x16</action>
+						<action>army.money_reward_med</action>
+						<give_info>bandit_trade_up_x16</give_info>
+						<give_info>borov_item_stop_2</give_info>
+						<next>7</next>
+                </phrase>
+				<phrase id="16">
+                        <text>stop_items</text>
+                </phrase>
+        </phrase_list>
+</dialog>		
+
+    <dialog id="ecolog_choose_items">
+        <phrase_list>
+                <phrase id="0">
+                        <text>ecolog_choose_items</text>
+                        <next>1</next>
+                </phrase>
+                <phrase id="1">
+                        <text>ecolog_preview_items</text>
+						<next>2</next>
+						<next>8</next>
+						<next>16</next>
+                </phrase>
+				<phrase id="2">
+				        <dont_has_info>ecolog_item_stop_1</dont_has_info>
+				        <precondition>bandit.proverka_doc_x18</precondition>
+                        <text>choose_docs_x18</text>
+						<next>3</next>
+                </phrase>
+				<phrase id="3">
+                        <text>ecolog_talk_docs_x18</text>
+						<next>4</next>
+						<next>5</next>
+                </phrase>
+				<phrase id="4">
+                        <text>item_accept_1</text>
+						<action>bandit.peredacha_x18</action>
+						<action>army.money_ecolog</action>
+						<give_info>ecolog_item_stop_1</give_info>
+						<next>7</next>
+                </phrase>
+				<phrase id="5">
+                        <text>item_fail_1</text>
+						<next>6</next>
+                </phrase>
+				<phrase id="6">
+                        <text>ecolog_not_item</text>
+                </phrase>
+				<phrase id="7">
+                        <text>ecolog_apply_item</text>
+                </phrase>
+				<phrase id="8">
+				        <dont_has_info>ecolog_item_stop_2</dont_has_info>
+				        <precondition>bandit.proverka_doc_x16</precondition>
+                        <text>choose_docs_x16</text>
+						<next>9</next>
+                </phrase>
+				<phrase id="9">
+                        <text>ecolog_talk_docs_x16</text>
+						<next>10</next>
+						<next>5</next>
+                </phrase>
+				<phrase id="10">
+                        <text>item_accept_1</text>
+						<action>bandit.peredacha_x16</action>
+						<action>army.money_reward_med</action>
+						<give_info>ecolog_trade_up_x16</give_info>
+						<give_info>ecolog_item_stop_2</give_info>
+						<next>7</next>
+                </phrase>
+				<phrase id="16">
+                        <text>stop_items</text>
+                </phrase>
+        </phrase_list>		
+</dialog>

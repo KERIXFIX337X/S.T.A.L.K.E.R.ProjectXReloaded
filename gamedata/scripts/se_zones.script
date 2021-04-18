@@ -1,0 +1,263 @@
+local not_spawn_levels = {
+	l05_bar = true
+}
+
+local update_time = time_global()+50000
+local upd_tick = 0
+local registered_anoms = {}
+
+function update_anoms(tg)
+	if tg < update_time then
+		return
+	end
+	upd_tick = upd_tick+1
+	local anom = registered_anoms[upd_tick]
+	if not anom then
+		for i,a in pairs(registered_anoms) do
+			if i > upd_tick then
+				anom = a
+				upd_tick = i
+				break
+			end
+		end
+		if not anom then
+			upd_tick = 0
+			update_time = tg+300000
+			return
+		end
+	end
+--	if db.actor and anom.position:distance_to(db.actor:position()) > 200 then
+	if not anom.online then
+		try_to_born(anom)
+	end
+	update_time = tg+235
+end
+
+function try_to_born(anom)
+	if anom.last_spawn_time == nil then
+		anom.last_spawn_time = game.get_game_time()
+		return
+	end
+	if game.get_game_time():diffSec(anom.last_spawn_time) >= anom.artefact_spawn_idle then
+		try_to_born_immediately(anom)
+	end
+end
+
+function try_to_born_immediately(anom)
+	anom.last_spawn_time = game.get_game_time()
+	if math.random(100) <= anom.artefact_spawn_rnd then
+		anom:spawn_artefacts()
+	end
+end
+
+--. Разродить все аномалии в игре, или на определённом уровне
+function all_born_artefacts(loc)
+	if loc == "current" then
+		loc = level.name()
+	end
+	local gg = game_graph()
+	for i,a in pairs(registered_anoms) do
+		if a.m_game_vertex_id and gg:valid_vertex_id(a.m_game_vertex_id) then
+			if not loc or loc == "all" or loc == alife():level_name(gg:vertex(a.m_game_vertex_id):level_id()) then
+				try_to_born_immediately(a)
+			end
+		end
+	end
+end
+
+local tmp_anomalies = {}
+
+function is_single_player_game	()
+	if (_G.alife == nil) then
+		return	(true)
+	end
+	
+	if (alife() ~= nil) then
+		return	(true)
+	end
+	
+	if (_G.IsGameTypeSingle == nil) then
+		return	(true)
+	end
+
+	if (IsGameTypeSingle() == true) then
+		return	(true)
+	end
+
+	return		(false)
+end
+
+class "se_zone_anom" (cse_anomalous_zone)
+function se_zone_anom:__init (section) super (section)	
+end
+function se_zone_anom:on_register()
+	cse_anomalous_zone.on_register(self)
+	
+	if sim_statistic.show_anomalous_spot == true then
+		level.map_add_object_spot_ser(self.id, "anomaly_zone_location", "anom: " .. self:name())
+	end
+	
+	self.artefact_spawn_idle = 60*60*1000*utils.cfg_get_number(system_ini(), self:section_name(), "artefact_spawn_idle", self, false, 24)
+	self.artefact_spawn_rnd = utils.cfg_get_number(system_ini(), self:section_name(), "artefact_spawn_rnd", self, false, 100)
+	
+	if (level_anomaly.check_on_off_mode(self) == false) and (string.find(self:name(),"mine_field") == nil) then
+		tmp_anomalies[table.getn(tmp_anomalies)+1] = self.id
+	end
+end
+
+function get_count_tmp_anom()
+	return	table.getn(tmp_anomalies)
+end
+
+function get_point_tmp_anom(arg)
+	local tmp_id = tmp_anomalies[arg]
+	return	tmp_id
+end
+
+function se_zone_anom:on_unregister()
+  zone_mgr.unregister_zone(self)
+  cse_anomalous_zone.on_unregister(self)
+--  xiani.xlog("unreg " .. tostring(self.id))  
+end
+
+function se_zone_anom:move_offline()
+  cse_anomalous_zone.move_offline(self)
+--  xiani.xlog("offline " .. tostring(self.id))  
+end
+
+function se_zone_anom:move_offline(var)
+  cse_anomalous_zone.move_offline(self,var)
+--  xiani.xlog("offline1 " .. tostring(self.id))  
+end
+
+function se_zone_anom:on_spawn()
+  cse_anomalous_zone.on_spawn(self)
+--  xiani.xlog("spawn " .. tostring(self.id))
+end
+
+function se_zone_anom:update()
+	cse_anomalous_zone.update(self)
+
+	if self.last_spawn_time == nil then
+		self.last_spawn_time = game.get_game_time()
+	end
+
+	if game.get_game_time():diffSec(self.last_spawn_time) >= self.artefact_spawn_idle then
+		self.last_spawn_time = game.get_game_time()
+		if math.random(100) <= self.artefact_spawn_rnd then
+			self:spawn_artefacts()
+		end
+	end	
+end
+function se_zone_anom:STATE_Write(packet)
+	cse_anomalous_zone.STATE_Write(self, packet)
+
+	if (is_single_player_game() == false) then
+		return
+	end
+	
+	if self.last_spawn_time == nil then
+		packet:w_u8(0)
+	else
+		packet:w_u8(1)
+		utils.w_CTime(packet, self.last_spawn_time)
+	end	
+end
+-- восстановление
+function se_zone_anom:STATE_Read( packet, size )
+  zone_mgr.register_zone_from_packet(self, packet, size)
+  cse_anomalous_zone.STATE_Read( self, packet, size )
+	
+	if editor() then
+		return
+	end
+	
+	if (is_single_player_game() == false) then
+		return
+	end
+	
+	local flag = packet:r_u8()
+	if flag == 1 then
+		self.last_spawn_time = utils.r_CTime(packet)
+	end
+end
+
+
+class "se_zone_visual" (cse_zone_visual)
+function se_zone_visual:__init (section) super (section)
+end
+function se_zone_visual:on_register()
+	cse_zone_visual.on_register(self)
+	
+	if sim_statistic.show_anomalous_spot == true then
+		level.map_add_object_spot_ser(self.id, "anomaly_zone_location", "visual: " .. self:name())
+	end
+	
+	self.artefact_spawn_idle = 60*60*1000*utils.cfg_get_number(system_ini(), self:section_name(), "artefact_spawn_idle", self, false, 24)
+	self.artefact_spawn_rnd = utils.cfg_get_number(system_ini(), self:section_name(), "artefact_spawn_rnd", self, false, 100)	
+end
+function se_zone_visual:update()
+	cse_zone_visual.update(self)
+
+	if self.last_spawn_time == nil then
+		self.last_spawn_time = game.get_game_time()
+	end
+
+	if game.get_game_time():diffSec(self.last_spawn_time) >= self.artefact_spawn_idle then
+		self.last_spawn_time = game.get_game_time()
+		if math.random(100) <= self.artefact_spawn_rnd then
+			self:spawn_artefacts()
+		end
+	end	
+end
+
+function se_zone_visual:STATE_Write(packet)
+	cse_zone_visual.STATE_Write(self, packet)
+
+	if (is_single_player_game() == false) then
+		return
+	end
+	
+	if self.last_spawn_time == nil then
+		packet:w_u8(0)
+	else
+		packet:w_u8(1)
+		utils.w_CTime(packet, self.last_spawn_time)
+	end	
+end
+-- восстановление
+function se_zone_visual:STATE_Read( packet, size )
+	cse_zone_visual.STATE_Read( self, packet, size )
+	
+	if editor() then
+		return
+	end
+	
+	if (is_single_player_game() == false) then
+		return
+	end
+	
+	local flag = packet:r_u8()
+	if flag == 1 then
+		self.last_spawn_time = utils.r_CTime(packet)
+	end
+end
+
+
+
+--' Рестрикторы
+class "se_restrictor" (cse_alife_space_restrictor)
+function se_restrictor:on_register()
+	cse_alife_space_restrictor.on_register(self)
+	
+	--' Нарисовать мапспот с собой
+	if sim_statistic.show_restrictor_spot == true then
+		level.map_add_object_spot_ser(self.id, "green_location", "restr: " .. self:name())
+	end
+end
+
+function se_restrictor:__init (section) super (section)
+end
+function se_restrictor:keep_saved_data_anyway()
+	return true
+end

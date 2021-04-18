@@ -1,0 +1,23 @@
+[logic]
+active = {+yan_brain_off} sr_idle, {-yan_brain_off} sr_psy_antenna@good_helmet
+
+[sr_psy_antenna@no_helmet]
+eff_intensity = 40
+hit_intensity = 20
+on_info = {=good_psy_immunity} sr_psy_antenna@good_helmet, {=bad_psy_immunity} sr_psy_antenna@bad_helmet
+on_info2 = {+yan_brain_off} sr_idle
+
+[sr_psy_antenna@bad_helmet]
+eff_intensity = 20
+hit_intensity = 0
+on_info = {=bad_psy_immunity}, {=good_psy_immunity} sr_psy_antenna@good_helmet, sr_psy_antenna@no_helmet
+on_info2 = {+yan_brain_off} sr_idle
+
+[sr_psy_antenna@good_helmet]
+eff_intensity = 10
+hit_intensity = 0
+on_info = {=good_psy_immunity}, {=bad_psy_immunity} sr_psy_antenna@bad_helmet, sr_psy_antenna@no_helmet
+on_info2 = {+yan_brain_off} sr_idle
+
+[sr_idle]
+on_info = {-yan_brain_off} sr_psy_antenna@good_helmet

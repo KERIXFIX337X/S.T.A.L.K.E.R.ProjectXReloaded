@@ -1,0 +1,21 @@
+[logic]
+active = ph_sound@1
+on_hit = hit
+
+[hit]
+on_info = %+mil_matugalnik_off%
+
+[ph_idle]
+on_info = {+mil_freedom_under_attack} ph_sound@2
+on_info2 = {+mil_matugalnik_off} nil
+
+[ph_sound@1]
+snd = music
+on_info = {+mil_freedom_under_attack} ph_sound@2
+on_info2 = {+mil_matugalnik_off} nil
+
+[ph_sound@2]
+snd = siren
+on_info = {-mil_freedom_under_attack} ph_sound@1
+on_info2 = {+mil_matugalnik_off} nil
+looped = true

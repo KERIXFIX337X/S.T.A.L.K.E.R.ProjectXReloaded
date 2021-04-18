@@ -1,0 +1,649 @@
+com_index = 1
+in_developing_mode = 0
+
+function xlog(fmt,...)
+--[[    get_console():execute("xndbg_fmt:" .. string.gsub(fmt, "%s", "_"))
+    get_console():execute("flush")]]
+    text = string.format(fmt,...)
+    local msg_no_ws = string.gsub(text, "%s", "_")
+    get_console():execute("xndbg:" .. msg_no_ws)
+    get_console():execute("flush")
+end
+
+function getFreeplayStartVersion()
+  return xiani_version.getFreeplayStartVersion()
+end
+
+function test()
+  xiani_amk.testAMK()
+  xiani_maptools.test()
+  ui_mm_freeplay.test()
+  ui_eoc2.test()
+  xr_wounded.testx()
+  return true
+end
+
+function test2()
+end
+
+function test1(actor, npc)
+end
+
+-- add standart level_changers
+-- add Sak level_changers from mod NewLevelChangers 2
+-- removed level changer AES2 - Pripyat
+-- added my own level changer: AES - AES2
+
+function add_lchanger_location()
+local lc_table = {
+  -- escape
+  esc_lc_exit_to_garbage_01 = {id=91, hint="to_garbage"}, -- x
+  esc_lc_exit_to_darkvalley_from_esc = {id=6002, hint="to_darkvalley"},
+  esc_lc_exit_to_agroprom_101 = {id=9101, hint="to_agroprom"},
+  
+
+  -- garbage
+  -- gar_exit_to_agroprom_01 = {id=191, hint="to_agroprom"}, -- old
+  gar_lc_gar_exit_to_agroprom_02 = {id=192, hint="to_agroprom"},
+  gar_lc_gar_exit_to_escape = {id=193, hint="to_escape"},
+  gar_lc_gar_exit_to_bar = {id=194, hint="to_bar"},
+  -- gar_exit_to_darkvalley_low = {id=195, hint="to_darkvalley"}, -- old
+  gar_lc_exit_to_darkvalley_01 = {id=196, hint="to_darkvalley"}, -- old name was "gar_exit_to_darkvalley_high"
+  gar_lc_gar_exit_to_aver = {id=6500, hint="to_aver"},
+  
+  -- agroprom
+  -- agr_exit_to_garbage_01 = {id=391, hint="to_garbage"}, -- old
+  agr_lc_agr_exit_to_garbage_02 = {id=392, hint="to_garbage"},
+  agr_lc_exit_to_escape_100= {id=9100, hint="to_escape"},
+  agr_lc_exit_to_yantar_102= {id=9102, hint="to_yantar"},
+
+  -- darkvalley
+  -- old val_lvl_changer1 = {id=415, hint="to_garbage"},
+  dark_lc_exit_to_garbage_02 = {id=416, hint="to_garbage"},
+  dark_lc_exit_to_escape = {id=417, hint="to_escape"},
+  dark_lc_exit_to_aver= {id=11513, hint="to_aver"},
+  
+  -- bar
+  bar_lc_exit_to_military_01 = {id=592, hint="to_military"}, -- x
+  bar_lc_exit_to_garbage_01 = {id=593, hint="to_garbage"},
+  bar_lc_exit_to_rostok_01 = {id=594, hint="bar_rostok"},
+
+  -- rostok
+  -- exit_to_bar_01 -- not marked due to almost same position as marked bar-rostok level changer
+  rostok_lc_exit_to_yantar_01= {id=608, hint="to_yantar"},
+  rostok_lc_exit_to_mil_104= {id=9104, hint="to_military"},
+  
+  -- military
+  mil_lc_exit_to_bar_01 = {id=771, hint="to_bar"},
+  mil_lc_exit_to_radar_01 = {id=773, hint="to_radar"}, -- x
+  mil_lc_exit_to_rostok_105= {id=9105, hint="to_rostok"},
+  mil_lc_exit_to_darkvalley_111= {id=9111, hint="to_darkvalley"},
+  mil_lc_exit_to_aver= {id=11514, hint="to_aver"},
+  
+  -- yantar
+  yan_lc_exit_to_rostok_01 = {id=925, hint="to_rostok"},
+  yan_lc_exit_to_agroprom_103 = {id=9103, hint="to_agroprom"},
+
+  -- radar
+  rad_lc_exit_to_pripyat_01 = {id=1007, hint="to_pripyat"},
+  rad_lc_exit_to_military_01 = {id=1008, hint="to_military"},
+  rad_lc_exit_to_darkvalley_107 = {id=9107, hint="to_darkvalley"},
+  
+  -- pripyat
+  prip_lc_exit_to_radar_01 = {id=833, hint="to_radar"},
+  prip_lc_exit_to_stancia_01 = {id=832, hint="to_aes"},
+  
+  -- aes
+  aes_lc_exit_to_pripyat_from_st1 = {id=6001, hint="to_pripyat"},
+  aes_lc_exit_to_st2_from_st1_01 = {id=9112, hint="to_aes"},
+  aes_lc_exit_to_st2_from_st1_02 = {id=9113, hint="to_aes"},
+  
+  -- aes2
+  aes2_lc_exit_to_st1_from_st2_01 = {id=9114, hint="to_aes"},
+  aes2_lc_exit_to_st1_from_st2_02 = {id=9115, hint="to_aes"},
+  
+  aver_lc_exit_to_svalka = {id=11507, hint="to_garbage"},
+  aver_lc_exit_to_darkvalley = {id=11508, hint="to_darkvalley"},
+  aver_lc_exit_to_military = {id=11509, hint="to_military"},
+}
+  local sim = alife()
+  if sim then
+    for name,lc_info in pairs(lc_table) do
+      local obj = sim:story_object(lc_info["id"])
+      if obj then
+        --level.map_add_object_spot(obj.id, "level_changer", lc_info["hint"])
+        level.map_add_object_spot_ser(obj.id, "level_changer", lc_info["hint"])
+      end
+    end
+  end
+
+end
+
+function first_start(obj)
+-- give all needed infoportions
+        local free_start_infoportions = {
+        "encyclopedy", -- give all encyclopedy articles
+        
+        "esc_serious_talk",
+        "tutorial_end",
+        -- "esc_trader_hello_played",
+        "esc_trader_experienced",
+        
+        -- for escape lager dialogs
+        "esc_path_to_lager",
+        "tutorial_wounded_start",
+        
+        -- for freedom
+        "mil_lukash_guard_talked",
+        
+        -- for mil_dolg gulag
+        "mil_patrol_kill_continue",
+        "mil_patrol_dead",
+        
+        -- for radar, yantar
+        "bar_deactivate_radar_done",
+        "bun_antenna_off",
+        "yan_kill_brain_done",
+        
+        "yan_brain_off",
+        "yan_labx16_switcher_1_off",
+        "yan_labx16_switcher_2_off",
+        "yan_labx16_switcher_3_off",
+        "yan_labx16_switcher_primary_off",
+        
+        -- garbage dolg blockpost
+        "gar_free_pass",
+        
+        -- bar dolg bunker
+        "bar_dolg_base_pass"
+        }
+        for k,v in pairs(free_start_infoportions) do
+            obj.object:give_info_portion(v)
+        end
+end
+
+function freeplay_setup()
+    freeplay_setup_ui()
+end
+
+function freeplay_setup_ui()
+    db.actor:hide_weapon()
+    db.actor.weapon_hide = true
+    level.hide_indicators()
+    
+    db.actor:give_info_portion("freeplay_actor_setup")
+    
+    xiani.cache_communities()
+    xiani.cache_profiles()
+    
+    local fp_setup = ui_mm_freeplay.ui_mm_freeplay_wnd(self)
+    level.start_stop_menu(fp_setup,true)
+end
+
+function freeplay_start(char_name, use_name_policy, start_difficulty, profile_index, start_location)
+  -- setup initial difficulty
+  start_difficulty = tonumber(start_difficulty)
+  -- 1. check boundaries
+  if start_difficulty<0 then start_difficulty = 0 end
+  if start_difficulty>3 then start_difficulty = 3 end
+  -- 2. get difficulty name by number
+  local game_difficulty_by_num = bind_stalker.game_difficulty_by_num[start_difficulty]
+  xiani.xlog("freeplay_start:setting difficulty (" .. tostring(start_difficulty) .. ":" .. tostring(game_difficulty_by_num) .. ")")
+  -- 3. set difficulty
+  get_console():execute("g_game_difficulty " .. tostring(game_difficulty_by_num) .. "")
+  -- level.set_game_difficulty(start_difficulty)
+  
+  
+  xiani.xlog("freeplay_start:before_xiani.com_start2")
+  xiani.com_start2(profile_index, char_name, use_name_policy)
+end
+
+function freeplay_start_cleanup()
+  xiani.xlog("cleanup:get_LC")
+  local lc = alife():story_object(8657)
+  xiani.xlog("cleanup:destroy_LC")
+  alife():release(lc)
+  xiani.xlog("cleanup:LC_destroyed")
+    db.actor:hide_weapon()
+    db.actor.weapon_hide = true
+end
+
+function com_start2(profile_index, char_name, use_name_policy)
+    xiani.xlog("com_start2:start")
+    
+    -- give weapon to actor
+    -- but first remove wpn_knife - it is not needed anymore
+    local knife = db.actor:object("wpn_knife")
+    alife():release(alife():object(knife:id()))
+    
+    -- temp line... soon would be removed
+    db.actor:give_info_portion("sidr_returned_weapon")
+    
+    -- debug
+    if xiani.in_developing_mode == 1 then
+      xiani.xiani_test_equip()
+    end
+    
+    xiani.xlog("com_start2:before_jump")
+    -- считать настройки старта
+    profile_section = profiles_list[profile_index]
+    profile = xiani.get_profile(profile_section)
+    
+    -- настроить группировку
+    if profile.community ~= nil then
+      xiani.xlog("freeplay_start:setting_community_to_" .. tostring(profile.community))
+      db.actor:set_character_community(profile.community, 0, 0)
+    end
+    -- настроить имя
+    xiani.setup_player_profile(char_name, profile.character_profile, use_name_policy)
+    -- выдать инфопорции
+    if profile.give_infoportions ~= nil then
+      for k,infoportion in pairs(profile.give_infoportions) do
+        db.actor:give_info_portion(infoportion)
+      end
+    end
+    -- убрать инфопорции
+    if profile.disable_infoportions ~= nil then
+      for k,infoportion in pairs(profile.disable_infoportions) do
+        db.actor:disable_info_portion(infoportion)
+      end
+    end
+    -- выдать деньги и екипировку
+    if profile.money ~= nil and profile.money > 0 then
+      db.actor:give_money(profile.money)
+    end
+    if profile.inventory ~= nil then
+      for k,item in pairs(profile.inventory) do
+        for i=1, item.count do
+          xiani.actor_add_item(item.section)
+        end
+      end
+    end
+    
+    -- получить точку старта и произвести перенос
+    local sp = profile.spawn_point
+    xiani.start_jumpto(sp.position.x,sp.position.y,sp.position.z, sp.level_vertex_id, sp.game_vertex_id, sp.direction.x,sp.direction.y,sp.direction.z,sp.level)
+    
+    db.actor:activate_slot(3)
+    xiani.xlog("com_start2:after_jump")
+    -- level.show_indicators()
+    -- db.actor:restore_weapon()
+end
+
+function start_jumpto(x,y,z,lv, gv, dx, dy, dz, level_name)
+  local lc = alife():create("level_changer", db.actor:position(), db.actor:level_vertex_id(), db.actor:game_vertex_id())
+  local tbl = sak.get_lc_data(lc)
+  
+  local shapes={}
+  shapes[1]={}
+  shapes[1].shtype=0
+  shapes[1].radius = 10
+  shapes[1].center = vector():set(0,0,0)
+  
+  tbl.shapes = shapes
+  
+  tbl.dest_level_name = level_name
+  tbl.dest_position = vector():set(x,y,z)
+  tbl.dest_direction = vector():set(dx,dy,dz)
+  tbl.dest_game_vertex_id = gv
+  tbl.dest_level_vertex_id = lv
+  tbl.silent_mode = 1
+  tbl.story_id = 8657
+  -- tbl.dest_graph_point = "start_actor_01"
+  
+  sak.set_lc_data(tbl,lc)
+  
+  db.actor:set_actor_position(lc.position)
+  xiani.xlog("jump:finished")
+end
+
+comm_by_num = {}
+comm_by_section = {}
+function cache_communities()
+  xiani.xlog("cache_communities: start")
+  local profile = {}
+  local i
+  local fs_ini = ini_file("misc\\fs_config.ltx")
+  if fs_ini:section_exist("communities") then
+    local profiles_count = fs_ini:line_count("communities")
+    local result, profile_section, value = nil, nil, nil
+    for i=0, (profiles_count-1) do
+      result, com_section, value = fs_ini:r_line("communities",i,"","")
+      if (com_section~=nil) then
+        local comm = {}
+        comm.section = com_section
+        if (value ~= nil and value~="") then
+          comm.title = value
+        else
+          comm.title = com_section
+        end
+        xiani.xlog("cache_communities: c[%d] sect=%s title=%s", (i+1), tostring(comm.section), tostring(comm.title))
+        comm_by_num[(i+1)] = comm
+        comm_by_section[com_section] = comm
+      end
+    end
+  end
+  xiani.xlog("cache_communities: end")
+end
+
+profiles = {}
+profiles_list = {}
+function cache_profiles()
+  xiani.xlog("profiles: start")
+  local profile = {}
+  local i
+  local fs_ini = ini_file("misc\\fs_config.ltx")
+  if fs_ini:section_exist("profiles_list") then
+    local profiles_count = fs_ini:line_count("profiles_list")
+    local result, profile_section, value = nil, nil, nil
+    for i=0, (profiles_count-1) do
+      result, profile_section, value = fs_ini:r_line("profiles_list",i,"","")
+      if (profile_section~=nil) then
+        -- если секция профиля нормально считалась
+        -- ищем профиль, вытаскиваем нужную информацию
+        profile = xiani.get_profile(profile_section)
+        
+        profiles_list[i] = profile_section
+        profiles[profile_section] = profile
+        
+        xiani.xlog("profiles: p[%d] sect=%s title=%s", (i+1), tostring(profile_section), tostring(profile.profile_name))
+      end
+    end
+  end
+  xiani.xlog("profiles: end")
+end
+
+function get_profile(profile_section)
+  local profile = {}
+  local i
+  local fs_ini = ini_file("misc\\fs_config.ltx")
+  if (profile_section~=nil) and (fs_ini:section_exist(profile_section) == true) then
+    -- считать профиль
+    if fs_ini:line_exist(profile_section, "community") then
+      profile.profile_section = profile_section
+      
+      -- прочитать имя профиля
+      if fs_ini:line_exist(profile_section, "profile_name") then
+        profile.profile_name = fs_ini:r_string(profile_section, "profile_name")
+      end
+      -- прочитать иконку
+      if fs_ini:line_exist(profile_section, "icon") then
+        profile.icon = fs_ini:r_string(profile_section, "icon")
+      end
+      
+      -- прочитать имя игрока
+      if fs_ini:line_exist(profile_section, "player_name") then
+        profile.player_name = fs_ini:r_string(profile_section, "player_name")
+        profile.player_name = game.translate_string(profile.player_name)
+      end
+      -- прочитать группировку
+      if fs_ini:line_exist(profile_section, "community") then
+        profile.community = fs_ini:r_string(profile_section, "community")
+      end
+      -- прочитать профиль персонажа
+      if fs_ini:line_exist(profile_section, "character_profile") then
+        profile.character_profile = fs_ini:r_string(profile_section, "character_profile")
+      end
+      -- считать и распарсить стартовый инвентарь
+      if fs_ini:line_exist(profile_section, "inventory") then
+        local inventory_section = fs_ini:r_string(profile_section, "inventory")
+        profile.inventory = xiani.load_inventory(fs_ini, inventory_section)
+      end
+      -- деньги
+      if fs_ini:line_exist(profile_section, "money") then
+        profile.money = fs_ini:r_float(profile_section, "money")
+      end
+      
+      -- прочитать точку старта
+      -- spawn_point
+      if fs_ini:line_exist(profile_section, "spawn_point") then
+        local spawn_point_section = fs_ini:r_string(profile_section, "spawn_point")
+        profile.spawn_point = load_spawnpoint(fs_ini, spawn_point_section)
+      end
+      
+      -- прочитать инфопорции на выдачу и на отключение
+      if fs_ini:line_exist(profile_section, "give_infoportions") then
+        local t = se_respawn.parse_names( fs_ini:r_string( profile_section, "give_infoportions" ) )
+        profile.give_infoportions = t
+      end
+      if fs_ini:line_exist(profile_section, "disable_infoportions") then
+        local t = se_respawn.parse_names( fs_ini:r_string( profile_section, "disable_infoportions" ) )
+        profile.disable_infoportions = t
+      end
+    end
+  else
+    abort("fs start: cannot read actor profiles list")
+  end
+  return profile
+end
+
+function load_inventory(fs_ini, inventory_section)
+  local inventory = {}
+  local i
+  if (inventory_section~=nil) and (fs_ini:section_exist(inventory_section) == true) then
+    local items_count = fs_ini:line_count(inventory_section)
+    local result, item_section, value = nil, nil, nil
+    local item
+    for i=0, (items_count-1) do
+      result, item_section, value = fs_ini:r_line(inventory_section,i,"","")
+      if (item_section~=nil) then
+        if (value ~= nil) and (value ~= '') then
+          value = fs_ini:r_float(inventory_section, item_section)
+        else
+          value = 1
+        end
+        item = {}
+        item.section = item_section
+        
+        -- проверить есть ли значение и решить выдавать итем или нет
+        if value ~= nil then
+          if value < 1 then
+            if math.random() > value then
+              item.count = 0
+            end
+          else
+            item.count = value
+          end
+        end
+        
+        if item.count > 0 then
+          table.insert(inventory, item)
+        end
+      end
+    end
+  end
+  return inventory
+end
+
+function load_spawnpoint(fs_ini, spawn_point_section)
+  local spawn_point = {}
+  local i
+  if (spawn_point_section~=nil) and (fs_ini:section_exist(spawn_point_section) == true) then
+    -- spawn_point_name
+    if fs_ini:line_exist(spawn_point_section, "sp_name") then
+      spawn_point.sp_name = fs_ini:r_string(spawn_point_section, "sp_name")
+    end
+    -- level
+    if fs_ini:line_exist(spawn_point_section, "level") then
+      spawn_point.level = fs_ini:r_string(spawn_point_section, "level")
+    end
+    -- position
+    if fs_ini:line_exist(spawn_point_section, "position") then
+      local pos = fs_ini:r_vector(spawn_point_section, "position")
+      spawn_point.position = pos
+    end
+    -- direction
+    if fs_ini:line_exist(spawn_point_section, "direction") then
+      local dir = fs_ini:r_vector(spawn_point_section, "direction")
+      spawn_point.direction = dir
+    end
+    -- game_vertex_id
+    if fs_ini:line_exist(spawn_point_section, "game_vertex_id") then
+      spawn_point.game_vertex_id = fs_ini:r_float(spawn_point_section, "game_vertex_id")
+    end
+    -- level_vertex_id
+    if fs_ini:line_exist(spawn_point_section, "level_vertex_id") then
+      spawn_point.level_vertex_id = fs_ini:r_float(spawn_point_section, "level_vertex_id")
+    end
+  end
+  return spawn_point
+end
+
+function setup_player_profile(char_name, char_profile, use_name_policy)
+  --local actor_id = obj:id()
+  local actor_id = db.actor:id()
+  local sim = alife()
+  if sim ~= nil then
+    local se_actor = sim:object(actor_id)
+    
+    -- switch_offline
+    
+    -- sim:set_switch_online  (actor_id, false)
+    -- sim:set_switch_offline (actor_id, true)
+    
+    -- читает и распарсивает net_packet
+    local tbl = xiani_amk.read_actor_params(se_actor)
+    
+    -- назначаем профиль
+    tbl.profile = char_profile
+    -- если не стоит опция "рандомное имя"
+    if (use_name_policy == 1) then
+      -- назначаем имя
+      tbl.charname = char_name -- .. "(" .. communities[xiani.com_index] .. ")"
+    else
+    end
+    
+    -- запихиваем обратно
+    xiani_amk.write_actor_params(tbl, se_actor)
+    
+    -- switch_online(se_npc)
+    -- sim:set_switch_online  (actor_id, true)
+    -- sim:set_switch_offline (actor_id, false)
+  end
+end
+
+function actor_add_item(section)
+alife():create(section,	
+                        db.actor:position(),
+                        db.actor:level_vertex_id(),	
+                        db.actor:game_vertex_id(),
+                        db.actor:id())
+end
+
+function xiani_test_equip()
+  xiani.actor_add_item("wpn_val")
+  xiani.actor_add_item("ammo_9x39_ap")
+  xiani.actor_add_item("ammo_9x39_ap")
+  xiani.actor_add_item("ammo_9x39_ap")
+  xiani.actor_add_item("ammo_9x39_ap")
+  xiani.actor_add_item("ammo_9x39_ap")
+  xiani.actor_add_item("ammo_9x39_ap")
+  xiani.actor_add_item("ammo_9x39_ap")
+  xiani.actor_add_item("ammo_9x39_ap")
+  xiani.actor_add_item("ammo_9x39_ap")
+  xiani.actor_add_item("ammo_9x39_ap")
+  xiani.actor_add_item("ammo_9x39_ap")
+  xiani.actor_add_item("ammo_9x39_ap")
+  xiani.actor_add_item("ammo_9x39_ap")
+  xiani.actor_add_item("ammo_9x39_ap")
+  xiani.actor_add_item("ammo_9x39_ap")
+  xiani.actor_add_item("ammo_9x39_ap")
+  xiani.actor_add_item("ammo_9x39_ap")
+  xiani.actor_add_item("ammo_9x39_ap")
+  xiani.actor_add_item("ammo_9x39_ap")
+  xiani.actor_add_item("ammo_9x39_ap")
+  xiani.actor_add_item("ammo_9x39_ap")
+  xiani.actor_add_item("ammo_9x39_ap")
+  xiani.actor_add_item("military_outfit")
+  xiani.actor_add_item("medkit_army")
+  xiani.actor_add_item("medkit_army")
+  xiani.actor_add_item("medkit_army")
+  xiani.actor_add_item("medkit_army")
+  xiani.actor_add_item("medkit_army")
+  xiani.actor_add_item("medkit_army")
+  xiani.actor_add_item("medkit_army")
+  xiani.actor_add_item("medkit_army")
+  xiani.actor_add_item("medkit_army")
+  xiani.actor_add_item("medkit_army")
+  xiani.actor_add_item("bandage")
+  xiani.actor_add_item("bandage")
+  xiani.actor_add_item("bandage")
+  xiani.actor_add_item("bandage")
+  xiani.actor_add_item("bandage")
+  xiani.actor_add_item("bandage")
+  xiani.actor_add_item("bandage")
+  xiani.actor_add_item("bandage")
+  xiani.actor_add_item("bandage")
+  xiani.actor_add_item("bandage")
+  xiani.actor_add_item("bandage")
+  xiani.actor_add_item("antirad")
+  xiani.actor_add_item("antirad")
+  xiani.actor_add_item("antirad")
+  xiani.actor_add_item("antirad")
+  xiani.actor_add_item("antirad")
+  xiani.actor_add_item("antirad")
+  xiani.actor_add_item("antirad")
+  xiani.actor_add_item("antirad")
+  xiani.actor_add_item("antirad")
+  xiani.actor_add_item("antirad")
+  xiani.actor_add_item("antirad")
+  xiani.actor_add_item("antirad")
+  xiani.actor_add_item("antirad")
+  xiani.actor_add_item("antirad")
+  xiani.actor_add_item("antirad")
+  xiani.actor_add_item("antirad")
+  xiani.actor_add_item("antirad")
+  xiani.actor_add_item("antirad")
+  xiani.actor_add_item("antirad")
+  xiani.actor_add_item("antirad")
+  xiani.actor_add_item("antirad")
+  xiani.actor_add_item("antirad")
+  xiani.actor_add_item("antirad")
+  xiani.actor_add_item("conserva")
+  xiani.actor_add_item("conserva")
+  xiani.actor_add_item("conserva")
+  xiani.actor_add_item("conserva")
+  xiani.actor_add_item("conserva")
+  xiani.actor_add_item("conserva")
+  xiani.actor_add_item("conserva")
+  xiani.actor_add_item("conserva")
+  xiani.actor_add_item("conserva")
+  xiani.actor_add_item("conserva")
+  xiani.actor_add_item("conserva")
+end
+
+-- dialogs functions
+function bar_dolg_base_pass()
+    -- since version 0.95 free access to all stalker into Dolg base bunker
+    return true
+    -- if db.actor ~= nil then
+    --  return has_alife_info("bar_dolg_base_pass") or xr_effects.actor_in_dolg()
+    -- end
+end
+
+function bar_no_dolg_base_pass()
+    return not xiani.bar_dolg_base_pass()
+end
+
+function bad_psy_immunity()
+  if db.actor then
+      return xr_conditions.actor_has_item(bad_psy_helmet) and (db.actor:character_community() ~= "monolith" or db.actor:character_community() ~= "zombie")
+  end
+  return false
+end
+
+function good_psy_immunity()
+  if db.actor then
+      return xr_conditions.actor_has_item(good_psy_helmet) or db.actor:character_community() == "monolith" or db.actor:character_community() == "zombie"
+  end
+  return false
+end
+
+prevseed = 0
+function getLSRandomSeed()
+    if (prevseed == 0) then prevseed = math.random() end
+    local xseed = prevseed + time_global() + 1
+    math.randomseed(xseed)
+    xiani.prevseed = math.random(xseed)
+    return xseed
+end

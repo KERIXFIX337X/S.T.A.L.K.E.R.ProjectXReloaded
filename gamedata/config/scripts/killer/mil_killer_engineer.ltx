@@ -1,0 +1,28 @@
+[logic]
+active = camper@stay_at_position
+combat_ignore = combat_ignore
+danger = danger_condition
+
+[camper@stay_at_position]
+path_walk = mil_killer_eng_walk_1
+path_look = mil_killer_eng_look_1
+on_info = {+lets_raid_blockpost} camper@stay_at_blokpost
+def_state_standing = choose
+radius = 10
+meet = meet@engineer
+no_retreat = true
+shoot = always
+
+[meet@engineer]
+victim = 2|actor
+victim_wpn = 2|actor
+use = true
+use_wpn = true
+
+[camper@stay_at_blokpost]
+path_walk = mil_killer_eng_walk
+path_look = mil_killer_eng_look
+def_state_standing = idle
+radius = 10
+no_retreat = true
+shoot = always

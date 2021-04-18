@@ -1,0 +1,137 @@
+
+local show_smart_on_map = true
+
+local smart_mapspots = 
+{
+	smart_not_working = "barin_smart_not_working", -- not working (waiting for population)
+	smart_not_available = "barin_smart_not_available", -- not available
+	smart_on = "barin_smart_on", -- working & available
+	smart_off = "barin_smart_off" -- not working & not available (waiting for infoportion)
+}
+
+local level_names = 
+{
+	l01_escape = "cordon",
+	l02_garbage = "garbage",
+	l03_agroprom = "agroprom",
+	l03u_agr_underground = "agro_under",
+	l04_darkvalley = "dark_valley",
+	l04u_labx18 = "x18",
+	l05_bar = "bar",
+	l06_rostok = "rostok",
+	l07_military = "military",
+	l08_yantar = "yantar",
+	l08u_brainlab = "x16",
+	l10_radar = "radar",
+	l10u_bunker = "x10",
+	l11_pripyat = "pripyat",
+	l12_stancia = "aes1",
+	l12_stancia_2 = "aes2",
+	l12u_control_monolith = "mon_control",
+	l12u_sarcofag = "sarcophag"
+}
+
+function ToString(str)
+	local str_type = type(str)
+	if str_type == "string" then
+		return str
+	elseif str_type == "nil" then
+		return "<nil>"
+	elseif str_type == "number" then
+		return tostring(str)
+	elseif str_type == "boolean" then
+		if str then
+			return "true"
+		else
+			return "false"
+		end
+	elseif str_type == "table" then
+		return "<table>"
+	end
+	return "<custom_data>"
+end
+
+function has_info(condition)
+	local hInfo = has_alife_info(string.sub(condition, 2))
+	
+	if string.sub(condition, 1, 1) == "-" then
+		hInfo = not hInfo
+	end
+	
+	if hInfo then
+		return "T"
+	else
+		return "F"
+	end
+end
+
+function parse_condlist(condlist)
+	local OR_tab = {}
+	
+	for split_by_comma in string.gfind(condlist, "%s*([^,]+)%s*") do
+		table.insert(OR_tab, split_by_comma)
+	end
+
+	for index, v in pairs(OR_tab) do
+		for remove_brackets in string.gfind(v, "{%s*(.*)%s*}") do
+			--for condition in string.gfind(remove_brackets, "([+-][%w*%_%w*]*)") do
+			for condition in string.gfind(remove_brackets, "([+-][%w*%_]*)") do
+				OR_tab[index] = string.gsub(OR_tab[index], condition, has_info(condition) .. " AND ")
+			end
+		end
+		OR_tab[index] = string.sub(OR_tab[index], 1, -7) .. "}"
+	end
+
+	local parsed_conds = OR_tab[1]
+	
+	for index = 2, #OR_tab do
+		parsed_conds = parsed_conds .. " OR " .. OR_tab[index]
+	end
+	
+	return parsed_conds
+end
+
+function get_smart_stat(name, available, working, level_name, communities, condlist)
+	local stat = name .. "\\navailable = " .. ToString(available)
+	stat = stat .. "\\nworking = " .. ToString(working)
+	stat = stat .. "\\nlevel = " .. level_names[level_name]
+	stat = stat .. "\\nstate = " .. ToString(xr_gulag.getGulagState(name))
+	stat = stat .. "\\nquantity = " .. ToString(xr_gulag.getGulagPopulation(name))
+	stat = stat .. "\\ncomed = " .. ToString(xr_gulag.getGulagPopulationComed(name))
+	stat = stat .. "\\ncasualities = " .. ToString(xr_gulag.getCasualities(name))
+	stat = stat .. "\\ncomm = " .. ToString(communities)
+	
+	if condlist then
+		stat = stat .. "\\ncond = " .. condlist
+		stat = stat .. "\\ncond = " .. parse_condlist(condlist)
+	end
+	
+	return stat
+end
+
+function remove_mapspots(id)
+	for k, v in pairs(smart_mapspots) do
+		for index = 1, level.map_has_object_spot(id, v) do
+			level.map_remove_object_spot(id, v)
+		end
+	end
+end
+
+function ShowSmartInfo(id, name, available, working, level_name, communities, condlist)
+	if not show_smart_on_map then return end
+	
+	local stat = get_smart_stat(name, available, working, level_name, communities, condlist)
+	
+	remove_mapspots(id)
+	
+	if not working and not available then
+		level.map_add_object_spot(id, smart_mapspots.smart_off, stat)
+	elseif not working then
+		level.map_add_object_spot(id, smart_mapspots.smart_not_working, stat)
+	elseif not available then
+		level.map_add_object_spot(id, smart_mapspots.smart_not_available, stat)
+	else
+		level.map_add_object_spot(id, smart_mapspots.smart_on, stat)
+	end
+	
+end

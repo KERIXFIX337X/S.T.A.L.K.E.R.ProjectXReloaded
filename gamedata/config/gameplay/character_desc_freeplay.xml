@@ -1,0 +1,149 @@
+<?xml version='1.0' encoding="windows-1251"?>
+<xml>
+    <specific_character id="fp_actor_default" no_random = "1">
+        <name>GENERATE_NAME_stalker</name>
+        <icon>ui_npc_u_stalker_screen_selector</icon>
+        <map_icon x="0" y="0"></map_icon>
+        
+        <team>Actor</team>
+        <supplies>
+            [spawn] \n
+            device_torch \n
+        </supplies>
+        
+        <class>actor</class>
+        <community>actor</community>
+        
+        <rank>00</rank>
+        <reputation>0</reputation>
+        <visual>actors\hero\stalker_novice</visual>
+    </specific_character>
+    <specific_character id="fp_actor_freedom" no_random = "1">
+        <name>GENERATE_NAME_stalker</name>
+        <icon>ui_npc_u_stalker_sv_rukzak_1_1</icon>
+        <map_icon x="5" y="0"></map_icon>
+        <bio>mil_Svoboda_regular_bio</bio>
+
+        <team>Actor</team>
+        <supplies>
+            [spawn] \n
+            device_torch \n
+        </supplies>
+        
+        <class>actor</class>
+        <community>actor</community>
+    
+        <rank>00</rank>
+        <reputation>0</reputation>
+        <visual>actors\svoboda\stalker_sv_rukzak_1_1</visual>
+    </specific_character>
+    <specific_character id="fp_actor_dolg" no_random = "1">
+        <name>GENERATE_NAME_stalker</name>
+        <icon>ui_npc_u_stalker_do_balon_4</icon>
+        <map_icon x="0" y="0"></map_icon>
+
+        <team>Actor</team>
+        <supplies>
+            [spawn] \n
+            device_torch \n
+        </supplies>
+        
+        <class>actor</class>
+        <community>actor</community>
+    
+        <rank>00</rank>
+        <reputation>0</reputation>
+        <visual>actors\dolg\stalker_do_balon_4</visual>
+    </specific_character>
+    <specific_character id="fp_actor_military" no_random = "1">
+        <name>GENERATE_NAME_private</name>
+        <icon>ui_npc_u_soldier_screenselector</icon>
+        <map_icon x="0" y="0"></map_icon>
+
+        <team>Actor</team>
+        <supplies>
+            [spawn] \n
+            device_torch \n
+        </supplies>
+        
+        <class>actor</class>
+        <community>actor</community>
+    
+        <rank>00</rank>
+        <reputation>0</reputation>
+        <visual>actors\soldier\soldier_obichniy</visual>
+    </specific_character>
+    <specific_character id="fp_actor_killer" no_random = "1">
+        <name>GENERATE_NAME_stalker</name>
+        <icon>ui_npc_u_stalker_ki_antigas</icon>
+        <map_icon x="2" y="0"></map_icon>
+
+
+        <team>Actor</team>
+        <supplies>
+            [spawn] \n
+            device_torch \n
+        </supplies>
+        
+        <class>actor</class>
+        <community>actor</community>
+    
+        <rank>00</rank>
+        <reputation>0</reputation>
+        <visual>actors\killer\stalker_ki_antigas</visual>
+    </specific_character>
+    <specific_character id="fp_actor_bandit" no_random = "1">
+        <name>GENERATE_NAME_bandit</name>
+        <icon>ui_npc_u_stalker_bandit_8</icon>
+        <map_icon x="3" y="2"></map_icon>
+
+        <team>Actor</team>
+        <supplies>
+            [spawn] \n
+            device_torch \n
+        </supplies>
+        
+        <class>actor</class>
+        <community>actor</community>
+    
+        <rank>00</rank>
+        <reputation>0</reputation>
+        <visual>actors\bandit\stalker_bandit_8</visual>
+    </specific_character>
+    <specific_character id="fp_actor_monolith" no_random = "1">
+        <name>GENERATE_NAME_stalker</name>
+        <icon>ui_npc_u_stalker_mo_head_1</icon>
+        <map_icon x="3" y="0"></map_icon>
+
+        <team>Actor</team>
+        <supplies>
+            [spawn] \n
+            device_torch \n
+        </supplies>
+        
+        <class>actor</class>
+        <community>actor</community>
+    
+        <rank>00</rank>
+        <reputation>0</reputation>
+        <visual>actors\monolit\stalker_mo_head_1</visual>
+    </specific_character>
+    <specific_character id="fp_actor_ecolog" no_random = "1">
+        <name>GENERATE_NAME_science</name>
+        <icon>ui_npc_u_stalker_ecolog</icon>
+        <map_icon x="0" y="6"></map_icon>
+
+        <team>Actor</team>
+        <supplies>
+            [spawn] \n
+            device_torch \n
+        </supplies>
+        
+        <class>actor</class>
+        <community>actor</community>
+    
+        <rank>00</rank>
+        <reputation>0</reputation>
+        <visual>actors\ecolog\stalker_ecolog</visual>
+    </specific_character>
+</xml>

@@ -1,0 +1,24 @@
+[logic]
+active = walker@stay_at_position
+trade = misc\trade_killer.ltx
+on_death = death
+inv_max_weight = 10000
+
+[walker@stay_at_position]
+path_walk = mil_ara_walk1
+path_look = mil_ara_look1
+danger = danger_condition
+meet = meet@ara1
+def_state_standing = choose
+
+[meet@ara1]
+victim = 2|actor
+victim_wpn = 2|actor
+use = true
+use_wpn = true
+
+[death]
+on_info = %+mil_ara_dead%
+
+[danger_condition]
+ignore_distance = 2

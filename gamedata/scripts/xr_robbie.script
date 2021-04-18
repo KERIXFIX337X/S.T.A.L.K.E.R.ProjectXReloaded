@@ -1,0 +1,4 @@
+local text = "closed_beta_test_descr"
+function cbt()
+    news_manager.send_tip(db.actor, text, 0, "trader", 20000)
+end

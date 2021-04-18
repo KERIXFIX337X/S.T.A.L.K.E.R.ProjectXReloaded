@@ -1,0 +1,19 @@
+<ui_texture>
+    <file_name>ui\ui_zen_treasure_spots</file_name>
+    <texture id="ui_mapQuest_gold_1"  x="32" y="40" width="64" height="64" />
+    <texture id="ui_mapQuest_gold_2"  x="32" y="24" width="64" height="64" />
+    <texture id="ui_mapQuest_gold_3"  x="36" y="40" width="64" height="64" />
+    <texture id="ui_mapQuest_gold_4"  x="36" y="24" width="64" height="64" />
+    <texture id="ui_mapQuest_gold_5"  x="24" y="40" width="64" height="64" />
+    <texture id="ui_mapQuest_gold_6"  x="24" y="24" width="64" height="64" />
+    <texture id="ui_mapQuest_gold_7"  x="36" y="32" width="64" height="64" />
+    <texture id="ui_mapQuest_gold_8"  x="24" y="32" width="64" height="64" />
+    <texture id="ui_mapQuest_gold_9"  x="32" y="36" width="64" height="64" />
+    <texture id="ui_mapQuest_gold_10" x="32" y="28" width="64" height="64" />
+    <texture id="ui_mapQuest_gold_11" x="36" y="36" width="64" height="64" />
+    <texture id="ui_mapQuest_gold_12" x="36" y="28" width="64" height="64" />
+    <texture id="ui_mapQuest_gold_13" x="28" y="36" width="64" height="64" />
+    <texture id="ui_mapQuest_gold_14" x="28" y="28" width="64" height="64" />
+    <texture id="ui_mapQuest_gold_15" x="36" y="32" width="64" height="64" />
+    <texture id="ui_mapQuest_gold_16" x="28" y="32" width="64" height="64" />
+</ui_texture>

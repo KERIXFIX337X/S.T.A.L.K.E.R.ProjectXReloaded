@@ -1,0 +1,1345 @@
+function common_icon(first_speaker, second_speaker)
+    local mod_texture, task_rect = get_texture_info("ui_iconsNpc_stalker_neytral_balon_4")
+    db.actor:give_talk_message(guider_info, task_texture, task_rect, "iconed_answer_item")	
+	    if cost_on_guid >= math.random(900, 1370) then
+	        db.actor:give_talk_message(guider_dialog_phr_26_2, "ui\\icon_guider", Frect():set(0,324,165,108), "iconed_answer_item")
+        else
+		    db.actor:give_talk_message(guider_dialog_phr_26_2, "ui\\icon_guider", Frect():set(165,0,165,108), "iconed_answer_item")
+	 end
+end 
+
+
+function pm(first_speaker, second_speaker)
+    dialogs.relocate_item_section(second_speaker, "wpn_pm", "out")
+	dialogs.relocate_money(second_speaker, 3000, "out")
+	dialogs.relocate_item_section(second_speaker, "wpn_pm_m1", "in")
+
+end
+
+function has_500(actor, npc)
+    return actor:money() >= 500
+end
+
+function give_medkit(first_speaker, second_speaker)
+    dialogs.relocate_item_section(first_speaker, "medkit", "in")
+end
+
+-------------------------------- mp5-----------------------------
+
+function has_mp5_1()
+local mp5 = db.actor:object("wpn_mp5")
+if mp5 ~= nil and db.actor:money() >= 1000 then
+return true
+end
+end
+
+function has_mp5_2()
+local mp5 = db.actor:object("wpn_mp5")
+if mp5 ~= nil and db.actor:money() >= 4000 then
+return true
+end
+end
+
+function has_mp5_3()
+local mp5 = db.actor:object("wpn_mp5")
+if mp5 ~= nil and db.actor:money() >= 7000 then
+return true
+end
+end
+
+
+
+function mp5_m1(first_speaker, second_speaker)
+    	dialogs.relocate_item_section(second_speaker, "wpn_mp5", "out")
+	dialogs.relocate_money(second_speaker, 4000, "out")
+	dialogs.relocate_item_section(second_speaker, "wpn_mp5_m1", "in")
+
+end
+
+
+function mp5_m2(first_speaker, second_speaker)
+    	dialogs.relocate_item_section(second_speaker, "wpn_mp5", "out")
+	dialogs.relocate_money(second_speaker, 1000, "out")
+	dialogs.relocate_item_section(second_speaker, "wpn_mp5_m2", "in")
+
+end
+
+
+function mp5_m3(first_speaker, second_speaker)
+    	dialogs.relocate_item_section(second_speaker, "wpn_mp5", "out")
+	dialogs.relocate_money(second_speaker, 7000, "out")
+	dialogs.relocate_item_section(second_speaker, "wpn_mp5_m5", "in")
+
+end
+
+
+function mp5_m4(first_speaker, second_speaker)
+    	dialogs.relocate_item_section(second_speaker, "wpn_mp5", "out")
+	dialogs.relocate_money(second_speaker, 7000, "out")
+	dialogs.relocate_item_section(second_speaker, "wpn_mp5_m4", "in")
+
+end
+
+---------------------------- ak74u ---------------------------
+
+function has_ak74u_1()
+local mp5 = db.actor:object("wpn_ak74u")
+if mp5 ~= nil and db.actor:money() >= 3000 then
+return true
+end
+end
+
+function has_ak74u_2()
+local mp5 = db.actor:object("wpn_ak74u")
+if mp5 ~= nil and db.actor:money() >= 5000 then
+return true
+end
+end
+
+function icon_sil_ak74u(first_speaker, second_speaker)
+    db.actor:give_talk_message(game.translate_string "sil_pbs_descr"..game.translate_string "price_sil_pbs", "ui\\icon_upgrades", Frect():set(166,0,83,47), "iconed_answer_item")
+end
+
+function ak74u_m1(first_speaker, second_speaker)
+    	dialogs.relocate_item_section(second_speaker, "wpn_ak74u", "out")
+	dialogs.relocate_money(second_speaker, 3000, "out")
+	dialogs.relocate_item_section(second_speaker, "wpn_ak74u_m1", "in")
+
+end
+
+function ak74u_m2(first_speaker, second_speaker)
+    	dialogs.relocate_item_section(second_speaker, "wpn_ak74u", "out")
+	dialogs.relocate_money(second_speaker, 5000, "out")
+	dialogs.relocate_item_section(second_speaker, "wpn_ak74u_m2", "in")
+
+end
+
+function ak74u_m4(first_speaker, second_speaker)
+    	dialogs.relocate_item_section(second_speaker, "wpn_ak74u", "out")
+	dialogs.relocate_money(second_speaker, 5000, "out")
+	dialogs.relocate_item_section(second_speaker, "wpn_ak74u_m4", "in")
+
+end
+
+---------------------------- pm ---------------------------
+
+
+function has_pm_1()
+local mp5 = db.actor:object("wpn_pm")
+if mp5 ~= nil and db.actor:money() >= 3000 then
+return true
+end
+end
+
+function pm_m1(first_speaker, second_speaker)
+    dialogs.relocate_item_section(second_speaker, "wpn_pm", "out")
+	dialogs.relocate_money(second_speaker, 3000, "out")
+	dialogs.relocate_item_section(second_speaker, "wpn_pm_m1", "in")
+end
+
+function pm_m2(first_speaker, second_speaker)
+    	dialogs.relocate_item_section(second_speaker, "wpn_pm", "out")
+	dialogs.relocate_money(second_speaker, 3000, "out")
+	dialogs.relocate_item_section(second_speaker, "wpn_pm_m2", "in")
+
+end
+
+
+----------------------------- pb ------------------------
+
+
+
+function has_pb_1()
+local mp5 = db.actor:object("wpn_pb")
+if mp5 ~= nil and db.actor:money() >= 1500 then
+return true
+end
+end
+
+function has_pb_2()
+local mp5 = db.actor:object("wpn_pb")
+if mp5 ~= nil and db.actor:money() >= 3000 then
+return true
+end
+end
+
+
+function pb_m1(first_speaker, second_speaker)
+    	dialogs.relocate_item_section(second_speaker, "wpn_pb", "out")
+	dialogs.relocate_money(second_speaker, 3000, "out")
+	dialogs.relocate_item_section(second_speaker, "wpn_pb_m2", "in")
+
+end
+
+function pb_m2(first_speaker, second_speaker)
+    	dialogs.relocate_item_section(second_speaker, "wpn_pb", "out")
+	dialogs.relocate_money(second_speaker, 1500, "out")
+	dialogs.relocate_item_section(second_speaker, "wpn_pb_m2", "in")
+
+end
+
+--------------------------- fort ---------------------------
+
+
+function has_fort_1()
+local mp5 = db.actor:object("wpn_fort")
+if mp5 ~= nil and db.actor:money() >= 3000 then
+return true
+end
+end
+
+
+function fort_m1(first_speaker, second_speaker)
+    	dialogs.relocate_item_section(second_speaker, "wpn_fort", "out")
+	dialogs.relocate_money(second_speaker, 3000, "out")
+	dialogs.relocate_item_section(second_speaker, "wpn_fort_m1", "in")
+
+end
+
+function fort_m2(first_speaker, second_speaker)
+    	dialogs.relocate_item_section(second_speaker, "wpn_fort", "out")
+	dialogs.relocate_money(second_speaker, 2000, "out")
+	dialogs.relocate_item_section(second_speaker, "wpn_fort_m2", "in")
+
+end
+
+---------------------------- SIG SAUER P220 ---------------------------
+function has_sig220_1()
+local mp5 = db.actor:object("wpn_sig220")
+if mp5 ~= nil and db.actor:money() >= 3000 then
+return true
+end
+end
+
+function sig220_m1(first_speaker, second_speaker)
+    dialogs.relocate_item_section(second_speaker, "wpn_sig220", "out")
+	dialogs.relocate_money(second_speaker, 3000, "out")
+	dialogs.relocate_item_section(second_speaker, "wpn_sig220_m1", "in")
+end
+
+---------------------------- Browning HP ---------------------------
+
+function has_hpsa_1()
+local mp5 = db.actor:object("wpn_hpsa")
+if mp5 ~= nil and db.actor:money() >= 3000 then
+return true
+end
+end
+
+function hpsa_m1(first_speaker, second_speaker)
+    dialogs.relocate_item_section(second_speaker, "wpn_hpsa", "out")
+	dialogs.relocate_money(second_speaker, 3000, "out")
+	dialogs.relocate_item_section(second_speaker, "wpn_hpsa_m1", "in")
+end
+
+----------------------------- ak74 -------------------------
+
+
+
+function has_ak74_1()
+local mp5 = db.actor:object("wpn_ak74")
+if mp5 ~= nil and db.actor:money() >= 5000 then
+return true
+end
+end
+
+function has_ak74_2()
+local mp5 = db.actor:object("wpn_ak74")
+if mp5 ~= nil and db.actor:money() >= 3000 then
+return true
+end
+end
+
+function has_ak74_4()
+local mp5 = db.actor:object("wpn_ak74")
+if mp5 ~= nil and db.actor:money() >= 5000 then
+return true
+end
+end
+
+function has_ak74_3()
+local mp5 = db.actor:object("wpn_ak74")
+if mp5 ~= nil and db.actor:money() >= 3000 then
+return true
+end
+end
+
+
+
+function ak74_m4(first_speaker, second_speaker)
+    	dialogs.relocate_item_section(second_speaker, "wpn_ak74", "out")
+	dialogs.relocate_money(second_speaker, 3000, "out")
+	dialogs.relocate_item_section(second_speaker, "wpn_ak74_m4", "in")
+
+end
+
+function ak74_m2(first_speaker, second_speaker)
+    	dialogs.relocate_item_section(second_speaker, "wpn_ak74", "out")
+	dialogs.relocate_money(second_speaker, 5000, "out")
+	dialogs.relocate_item_section(second_speaker, "wpn_ak74_m2", "in")
+
+end
+
+function ak74_m3(first_speaker, second_speaker)
+    	dialogs.relocate_item_section(second_speaker, "wpn_ak74", "out")
+	dialogs.relocate_money(second_speaker, 3000, "out")
+	dialogs.relocate_item_section(second_speaker, "wpn_ak74_m3", "in")
+
+end
+
+------------------------------- BM16 -------------------------
+
+
+function has_bm16()
+local mp5 = db.actor:object("wpn_bm16")
+if mp5 ~= nil and db.actor:money() >= 500 then
+return true
+end
+end
+
+
+
+function bm16_m1(first_speaker, second_speaker)
+    	dialogs.relocate_item_section(second_speaker, "wpn_bm16", "out")
+	dialogs.relocate_money(second_speaker, 500, "out")
+	dialogs.relocate_item_section(second_speaker, "wpn_bm16_m1", "in")
+
+end
+
+
+---------------------------- TOZ34 ----------------------------
+
+
+function has_toz34()
+local mp5 = db.actor:object("wpn_toz34")
+if mp5 ~= nil and db.actor:money() >= 1000 then
+return true
+end
+end
+
+function has_toz34_1()
+local mp5 = db.actor:object("wpn_toz34")
+if mp5 ~= nil and db.actor:money() >= 5000 then
+return true
+end
+end
+
+function toz34_m1(first_speaker, second_speaker)
+    	dialogs.relocate_item_section(second_speaker, "wpn_toz34", "out")
+	dialogs.relocate_money(second_speaker, 1000, "out")
+	dialogs.relocate_item_section(second_speaker, "wpn_toz34_m1", "in")
+
+end
+
+function toz34_m2(first_speaker, second_speaker)
+    	dialogs.relocate_item_section(second_speaker, "wpn_toz34", "out")
+	dialogs.relocate_money(second_speaker, 5000, "out")
+	dialogs.relocate_item_section(second_speaker, "wpn_toz34_m2", "in")
+
+end
+----------------------------- Walther ------------------------
+
+
+function has_walther_1()
+local mp5 = db.actor:object("wpn_walther")
+if mp5 ~= nil and db.actor:money() >= 2000 then
+return true
+end
+end
+
+function has_walther_2()
+local mp5 = db.actor:object("wpn_walther")
+if mp5 ~= nil and db.actor:money() >= 3000 then
+return true
+end
+end
+
+function has_walther_4()
+local mp5 = db.actor:object("wpn_walther")
+if mp5 ~= nil and db.actor:money() >= 4000 then
+return true
+end
+end
+
+function walther_m1(first_speaker, second_speaker)
+    dialogs.relocate_item_section(second_speaker, "wpn_walther", "out")
+	dialogs.relocate_money(second_speaker, 2000, "out")
+	dialogs.relocate_item_section(second_speaker, "wpn_walther_m1", "in")
+
+end
+
+function walther_m2(first_speaker, second_speaker)
+    	dialogs.relocate_item_section(second_speaker, "wpn_walther", "out")
+	dialogs.relocate_money(second_speaker, 3000, "out")
+	dialogs.relocate_item_section(second_speaker, "wpn_walther_m2", "in")
+
+end
+
+function walther_m4(first_speaker, second_speaker)
+    	dialogs.relocate_item_section(second_speaker, "wpn_walther", "out")
+	dialogs.relocate_money(second_speaker, 4000, "out")
+	dialogs.relocate_item_section(second_speaker, "wpn_walther_m4", "in")
+
+end
+
+
+------------------------------- USP ------------------------
+
+
+function has_usp()
+local mp5 = db.actor:object("wpn_usp")
+if mp5 ~= nil and db.actor:money() >= 2000 then
+return true
+end
+end
+
+function usp_m1(first_speaker, second_speaker)
+    	dialogs.relocate_item_section(second_speaker, "wpn_usp", "out")
+	dialogs.relocate_money(second_speaker, 2000, "out")
+	dialogs.relocate_item_section(second_speaker, "wpn_usp_m1", "in")
+
+end
+
+
+------------------------------- Beretta ----------------------
+
+
+function has_beretta_1()
+local mp5 = db.actor:object("wpn_beretta")
+if mp5 ~= nil and db.actor:money() >= 3000 then
+return true
+end
+end
+
+function has_beretta_2()
+local mp5 = db.actor:object("wpn_beretta")
+if mp5 ~= nil and db.actor:money() >= 3500 then
+return true
+end
+end
+
+function beretta_m1(first_speaker, second_speaker)
+    dialogs.relocate_item_section(second_speaker, "wpn_beretta", "out")
+	dialogs.relocate_money(second_speaker, 3000, "out")
+	dialogs.relocate_item_section(second_speaker, "wpn_beretta_m1", "in")
+
+end
+
+function beretta_m2(first_speaker, second_speaker)
+    dialogs.relocate_item_section(second_speaker, "wpn_beretta", "out")
+	dialogs.relocate_money(second_speaker, 3000, "out")
+	dialogs.relocate_item_section(second_speaker, "wpn_beretta_m2", "in")
+
+end
+------------------------------- Desert Eagle ----------------------
+
+function has_eagle_1()
+local mp5 = db.actor:object("wpn_desert_eagle")
+if mp5 ~= nil and db.actor:money() >= 3000 then
+return true
+end
+end
+
+function eagle_m1(first_speaker, second_speaker)
+    dialogs.relocate_item_section(second_speaker, "wpn_desert_eagle", "out")
+	dialogs.relocate_money(second_speaker, 3000, "out")
+	dialogs.relocate_item_section(second_speaker, "wpn_deagle_m1", "in")
+
+end
+
+--------------------------------- LR-300--------------------
+
+
+function has_lr300()
+local mp5 = db.actor:object("wpn_lr300")
+if mp5 ~= nil and db.actor:money() >= 5000 then
+return true
+end
+end
+
+function lr300_m1(first_speaker, second_speaker)
+    	dialogs.relocate_item_section(second_speaker, "wpn_lr300", "out")
+	dialogs.relocate_money(second_speaker, 2500, "out")
+	dialogs.relocate_item_section(second_speaker, "wpn_lr300_m3", "in")
+
+end
+
+
+
+--------------------------------- FN2000--------------------
+
+
+function has_fn2000()
+local mp5 = db.actor:object("wpn_fn2000")
+if mp5 ~= nil and db.actor:money() >= 10000 then
+return true
+end
+end
+
+function fn2000_m1(first_speaker, second_speaker)
+    	dialogs.relocate_item_section(second_speaker, "wpn_fn2000", "out")
+	dialogs.relocate_money(second_speaker, 10000, "out")
+	dialogs.relocate_item_section(second_speaker, "wpn_fn2000_m1", "in")
+
+end
+
+----------------------------- L85--------------------------
+
+
+function has_l85_1()
+local mp5 = db.actor:object("wpn_l85")
+if mp5 ~= nil and db.actor:money() >= 4000 then
+return true
+end
+end
+
+function has_l85_2()
+local mp5 = db.actor:object("wpn_l85")
+if mp5 ~= nil and db.actor:money() >= 2500 then
+return true
+end
+end
+
+
+function l85_m2(first_speaker, second_speaker)
+    	dialogs.relocate_item_section(second_speaker, "wpn_l85", "out")
+	dialogs.relocate_money(second_speaker, 4000, "out")
+	dialogs.relocate_item_section(second_speaker, "wpn_l85_m2", "in")
+
+end
+
+function l85_m3(first_speaker, second_speaker)
+    	dialogs.relocate_item_section(second_speaker, "wpn_l85", "out")
+	dialogs.relocate_money(second_speaker, 2500, "out")
+	dialogs.relocate_item_section(second_speaker, "wpn_l85_m3", "in")
+
+end
+
+
+
+
+----------------------------- Sig 550--------------------------
+
+
+function has_sig_1()
+local mp5 = db.actor:object("wpn_sig550")
+if mp5 ~= nil and db.actor:money() >= 3000 then
+return true
+end
+end
+
+function has_sig_2()
+local mp5 = db.actor:object("wpn_sig550")
+if mp5 ~= nil and db.actor:money() >= 5000 then
+return true
+end
+end
+
+function has_sig552_1()
+local mp5 = db.actor:object("wpn_sig552")
+if mp5 ~= nil and db.actor:money() >= 3000 then
+return true
+end
+end
+
+function has_sig552_2()
+local mp5 = db.actor:object("wpn_sig552")
+if mp5 ~= nil and db.actor:money() >= 5000 then
+return true
+end
+end
+
+function sig552_m1(first_speaker, second_speaker)
+    	dialogs.relocate_item_section(second_speaker, "wpn_sig552", "out")
+	dialogs.relocate_money(second_speaker, 3000, "out")
+	dialogs.relocate_item_section(second_speaker, "wpn_sig552_m1", "in")
+end
+
+function sig552_m2(first_speaker, second_speaker)
+    	dialogs.relocate_item_section(second_speaker, "wpn_sig552", "out")
+	dialogs.relocate_money(second_speaker, 5000, "out")
+	dialogs.relocate_item_section(second_speaker, "wpn_sig552_m2", "in")
+end
+
+function sig_m1(first_speaker, second_speaker)
+    	dialogs.relocate_item_section(second_speaker, "wpn_sig550", "out")
+	dialogs.relocate_money(second_speaker, 5000, "out")
+	dialogs.relocate_item_section(second_speaker, "wpn_sig_m1", "in")
+end
+
+function sig_m2(first_speaker, second_speaker)
+    	dialogs.relocate_item_section(second_speaker, "wpn_sig550", "out")
+	dialogs.relocate_money(second_speaker, 5000, "out")
+	dialogs.relocate_item_section(second_speaker, "wpn_sig_m2", "in")
+
+end
+function sig_m3(first_speaker, second_speaker)
+    	dialogs.relocate_item_section(second_speaker, "wpn_sig550", "out")
+	dialogs.relocate_money(second_speaker, 3000, "out")
+	dialogs.relocate_item_section(second_speaker, "wpn_sig550_m3", "in")
+
+end
+
+function has_abakan_3()
+local mp5 = db.actor:object("wpn_abakan")
+if mp5 ~= nil and db.actor:money() >= 5000 then
+return true
+end
+end
+
+function abakan_m3(first_speaker, second_speaker)
+    	dialogs.relocate_item_section(second_speaker, "wpn_abakan", "out")
+	dialogs.relocate_money(second_speaker, 5000, "out")
+	dialogs.relocate_item_section(second_speaker, "wpn_abakan_m3", "in")
+
+end
+
+function has_val()
+local mp5 = db.actor:object("wpn_val")
+if mp5 ~= nil and db.actor:money() >= 3000 then
+return true
+end
+end
+
+function val_m1(first_speaker, second_speaker)
+    	dialogs.relocate_item_section(second_speaker, "wpn_val", "out")
+	dialogs.relocate_money(second_speaker, 3000, "out")
+	dialogs.relocate_item_section(second_speaker, "wpn_val_m1", "in")
+
+end
+
+function has_groza_1()
+local mp5 = db.actor:object("wpn_groza")
+if mp5 ~= nil and db.actor:money() >= 8000 then
+return true
+end
+end
+
+
+function has_groza_2()
+local mp5 = db.actor:object("wpn_groza")
+if mp5 ~= nil and db.actor:money() >= 10000 then
+return true
+end
+end
+
+function has_groza_3()
+local mp5 = db.actor:object("wpn_groza")
+if mp5 ~= nil and db.actor:money() >= 20000 then
+return true
+end
+end
+
+
+
+function groza_m1(first_speaker, second_speaker)
+    	dialogs.relocate_item_section(second_speaker, "wpn_groza", "out")
+	dialogs.relocate_money(second_speaker, 10000, "out")
+	dialogs.relocate_item_section(second_speaker, "wpn_groza_m2", "in")
+
+end
+
+function groza_m2(first_speaker, second_speaker)
+    	dialogs.relocate_item_section(second_speaker, "wpn_groza", "out")
+	dialogs.relocate_money(second_speaker, 8000, "out")
+	dialogs.relocate_item_section(second_speaker, "wpn_groza_m2", "in")
+
+end
+
+function groza_m3(first_speaker, second_speaker)
+    	dialogs.relocate_item_section(second_speaker, "wpn_groza", "out")
+	dialogs.relocate_money(second_speaker, 20000, "out")
+	dialogs.relocate_item_section(second_speaker, "wpn_groza_m3", "in")
+
+end
+
+
+----------------------------- Vintorez ---------------------
+
+
+function has_vintorez()
+local mp5 = db.actor:object("wpn_vintorez")
+if mp5 ~= nil and db.actor:money() >= 15000 then
+return true
+end
+end
+
+
+
+function vintorez_m1(first_speaker, second_speaker)
+    	dialogs.relocate_item_section(second_speaker, "wpn_vintorez", "out")
+	dialogs.relocate_money(second_speaker, 15000, "out")
+	dialogs.relocate_item_section(second_speaker, "wpn_vintorez_m1", "in")
+
+end
+
+function vintorez_m2(first_speaker, second_speaker)
+    	dialogs.relocate_item_section(second_speaker, "wpn_vintorez", "out")
+	dialogs.relocate_money(second_speaker, 15000, "out")
+	dialogs.relocate_item_section(second_speaker, "wpn_vintorez_m2", "in")
+
+end
+
+function has_svd()
+local mp5 = db.actor:object("wpn_svd")
+if mp5 ~= nil and db.actor:money() >= 3000 then
+return true
+end
+end
+
+function has_svu()
+local mp5 = db.actor:object("wpn_svu")
+if mp5 ~= nil and db.actor:money() >= 4000 then
+return true
+end
+end
+
+function svu_m1(first_speaker, second_speaker)
+    	dialogs.relocate_item_section(second_speaker, "wpn_svu", "out")
+	dialogs.relocate_money(second_speaker, 4000, "out")
+	dialogs.relocate_item_section(second_speaker, "wpn_svu_m1", "in")
+end
+
+function svd_m3(first_speaker, second_speaker)
+    	dialogs.relocate_item_section(second_speaker, "wpn_svd", "out")
+	dialogs.relocate_money(second_speaker, 3000, "out")
+	dialogs.relocate_item_section(second_speaker, "wpn_svd_m3", "in")
+end
+
+function svd_m2(first_speaker, second_speaker)
+    	dialogs.relocate_item_section(second_speaker, "wpn_svd", "out")
+	dialogs.relocate_money(second_speaker, 3000, "out")
+	dialogs.relocate_item_section(second_speaker, "wpn_svd_m2", "in")
+
+end
+
+
+
+----------------------------- SPAS-12 ------------------------
+
+function has_spas_1()
+local mp5 = db.actor:object("wpn_spas12")
+if mp5 ~= nil and db.actor:money() >= 3000 then
+return true
+end
+end
+
+function has_spas_2()
+local mp5 = db.actor:object("wpn_spas12")
+if mp5 ~= nil and db.actor:money() >= 3500 then
+return true
+end
+end
+
+
+function spas_m1(first_speaker, second_speaker)
+    	dialogs.relocate_item_section(second_speaker, "wpn_spas12", "out")
+	dialogs.relocate_money(second_speaker, 3000, "out")
+	dialogs.relocate_item_section(second_speaker, "wpn_spas12_m1", "in")
+
+end
+
+function spas_m2(first_speaker, second_speaker)
+    	dialogs.relocate_item_section(second_speaker, "wpn_spas12", "out")
+	dialogs.relocate_money(second_speaker, 3500, "out")
+	dialogs.relocate_item_section(second_speaker, "wpn_spas12_m2", "in")
+
+end
+
+----------------------------------------------------------------------------------------- OUTFITS ------------------------------
+----------------------------------------------------------------
+
+------------------------------ Novice-------------------------
+
+
+function has_novice_1()
+local mp5 = db.actor:object("novice_outfit")
+if mp5 ~= nil and db.actor:money() >= 1000 then
+return true
+end
+end
+
+function has_novice_2()
+local mp5 = db.actor:object("novice_outfit")
+if mp5 ~= nil and db.actor:money() >= 5000 then
+return true
+end
+end
+
+function novice_m1(first_speaker, second_speaker)
+    	dialogs.relocate_item_section(second_speaker, "novice_outfit", "out")
+	dialogs.relocate_money(second_speaker, 3000, "out")
+	dialogs.relocate_item_section(second_speaker, "outfit_novice_m2", "in")
+
+end
+
+function novice_m2(first_speaker, second_speaker)
+    	dialogs.relocate_item_section(second_speaker, "novice_outfit", "out")
+	dialogs.relocate_money(second_speaker, 3000, "out")
+	dialogs.relocate_item_section(second_speaker, "outfit_novice_m3", "in")
+
+end
+
+function novice_m3(first_speaker, second_speaker)
+    	dialogs.relocate_item_section(second_speaker, "novice_outfit", "out")
+	dialogs.relocate_money(second_speaker, 5000, "out")
+	dialogs.relocate_item_section(second_speaker, "outfit_novice_m5", "in")
+
+end
+
+function novice_m6(first_speaker, second_speaker)
+    	dialogs.relocate_item_section(second_speaker, "novice_outfit", "out")
+	dialogs.relocate_money(second_speaker, 1000, "out")
+	dialogs.relocate_item_section(second_speaker, "outfit_novice_m6", "in")
+
+end
+------------------------------ Bandit -------------------------
+
+
+function has_bandit_1()
+local mp5 = db.actor:object("bandit_outfit")
+if mp5 ~= nil and db.actor:money() >= 2000 then
+return true
+end
+end
+
+function has_bandit_2()
+local mp5 = db.actor:object("bandit_outfit")
+if mp5 ~= nil and db.actor:money() >= 6500 then
+return true
+end
+end
+
+function bandit_m1(first_speaker, second_speaker)
+    	dialogs.relocate_item_section(second_speaker, "bandit_outfit", "out")
+	dialogs.relocate_money(second_speaker, 2000, "out")
+	dialogs.relocate_item_section(second_speaker, "outfit_bandit_m1", "in")
+
+end
+
+function bandit_m2(first_speaker, second_speaker)
+    	dialogs.relocate_item_section(second_speaker, "bandit_outfit", "out")
+	dialogs.relocate_money(second_speaker, 4000, "out")
+	dialogs.relocate_item_section(second_speaker, "outfit_bandit_m2", "in")
+
+end
+
+function bandit_m3(first_speaker, second_speaker)
+    	dialogs.relocate_item_section(second_speaker, "bandit_outfit", "out")
+	dialogs.relocate_money(second_speaker, 6500, "out")
+	dialogs.relocate_item_section(second_speaker, "outfit_bandit_m4", "in")
+
+end
+
+function has_dark_plash()
+local mp5 = db.actor:object("bandit_master_outfit")
+if mp5 ~= nil and db.actor:money() >= 5000 then
+return true
+end
+end
+
+function dark_plash_m1(first_speaker, second_speaker)
+    dialogs.relocate_item_section(second_speaker, "bandit_master_outfit", "out")
+	dialogs.relocate_money(second_speaker, 5000, "out")
+	dialogs.relocate_item_section(second_speaker, "bandit_master_outfit_m1", "in")
+end
+
+function has_brown_plash()
+local mp5 = db.actor:object("bandit_veteran_outfit")
+if mp5 ~= nil and db.actor:money() >= 5000 then
+return true
+end
+end
+
+function brown_plash_m1(first_speaker, second_speaker)
+    dialogs.relocate_item_section(second_speaker, "bandit_veteran_outfit", "out")
+	dialogs.relocate_money(second_speaker, 5000, "out")
+	dialogs.relocate_item_section(second_speaker, "bandit_veteran_outfit_m1", "in")
+end
+
+function has_killer_1()
+local mp5 = db.actor:object("killer_outfit")
+if mp5 ~= nil and db.actor:money() >= 2000 then
+return true
+end
+end
+
+function has_killer_2()
+local mp5 = db.actor:object("killer_outfit")
+if mp5 ~= nil and db.actor:money() >= 5000 then
+return true
+end
+end
+
+function killer_m1(first_speaker, second_speaker)
+    	dialogs.relocate_item_section(second_speaker, "killer_outfit", "out")
+	dialogs.relocate_money(second_speaker, 2000, "out")
+	dialogs.relocate_item_section(second_speaker, "outfit_killer_m2", "in")
+
+end
+
+function killer_m2(first_speaker, second_speaker)
+    	dialogs.relocate_item_section(second_speaker, "killer_outfit", "out")
+	dialogs.relocate_money(second_speaker, 2000, "out")
+	dialogs.relocate_item_section(second_speaker, "outfit_killer_m3", "in")
+
+end
+
+function killer_m3(first_speaker, second_speaker)
+    	dialogs.relocate_item_section(second_speaker, "killer_outfit", "out")
+	dialogs.relocate_money(second_speaker, 5000, "out")
+	dialogs.relocate_item_section(second_speaker, "outfit_killer_m5", "in")
+
+end
+
+------------------------------- Stalker ---------------------
+
+
+function has_stalker_1()
+local mp5 = db.actor:object("stalker_outfit")
+if mp5 ~= nil and db.actor:money() >= 8000 then
+return true
+end
+end
+
+function has_stalker_2()
+local mp5 = db.actor:object("stalker_outfit")
+if mp5 ~= nil and db.actor:money() >= 5000 then
+return true
+end
+end
+
+function stalker_m1(first_speaker, second_speaker)
+    	dialogs.relocate_item_section(second_speaker, "stalker_outfit", "out")
+	dialogs.relocate_money(second_speaker, 8000, "out")
+	dialogs.relocate_item_section(second_speaker, "stalker_outfit_m3", "in")
+
+end
+
+function stalker_m2(first_speaker, second_speaker)
+    	dialogs.relocate_item_section(second_speaker, "stalker_outfit", "out")
+	dialogs.relocate_money(second_speaker, 8000, "out")
+	dialogs.relocate_item_section(second_speaker, "stalker_outfit_m4", "in")
+
+end
+
+function stalker_m3(first_speaker, second_speaker)
+    	dialogs.relocate_item_section(second_speaker, "stalker_outfit", "out")
+	dialogs.relocate_money(second_speaker, 5000, "out")
+	dialogs.relocate_item_section(second_speaker, "stalker_outfit_m6", "in")
+
+end
+
+------------------------- freedom outfit --------------------
+
+function has_wind_1()
+local mp5 = db.actor:object("svoboda_light_outfit")
+if mp5 ~= nil and db.actor:money() >= 5000 then
+return true
+end
+end
+
+function has_wind_2()
+local mp5 = db.actor:object("svoboda_light_outfit")
+if mp5 ~= nil and db.actor:money() >= 8000 then
+return true
+end
+end
+
+function wind_m1(first_speaker, second_speaker)
+    	dialogs.relocate_item_section(second_speaker, "svoboda_light_outfit", "out")
+	dialogs.relocate_money(second_speaker, 5000, "out")
+	dialogs.relocate_item_section(second_speaker, "outfit_svoboda_m2", "in")
+
+end
+
+function wind_m2(first_speaker, second_speaker)
+    	dialogs.relocate_item_section(second_speaker, "svoboda_light_outfit", "out")
+	dialogs.relocate_money(second_speaker, 5000, "out")
+	dialogs.relocate_item_section(second_speaker, "outfit_svoboda_m3", "in")
+
+end
+
+function wind_m3(first_speaker, second_speaker)
+    	dialogs.relocate_item_section(second_speaker, "svoboda_light_outfit", "out")
+	dialogs.relocate_money(second_speaker, 5000, "out")
+	dialogs.relocate_item_section(second_speaker, "outfit_svoboda_m4", "in")
+
+end
+
+-------------------------- Freedom heavy ----------------------
+
+function has_heavy_1()
+local mp5 = db.actor:object("svoboda_heavy_outfit")
+if mp5 ~= nil and db.actor:money() >= 8000 then
+return true
+end
+end
+
+function has_heavy_2()
+local mp5 = db.actor:object("svoboda_heavy_outfit")
+if mp5 ~= nil and db.actor:money() >= 12000 then
+return true
+end
+end
+
+function heavy_m1(first_speaker, second_speaker)
+    	dialogs.relocate_item_section(second_speaker, "svoboda_light_outfit", "out")
+	dialogs.relocate_money(second_speaker, 8000, "out")
+	dialogs.relocate_item_section(second_speaker, "svoboda_heavy_outfit_m1", "in")
+
+end
+
+function heavy_m2(first_speaker, second_speaker)
+    	dialogs.relocate_item_section(second_speaker, "svoboda_light_outfit", "out")
+	dialogs.relocate_money(second_speaker, 8000, "out")
+	dialogs.relocate_item_section(second_speaker, "svoboda_heavy_outfit_m2", "in")
+
+end
+
+function heavy_m2(first_speaker, second_speaker)
+    	dialogs.relocate_item_section(second_speaker, "svoboda_light_outfit", "out")
+	dialogs.relocate_money(second_speaker, 12000, "out")
+	dialogs.relocate_item_section(second_speaker, "svoboda_heavy_outfit_m3", "in")
+
+end
+
+
+---------------------------- orange outfit --------------------
+
+function has_orange()
+local mp5 = db.actor:object("ecolog_outfit")
+if mp5 ~= nil and db.actor:money() >= 10000 then
+return true
+end
+end
+
+function orange_m1(first_speaker, second_speaker)
+    	dialogs.relocate_item_section(second_speaker, "ecolog_outfit", "out")
+	dialogs.relocate_money(second_speaker, 10000, "out")
+	dialogs.relocate_item_section(second_speaker, "ecolog_outfit_m1", "in")
+
+end
+
+function orange_m2(first_speaker, second_speaker)
+    	dialogs.relocate_item_section(second_speaker, "ecolog_outfit", "out")
+	dialogs.relocate_money(second_speaker, 10000, "out")
+	dialogs.relocate_item_section(second_speaker, "ecolog_outfit_m2", "in")
+
+end
+
+function orange_m3(first_speaker, second_speaker)
+    	dialogs.relocate_item_section(second_speaker, "ecolog_outfit", "out")
+	dialogs.relocate_money(second_speaker, 10000, "out")
+	dialogs.relocate_item_section(second_speaker, "ecolog_outfit_m4", "in")
+
+end
+
+
+---------------------------- green outfit --------------------
+
+function has_green()
+local mp5 = db.actor:object("protection_outfit")
+if mp5 ~= nil and db.actor:money() >= 14000 then
+return true
+end
+end
+
+function green_m1(first_speaker, second_speaker)
+    	dialogs.relocate_item_section(second_speaker, "protection_outfit", "out")
+	dialogs.relocate_money(second_speaker, 14000, "out")
+	dialogs.relocate_item_section(second_speaker, "protection_outfit_m1", "in")
+
+end
+
+function green_m2(first_speaker, second_speaker)
+    	dialogs.relocate_item_section(second_speaker, "protection_outfit", "out")
+	dialogs.relocate_money(second_speaker, 14000, "out")
+	dialogs.relocate_item_section(second_speaker, "protection_outfit_m2", "in")
+
+end
+
+function green_m3(first_speaker, second_speaker)
+    	dialogs.relocate_item_section(second_speaker, "protection_outfit", "out")
+	dialogs.relocate_money(second_speaker, 14000, "out")
+	dialogs.relocate_item_section(second_speaker, "protection_outfit_m4", "in")
+
+end
+
+
+---------------------------- SEVA ---------------------------
+
+
+function has_seva()
+local mp5 = db.actor:object("scientific_outfit")
+if mp5 ~= nil and db.actor:money() >= 20000 then
+return true
+end
+end
+
+
+function seva_m1(first_speaker, second_speaker)
+    	dialogs.relocate_item_section(second_speaker, "scientific_outfit", "out")
+	dialogs.relocate_money(second_speaker, 20000, "out")
+	dialogs.relocate_item_section(second_speaker, "scientific_outfit_m1", "in")
+
+end
+
+function seva_m2(first_speaker, second_speaker)
+    	dialogs.relocate_item_section(second_speaker, "scientific_outfit", "out")
+	dialogs.relocate_money(second_speaker, 20000, "out")
+	dialogs.relocate_item_section(second_speaker, "scientific_outfit_m2", "in")
+
+end
+
+function seva_m3(first_speaker, second_speaker)
+    	dialogs.relocate_item_section(second_speaker, "scientific_outfit", "out")
+	dialogs.relocate_money(second_speaker, 20000, "out")
+	dialogs.relocate_item_section(second_speaker, "scientific_outfit_m4", "in")
+
+end
+
+--------------------------- Monolit outfit -----------------
+
+function has_monolit_1()
+local mp5 = db.actor:object("monolit_outfit")
+if mp5 ~= nil and db.actor:money() >= 8000 then
+return true
+end
+end
+
+function has_monolit_2()
+local mp5 = db.actor:object("monolit_outfit")
+if mp5 ~= nil and db.actor:money() >= 12000 then
+return true
+end
+end
+
+function monolit_m1(first_speaker, second_speaker)
+    	dialogs.relocate_item_section(second_speaker, "monolit_outfit", "out")
+	dialogs.relocate_money(second_speaker, 8000, "out")
+	dialogs.relocate_item_section(second_speaker, "monolit_outfit_m1", "in")
+
+end
+
+function monolit_m2(first_speaker, second_speaker)
+    	dialogs.relocate_item_section(second_speaker, "monolit_outfit", "out")
+	dialogs.relocate_money(second_speaker, 8000, "out")
+	dialogs.relocate_item_section(second_speaker, "monolit_outfit_m2", "in")
+
+end
+
+function monolit_m3(first_speaker, second_speaker)
+    	dialogs.relocate_item_section(second_speaker, "monolit_outfit", "out")
+	dialogs.relocate_money(second_speaker, 12000, "out")
+	dialogs.relocate_item_section(second_speaker, "monolit_outfit_m4", "in")
+
+end
+
+----------------------- Dolg -----------------------------
+
+function has_dolg_1()
+local mp5 = db.actor:object("dolg_outfit")
+if mp5 ~= nil and db.actor:money() >= 7000 then
+return true
+end
+end
+
+function has_dolg_2()
+local mp5 = db.actor:object("dolg_outfit")
+if mp5 ~= nil and db.actor:money() >= 10000 then
+return true
+end
+end
+
+function dolg_m1(first_speaker, second_speaker)
+    	dialogs.relocate_item_section(second_speaker, "dolg_outfit", "out")
+	dialogs.relocate_money(second_speaker, 7000, "out")
+	dialogs.relocate_item_section(second_speaker, "dolg_outfit_m2", "in")
+
+end
+
+function dolg_m1(first_speaker, second_speaker)
+    	dialogs.relocate_item_section(second_speaker, "dolg_outfit", "out")
+	dialogs.relocate_money(second_speaker, 7000, "out")
+	dialogs.relocate_item_section(second_speaker, "dolg_outfit_m3", "in")
+
+end
+
+function dolg_m1(first_speaker, second_speaker)
+    	dialogs.relocate_item_section(second_speaker, "dolg_outfit", "out")
+	dialogs.relocate_money(second_speaker, 7000, "out")
+	dialogs.relocate_item_section(second_speaker, "dolg_outfit_m4", "in")
+
+end
+
+
+----------------------- Dolg science---------------------
+
+function has_dc_1()
+local mp5 = db.actor:object("dolg_scientific_outfit")
+if mp5 ~= nil and db.actor:money() >= 11000 then
+return true
+end
+end
+
+function has_dc_2()
+local mp5 = db.actor:object("dolg_scientific_outfit")
+if mp5 ~= nil and db.actor:money() >= 15000 then
+return true
+end
+end
+
+function dc_m1(first_speaker, second_speaker)
+    	dialogs.relocate_item_section(second_speaker, "dolg_scientific_outfit", "out")
+	dialogs.relocate_money(second_speaker, 11000, "out")
+	dialogs.relocate_item_section(second_speaker, "dolg_scientific_outfit_m1", "in")
+
+end
+
+function dc_m2(first_speaker, second_speaker)
+    	dialogs.relocate_item_section(second_speaker, "dolg_scientific_outfit", "out")
+	dialogs.relocate_money(second_speaker, 11000, "out")
+	dialogs.relocate_item_section(second_speaker, "dolg_scientific_outfit_m3", "in")
+
+end
+
+function dc_m3(first_speaker, second_speaker)
+    	dialogs.relocate_item_section(second_speaker, "dolg_scientific_outfit", "out")
+	dialogs.relocate_money(second_speaker, 15000, "out")
+	dialogs.relocate_item_section(second_speaker, "dolg_scientific_outfit_m2", "in")
+
+end
+
+
+----------------------- Spec ops ---------------------
+
+function has_specops_1()
+local mp5 = db.actor:object("specops_outfit")
+if mp5 ~= nil and db.actor:money() >= 3000 then
+return true
+end
+end
+
+function has_specops_2()
+local mp5 = db.actor:object("specops_outfit")
+if mp5 ~= nil and db.actor:money() >= 5000 then
+return true
+end
+end
+
+function specops_m1(first_speaker, second_speaker)
+    	dialogs.relocate_item_section(second_speaker, "specops_outfit", "out")
+	dialogs.relocate_money(second_speaker, 5000, "out")
+	dialogs.relocate_item_section(second_speaker, "specops_outfit_m2", "in")
+
+end
+
+function specops_m2(first_speaker, second_speaker)
+    	dialogs.relocate_item_section(second_speaker, "specops_outfit", "out")
+	dialogs.relocate_money(second_speaker, 3000, "out")
+	dialogs.relocate_item_section(second_speaker, "specops_outfit_m3", "in")
+
+end
+
+function specops_m3(first_speaker, second_speaker)
+    	dialogs.relocate_item_section(second_speaker, "specops_outfit", "out")
+	dialogs.relocate_money(second_speaker, 5000, "out")
+	dialogs.relocate_item_section(second_speaker, "specops_outfit_m4", "in")
+
+end
+
+
+function rpg(first_speaker, second_speaker)
+    	dialogs.relocate_item_section(second_speaker, "wpn_rpg7", "out")
+	dialogs.relocate_money(second_speaker, 4000, "in")
+	dialogs.relocate_item_section(second_speaker, "af_night_star", "in")
+
+end
+
+------------------------------- USP ------------------------
+
+
+function has_exo()
+local mp5 = db.actor:object("exo_outfit")
+if mp5 ~= nil and db.actor:money() >= 20000 then
+return true
+end
+end
+
+function exo_m1(first_speaker, second_speaker)
+    dialogs.relocate_item_section(second_speaker, "exo_outfit", "out")
+	dialogs.relocate_money(second_speaker, 20000, "out")
+	dialogs.relocate_item_section(second_speaker, "outfit_exo_m2", "in")
+
+end
+
+function has_exo_m2()
+local mp5 = db.actor:object("outfit_exo_m2")
+if mp5 ~= nil and db.actor:money() >= 30000 then
+return true
+end
+end
+
+function proverka_exo_m2(stalker, player)
+        return db.actor:object ("outfit_exo_m2") ~= nil
+end
+
+function exo_m2(first_speaker, second_speaker)
+    dialogs.relocate_item_section(second_speaker, "outfit_exo_m2", "out")
+	dialogs.relocate_money(second_speaker, 30000, "out")
+	dialogs.relocate_item_section(second_speaker, "outfit_exo_m3", "in")
+end
+
+-------------------------------------------------------
+
+function has_rpg()
+local mp5 = db.actor:object("wpn_rpg7")
+if mp5 ~= nil and db.actor:money() >= 0 then
+return true
+end
+end
+
+function proverka_instrumenti(actor,npc)
+   return has_alife_info("has_choose_instrumenti")
+end
+
+function proverka_pistol_box(first_speaker, second_speaker)
+    return first_speaker:object("pistol_box") ~= nil
+end
+
+function proverka_rifle_box(first_speaker, second_speaker)
+    return first_speaker:object("rifle_box") ~= nil
+end
+
+function proverka_smg_box(first_speaker, second_speaker)
+    return first_speaker:object("smg_box") ~= nil
+end
+
+function give_smg_box(first_speaker, second_speaker)
+       dialogs.relocate_item_section(second_speaker, "smg_box", "out")
+end
+
+function give_rifle_box(first_speaker, second_speaker)
+       dialogs.relocate_item_section(second_speaker, "rifle_box", "out")
+end
+
+function give_pistol_box(first_speaker, second_speaker)
+       dialogs.relocate_item_section(second_speaker, "pistol_box", "out")
+end
+
+function reward(first_speaker, second_speaker)
+   dialogs.relocate_money(second_speaker, 2500, "in")
+end
+
+function has_pistol_box(actor,npc)
+   return has_alife_info("has_pistol_box")
+end
+
+function has_rifle_box(actor,npc)
+   return has_alife_info("has_rifle_box")
+end
+
+function has_smg_box(actor,npc)
+   return has_alife_info("has_smg_box")
+end

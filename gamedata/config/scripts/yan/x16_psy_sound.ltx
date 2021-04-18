@@ -1,0 +1,17 @@
+[logic]
+active = {+yan_brain_off} sr_idle@off, sr_idle@on
+
+[sr_idle@off]
+on_info = {-yan_brain_off} sr_idle@on
+
+[sr_idle@on]
+on_actor_inside = sr_sound_act
+on_info = {+yan_brain_off} sr_idle@off
+
+[sr_sound_act]
+snd = ambient\x16\x16_psy
+delay = 1000
+max_delay = 1000
+stereo = true
+on_actor_outside = sr_idle@on
+on_info = {+yan_brain_off} sr_idle@off

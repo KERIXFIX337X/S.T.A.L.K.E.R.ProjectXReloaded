@@ -1,0 +1,72 @@
+class "evaluator_need_rescan" (property_evaluator)
+function evaluator_need_rescan:__init(name, storage) super(nil, name)
+	self.st = storage
+end
+
+function evaluator_need_rescan:evaluate()
+	return self.st.zone_mgr:need_rescan_near_zones()
+end
+
+class "action_rescan" (action_base)
+function action_rescan:__init(npc_name, name, storage) super(nil, name)
+	self.st = storage
+end
+
+function action_rescan:initialize()
+	action_base.initialize(self)
+end
+
+function action_rescan:execute()
+	action_base.execute(self)
+	return self.st.zone_mgr:rescan_near_zones()
+end
+
+function action_rescan:finalize()
+	action_base.finalize(self)
+end
+
+function add_to_binder(npc, char_ini, scheme, section, storage)
+	local properties = {
+		need_rescan = utils2.evaluators_id.anomaly_scanner_base + 0}
+	local operators = {
+		rescan = utils2.actions_id.anomaly_scanner_base + 0}
+
+	local manager = npc:motivation_action_manager()
+
+	manager:add_evaluator(properties.need_rescan, evaluator_need_rescan("evaluator_need_rescan", storage))
+
+	local action = action_rescan(npc:name(), "action_rescan", storage)
+	action:add_precondition(world_property(stalker_ids.property_alive, true))
+	action:add_precondition(world_property(xr_evaluators_id.sidor_wounded_base + 1, true))
+	action:add_precondition(world_property(properties.need_rescan, true))
+	action:add_effect(world_property(properties.need_rescan, false))
+	manager:add_action(operators.rescan, action)
+
+	action = manager:action(xr_actions_id.alife)
+	action:add_precondition(world_property(properties.need_rescan, false))
+
+	action = manager:action(stalker_ids.action_combat_planner)
+	action:add_precondition(world_property(properties.need_rescan, false))
+
+	action = manager:action(stalker_ids.action_danger_planner)
+	action:add_precondition(world_property(properties.need_rescan, false))
+
+	-- неохота включать вызов addCommonPrecondition в xr_attendant.script,
+	-- так что пробуем аккуратно залезть отсюда.
+	action = manager:action(xr_actions_id.sidor_attendant_act + 1)
+	if action ~= nil then
+		action:add_precondition(world_property(properties.need_rescan, false))
+	end
+end
+
+function set_scheme(npc, ini, scheme, section)
+	local st = xr_logic.assign_storage_and_bind(npc, ini, scheme, section)
+	st.zone_mgr = db.storage[npc:id()].zone_mgr
+	st.zone_mgr:reset()
+end
+
+function reset_scheme(npc, scheme, storage, section)
+end
+
+function disable_scheme(npc, scheme)
+end

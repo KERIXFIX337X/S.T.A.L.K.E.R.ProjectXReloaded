@@ -1,0 +1,11 @@
+local obj = alife():story_object( 9900 )
+local obj_id = obj.id
+function remove_spot_from_map(obj_id,type)
+    if obj_id and level.map_has_object_spot(obj_id, type) ~= 0 then
+        level.map_remove_object_spot(obj_id, type)
+    end
+end
+
+function remove_spot()
+    loner_remove.remove_spot_from_map(obj.id,"blue_location")
+end

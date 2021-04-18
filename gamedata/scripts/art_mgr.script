@@ -1,0 +1,241 @@
+
+----------------------------------------
+-- Artefact Respawn Script 1.01
+-- by kstn
+-- for Stalker ShoC 1.0004-1.0006 & Freeplay Start Mod
+----------------------------------------
+
+--[[function dbglog(fmt, ...)
+	local msg = string.format(fmt, ...)
+	local msg_no_ws = string.gsub(msg, "%s", "_")
+	get_console():execute("dbg:" .. msg_no_ws)
+end]]
+
+local minHH = 18
+local maxHH = 30
+local spawn_time
+local lev_cur_sav, lev_str = "", ""
+local lev = {
+	["l01_escape"] = 			{id="a",qtt=4,dmin=100,dmax=250},
+	["l02_garbage"] = 			{id="b",qtt=4,dmin=100,dmax=200},
+	["l03_agroprom"] = 			{id="c",qtt=4,dmin=100,dmax=200},
+	["l03u_agr_underground"] =	{id="d",qtt=4,dmin=25,dmax=50},
+	["l04_darkvalley"] = 		{id="e",qtt=4,dmin=100,dmax=250},
+	["l04u_labx18"] = 			{id="f",qtt=4,dmin=25,dmax=50},
+	["l05_bar"] = 				{id="g",qtt=0,dmin=0,dmax=0},
+	["l06_rostok"] = 			{id="h",qtt=3,dmin=50,dmax=100},
+	["l07_military"] = 			{id="i",qtt=4,dmin=100,dmax=200},
+	["l08_yantar"] = 			{id="j",qtt=4,dmin=50,dmax=100},
+	["l08u_brainlab"] = 		{id="k",qtt=0,dmin=0,dmax=0},
+	["l10_radar"] = 			{id="l",qtt=5,dmin=100,dmax=250},
+	["l10u_bunker"] = 			{id="m",qtt=0,dmin=0,dmax=0},
+	["l11_pripyat"] = 			{id="n",qtt=6,dmin=100,dmax=200},
+	["l12_stancia"] = 			{id="o",qtt=7,dmin=100,dmax=200},
+	["l12u_sarcofag"] = 		{id="p",qtt=0,dmin=0,dmax=0},
+	["l12u_control_monolith"] = {id="q",qtt=0,dmin=0,dmax=0},
+	["l12_stancia_2"] = 		{id="r",qtt=0,dmin=0,dmax=0}
+}
+local arts = {
+	["buzz"]={{"af_ameba_slime",60},{"af_ameba_slug",20},{"af_ameba_mica",15},{"af_dummy_pellicle",5}},
+	["zharka"]={{"af_drops",50},{"af_fireball",40},{"af_cristall",5},{"af_dummy_dummy",5}},
+	["mosquito"]={{"af_medusa",60},{"af_cristall_flower",30},{"af_night_star",5},{"af_dummy_spring",5}},
+	["mincer"]={{"af_blood",55},{"af_mincer_meat",30},{"af_soul",10},{"af_dummy_spring",5}},
+	["gravi"]={{"af_vyvert",60},{"af_gravi",30},{"af_gold_fish",5},{"af_dummy_spring",5}},
+	["witches"]={{"af_electra_sparkler",50},{"af_electra_flash",40},{"af_electra_moonlight",5},{"af_dummy_battery",5}},
+	["hair"]={{"af_rusty_thorn",50},{"af_rusty_kristall",25},{"af_dummy_glassbeads",10},{"af_fuzz_kolobok",10},{"af_rusty_sea-urchin",5}}
+}
+
+function save(packet)
+	packet:w_stringZ(lev_str)
+	packet:w_stringZ(lev_cur_sav)
+	utils.w_CTime(packet, spawn_time)
+end
+
+function load(packet)
+	lev_str = packet:r_stringZ()
+	lev_cur_sav = packet:r_stringZ()
+	spawn_time = utils.r_CTime(packet)
+end
+
+function update(t)
+	local game_time = game.get_game_time()
+	if spawn_time == nil then
+		spawn_time = game_time
+	end
+	if game_time >= spawn_time then
+		spawn_time = game.CTime() spawn_time:setHMSms(math.random(minHH, maxHH),0,0,0)
+		spawn_time = spawn_time + game_time
+		lev_cur_sav, lev_str = "", ""
+--		dbglog("Next Spawn Date:%s,Time:%s", spawn_time:dateToString(0), spawn_time:timeToString(1))
+	end
+
+	local lev_cur = level.name()
+	if lev_cur_sav ~= lev_cur then
+		local lev_cur_tbl = lev[lev_cur]
+		if lev_cur_tbl == nil then
+			get_console():execute("!!!!!!!!!!CAN NOT FIND LEVEL NAME IN TABLE:[lev]!!!!!!!!!!")
+			get_console():execute("flush")
+		end
+		local lid = lev_cur_tbl.id
+		if not string.find(lev_str, lid) then
+			local a_tbl, lev_tbl = {}, {}
+			local r = math.random(25,60)
+			local qtt = lev_cur_tbl.qtt
+			local dist = math.random(lev_cur_tbl.dmin, lev_cur_tbl.dmax)
+			
+			table.insert(lev_tbl, lid)
+			table.insert(lev_tbl, lev_str)
+			lev_str=table.concat(lev_tbl)
+--			dbglog("Table:[lev_tbl]converted to string:[lev_str=%s]", lev_str)
+			lev_cur_sav=lev_cur
+			if qtt==0 then return end
+			
+			local actor_pos=db.actor:position()
+			for i,v in pairs(t) do
+				local obj=level.object_by_id(v)
+				if obj and actor_pos:distance_to(obj:position())>r then
+					table.insert(a_tbl, v)
+					for ii,vv in pairs(a_tbl) do
+						if distance_between_safe(level.object_by_id(vv), obj)>0 and distance_between_safe(level.object_by_id(vv), obj)<dist then
+							table.remove(a_tbl)
+						end
+					end
+				end
+			end
+			for n=1,qtt do
+				local cnt = table.getn(a_tbl)
+				if cnt > 0 then
+					local id = math.random(cnt)
+					local obj = level.object_by_id(a_tbl[id])
+					table.remove(a_tbl, id)
+					create_art(obj)
+				end
+			end
+		end
+	end
+end
+
+-- Создаём артефаки
+function create_art(obj)
+	if obj == nil then
+		return
+	end
+
+	local key
+	local sect = obj:section()
+	if string.find(sect, "buzz") then
+		key = "buzz"
+	elseif string.find(sect, "zharka") then
+		key = "zharka"
+	elseif string.find(sect, "mosquito") then
+		key = "mosquito"
+	elseif string.find(sect, "mincer") then
+		key = "mincer"
+	elseif string.find(sect, "gravi") then
+		key = "gravi"
+	elseif string.find(sect, "witches") then
+		key = "witches"
+	elseif string.find(sect, "hair") then
+		key = "hair"
+	end
+
+	if key then
+		local lv = obj:level_vertex_id()
+		local gv = obj:game_vertex_id()
+		local pos = obj:position()
+		local off_x = 2
+		local off_y = 1.5
+		local off_z = 2
+		pos.x = pos.x + off_x
+		pos.y = pos.y + off_y
+		pos.z = pos.z + off_z
+		
+		if lv and gv and pos then
+			local sec = rwc(arts[key])
+			local art = alife():create(sec, pos, lv, gv)
+--			local art_inv = game.translate_string(system_ini():r_string(art:section_name(), "inv_name"))
+--			local text = "Аномалия:"..sect..", артефакт:"..art_inv
+--			level.map_add_object_spot(art.id, "green_location", text)
+		else
+			get_console():execute("!!!!!!!!!!FUCK MY BRAIN!!!!!!!!!!")
+			get_console():execute("flush")
+		end
+	end
+end
+
+-- random weighted choice
+function rwc(t)
+	local sum = 0
+	local rnd = math.random(100)
+	for i,v in ipairs(t) do
+		sum = sum + v[2]
+		if rnd <= sum then
+--			dbglog("rnd=[%d],weight=[%d],sum=[%d],Artefact section:[%s]",rnd,v[2],sum,v[1])
+			return v[1]
+		end
+	end
+end
+
+-- Удаление навозных куч артефактов, халявной брони и читерских ящиков с лутом
+function del_xlam()
+	local del_art, del_suit, del_box = true, true, true
+	local sim = alife()
+	local packet = net_packet()
+	for id=1, 65534 do
+		local obj = sim:object(id)
+		if obj then
+			local gvid, l_id
+			if del_art == true then
+				local sect = obj:section_name()
+				if
+					sect == "af_blood" or
+					sect == "af_cristall_flower" or
+					sect == "af_drops" or
+					sect == "af_fireball" or
+					sect == "af_gravi" or
+					sect == "af_medusa" or
+					sect == "af_mincer_meat" or
+					sect == "af_soul" or
+					sect == "af_vyvert" 
+				then
+					gvid = obj.m_game_vertex_id
+					l_id = game_graph():vertex(gvid):level_id()
+					if l_id < 14 and l_id ~= 4 and l_id ~= 6 and l_id ~= 10 and l_id ~= 12 then
+						sim:release(obj)
+					end
+				end
+			end
+			if del_suit == true and obj:clsid() == clsid.equ_stalker_s and
+				not string.find(obj:name(), "esc_outfit_bandit_m1") and
+				obj.parent_id == 65535
+			then
+				sim:release(obj)
+			end
+			if del_box == true and obj:clsid() == clsid.obj_phys_destroyable then
+				packet:w_begin(0)
+				obj:STATE_Write(packet)
+				packet:r_seek(2)
+				
+				local game_vertex_id = packet:r_u16()
+				local distance = packet:r_float()
+				local direct_control = packet:r_s32()
+				local level_vertex_id = packet:r_s32()
+				local object_flags = packet:r_s32()
+				local custom_data = packet:r_stringZ()
+				local story_id = packet:r_s32()
+				local spawn_story_id = packet:r_s32()
+				local visual_name = packet:r_stringZ()
+				
+				if visual_name then
+					gvid = obj.m_game_vertex_id
+					l_id = game_graph():vertex(gvid):level_id()
+					if string.find(visual_name, "box_wood") or
+						(string.find(visual_name, "box_metall") and l_id < 14 and l_id ~= 4 and l_id ~= 6 and l_id ~= 10 and l_id ~= 12)
+					then
+						sim:release(obj)
+					end
+				end
+			end
+		end
+	end
+end

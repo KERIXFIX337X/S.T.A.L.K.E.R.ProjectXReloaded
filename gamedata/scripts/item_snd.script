@@ -1,0 +1,38 @@
+function use_snd(obj)
+ 
+local obj_sect = obj:section()
+ 
+local snd
+ 
+if obj_sect == 'medkit' then snd = [[interface\inv_medkit]]
+ 
+elseif obj_sect == 'conserva' then snd = [[interface\inv_conserva]]
+
+elseif obj_sect == 'medkit_army' then snd = [[interface\inv_medkit]]
+
+elseif obj_sect == 'medkit_scientic' then snd = [[interface\inv_medkit]]
+
+elseif obj_sect == 'kolbasa' then snd = [[interface\inv_food]]
+
+elseif obj_sect == 'vodka' then snd = [[interface\inv_vodka]]
+
+elseif obj_sect == 'energy_drink' then snd = [[interface\inv_softdrink]]
+
+elseif obj_sect == 'bandage' then snd = [[interface\inv_bandage]]
+
+elseif obj_sect == 'antirad' then snd = [[interface\inv_pills]]
+
+elseif obj_sect == 'instrumental_box' then snd = [[interface\inv_instrumental_box]]
+
+end
+ 
+if snd then
+ 
+local snd_obj = xr_sound.get_safe_sound_object(snd)
+ 
+snd_obj:play_no_feedback(db.actor, sound_object.s2d, 0, vector(), 1.0)
+
+end
+ 
+end
+ 

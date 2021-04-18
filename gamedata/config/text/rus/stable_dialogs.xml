@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="windows-1251" ?>
+<string_table>
+	<string id="actor_break_dialog_0">
+		<text>До встречи!</text>
+	</string>
+	<string id="actor_help_wounded_0">
+		<text>Как ты?</text>
+	</string>
+	<string id="actor_help_wounded_1">
+		<text>Хреново мне, не видишь что ли? Нужна аптечка, или хотя бы бинт.</text>
+	</string>
+	<string id="actor_help_wounded_11">
+		<text>Держи аптечку.</text>
+	</string>
+	<string id="actor_help_wounded_111">
+		<text>Спасибо, брат, не забуду.</text>
+	</string>
+	<string id="actor_help_wounded_12">
+		<text>Держи бинт.</text>
+	</string>
+	<string id="actor_help_wounded_13">
+		<text>Извини, ничего нет.</text>
+	</string>
+	<string id="actor_help_wounded_131">
+		<text>Как же ты в Зоне ходишь? Зацепит тебя какая-то зараза, а ты даже вылечить себя не сможешь.</text>
+	</string>
+	<string id="actor_help_wounded_14">
+		<text>Хех, что ж ты так? Извини, свои я тебе не дам, иначе сам останусь ни с чем.</text>
+	</string>
+	<string id="actor_help_wounded_141">
+		<text>Твое дело, но не думай, что это делает тебе чести.</text>
+	</string>
+	<string id="hello_dialog_2">
+		<text>Привет!</text>
+	</string>
+	<string id="hello_dialog_3">
+		<text>Слышь, браток, помоги!</text>
+	</string>
+	<string id="sleep_title_1">
+		<text>Как долго спать?</text>
+	</string>
+	<string id="sleep_title_2">
+		<text>Сейчас сон не требуется.</text>
+	</string>
+	<string id="sleep_title_3">
+		<text>Репутация испорчена. Сон невозможен.</text>
+	</string>
+	<string id="sleep_title_4">
+		<text>Чтобы уснуть, необходимо отключить излучатель.</text>
+	</string>
+	<string id="sleep_title_5">
+		<text>Чтобы уснуть, необходимо вывести радиацию из организма.</text>
+	</string>
+  <string id="sleep_1_hour">
+		<text>Спать 1 час</text>
+	</string>
+	<string id="sleep_2_hours">
+		<text>Спать 2 часа</text>
+	</string>
+	<string id="sleep_3_hours">
+		<text>Спать 3 часа</text>
+	</string>
+	<string id="sleep_4_hours">
+		<text>Спать 4 часа</text>
+	</string>
+	<string id="sleep_5_hours">
+		<text>Спать 5 часов</text>
+	</string>
+	<string id="sleep_6_hours">
+		<text>Спать 6 часов</text>
+	</string>
+	<string id="sleep_7_hours">
+		<text>Спать 7 часов</text>
+	</string>
+	<string id="sleep_9_hours">
+		<text>Спать 9 часов</text>
+	</string>
+	
+	<string id="choose_items">
+		<text>Думаю тебя заинтересует...</text>
+	</string>
+	<string id="preview_items">
+		<text>Что там у тебя?</text>
+	</string>
+	<string id="stop_items">
+		<text>Я передумал.</text>
+	</string>
+	<string id="choose_docs_x18">
+		<text>• Толстая стопка научных бумаг из лаборатории X-18</text>
+	</string>
+	<string id="borov_talk_docs_x18">
+		<text>Чего мля? Документы из той заброшенной лабы? Откуда они у тебя? Хотя, это не моё дело, дай сюда, гляну. Так, ага... Эксперименты, жуть... Военные силы замешаны в этом... Оба - на, этот листочек точно будет полезен нашему барыге... Даже печати научного комплекса сохранились... Честно говоря, в этих формулах и диаграммах я нихрена не понимаю, но знаю людей которые это с руками оторвут. Давай так, я забираю у тебя эти бумаги за десять тысяч, плюс можешь рассчитывать на козырные товары у нашего барыги. Идёт?</text>
+	</string>
+	<string id="item_accept_1">
+		<text>Идёт.</text>
+	</string>
+	<string id="item_fail_1">
+		<text>Не, так не пойдет. Приберегу пожалуй.</text>
+	</string>
+	<string id="borov_not_item">
+		<text>Ну и проваливай, жлобяра!</text>
+	</string>
+	<string id="borov_apply_item">
+		<text>Да, с тобой приятно иметь дело!</text>
+	</string>
+	<string id="choose_docs_x16">
+		<text>• Полиэтиленовый пакет с документами из лаборатории Х-16</text>
+	</string>
+	<string id="borov_talk_docs_x16">
+		<text>Документы из мозговарки? Давай сюда, поглядим. Тааак... Структура научного комплекса... Ага, так вот откдуда безмозглые прут... Подземные коммуникации, интересно... Хреново то, что я нихрена не понимаю на ботанском. Короче, забираю у тебя эти тряпки за пятнашку, ну и всякие там погремухи наш барыга в ассортимент подкинет. Идёт?</text>
+	</string>
+	
+	<string id="ecolog_choose_items">
+		<text>Профессор, думаю вас заинтересует...</text>
+	</string>
+	<string id="ecolog_preview_items">
+		<text>Что там у вас молодой человек?</text>
+	</string>
+	<string id="ecolog_talk_docs_x18">
+		<text>Хм, интересно, дайте-ка взгляну. Действительно, эти документы из лабораторного комплекса Х-18. Печати и росписи руководителей тому подтверждение. Готов предложить вам тридцать тысяч рублей в обмен на эти документы. Что скажете?</text>
+	</string>
+	<string id="ecolog_not_item">
+		<text>Хорошо подумайте, молодой человек.</text>
+	</string>
+	<string id="ecolog_apply_item">
+		<text>Вы внесли огромный вклад в науку, спасибо.</text>
+	</string>
+	<string id="ecolog_talk_docs_x16">
+		<text>Вот так да! Неожидал что кто-то ещё принесёт интересные бумаги из X-16. Вы не представляете насколько эта мукулатура для нас дорога. В обмен на эти документы я готов вам предложить следующее: пятнадцать тысяч рублей плюс поставка высокоточного энергетического оружия и боеприпасов для него. Разумеется, эта винтовка стоит не малых денег, но специально для вас я сделаю скидку. Что скажете?</text>
+	</string>
+	
+	<string id="ara_talk_docs_x18">
+		<text>Вот так да... Не думал что когда либо ещё их увижу. Слушай сюда, эти документы находятся под грифом особой секретности. Одни лишь военные силы готовы развернуть полномасштабную операцию по захвату этих бумаг. Смекаешь? Эти документы меня безусловно интересуют.</text>
+	</string>
+	<string id="ara_not_item">
+		<text>Ну и проваливай, жлобяра!</text>
+	</string>
+	<string id="ara_apply_item">
+		<text>Да, с тобой приятно иметь дело!</text>
+	</string>
+	<string id="ara_talk_docs_x16">
+		<text>Документы из мозговарки? Давай сюда, поглядим. Тааак... Структура научного комплекса... Ага, так вот откдуда безмозглые прут... Подземные коммуникации, интересно... Хреново то, что я нихрена не понимаю на ботанском. Короче, забираю у тебя эти тряпки за пятнашку, ну и всякие там погремухи наш барыга в ассортимент подкинет. Идёт?</text>
+	</string>
+</string_table>

@@ -1,0 +1,18 @@
+[logic]
+active = {-yan_labx16_switcher_2_off} ph_idle@activate, ph_idle@deactivate
+
+[ph_button@active]
+anim = lab_primary_switcher_idle
+tooltip = tip_switch_off
+on_press = ph_idle@deactivate %=play_snd_from_obj(909:ambient\switch_1)%
+
+[ph_idle@activate]
+on_timer = 1 | ph_button@active %-yan_labx16_switcher_2_off -yan_labx16_switcher_2_end =turn_on(909) =turn_on(914) =turn_off(913)%
+
+[ph_idle@deactivate]
+on_timer = 1 | ph_button@inactive %+yan_labx16_switcher_2_off =turn_off(909) =turn_off(914) =turn_on(913)%
+
+[ph_button@inactive]
+anim = lab_primary_switcher_off
+tooltip = tip_switch_on
+on_press = ph_idle@activate %=play_snd_from_obj(909:ambient\switch_1)%

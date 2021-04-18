@@ -1,0 +1,162 @@
+local actor_want_sleep = true
+local actor_cannot_sleep = false
+
+class "sleep" (CUIScriptWnd)
+
+function sleep:__init(owner) super()
+
+	-- added by XiaNi
+	-- я не уверен что это правильная схема...
+	-- ведь человек может проснуться среди ночи и сразу снова лечь спать
+	-- поэтому покачто будем считать что сталкер всегда хочет спать...
+	-- пока не решу как быть
+--[[	 if sleep_manager.last_sleep_time == nil or sleep_manager.last_sleep_duration == nil or 
+			game.time() > sleep_manager.last_sleep_time + sleep_manager.last_sleep_duration then
+
+		actor_want_sleep = true
+	else
+		actor_want_sleep = false
+	end]]
+	
+	self.owner = owner
+	self:InitControls()
+	self:InitCallBacks()
+end
+
+function sleep:__finalize() end
+
+function sleep:InitControls()
+	self:Init(50,50,700,450)
+
+	local xml = CScriptXmlInit()
+	xml:ParseFile("ui_sleeping_bag.xml")
+
+	-- xml:InitStatic("back_video", self)
+	xml:InitStatic("background", self)
+
+	self:Register(xml:Init3tButton("btn_cancel", self),"btn_cancel")
+
+	-- Невозможно спать если выжигатель не отключен.
+--	if level.name() == "l08_yantar" and (not has_alife_info("yan_labx16_switcher_primary_off")) then
+--		self:Register(xml:Init3tButton("caption_4", self),"caption_4")
+--		actor_cannot_sleep = true
+--		return
+--
+	-- Невозможно спать если ГГ фонит
+	if db.actor.radiation > 0 then
+		self:Register(xml:Init3tButton("caption_5", self),"caption_5")
+		actor_cannot_sleep = true
+		return
+	else
+		actor_cannot_sleep = false
+	end
+
+	if sleep_manager.actor_can_sleep_here then
+		if actor_want_sleep then
+			self:Register(xml:Init3tButton("caption_1", self),"caption_1")
+			if sleep_manager.sleeping_bag_in_slot then
+				self:Register(xml:Init3tButton("btn_1", self),"btn_1")
+				self:Register(xml:Init3tButton("btn_3", self),"btn_3")
+				self:Register(xml:Init3tButton("btn_5", self),"btn_5")
+				self:Register(xml:Init3tButton("btn_7", self),"btn_7")
+				self:Register(xml:Init3tButton("btn_9", self),"btn_9")
+			else
+				self:Register(xml:Init3tButton("btn_2", self),"btn_2")
+				self:Register(xml:Init3tButton("btn_4", self),"btn_4")
+				self:Register(xml:Init3tButton("btn_6", self),"btn_6")
+			end
+		else
+			self:Register(xml:Init3tButton("caption_2", self),"caption_2")
+		end
+	else
+		self:Register(xml:Init3tButton("caption_3", self),"caption_3")
+	end
+end
+
+function sleep:InitCallBacks()
+	if (not actor_cannot_sleep) then 
+		if actor_want_sleep and sleep_manager.actor_can_sleep_here then
+			if sleep_manager.sleeping_bag_in_slot then
+				self:AddCallback("btn_1", 	ui_events.BUTTON_CLICKED, self.sleep1, self)
+				self:AddCallback("btn_3", 	ui_events.BUTTON_CLICKED, self.sleep3, self)
+				self:AddCallback("btn_5", 	ui_events.BUTTON_CLICKED, self.sleep5, self)
+				self:AddCallback("btn_7", 	ui_events.BUTTON_CLICKED, self.sleep7, self)
+				self:AddCallback("btn_9", 	ui_events.BUTTON_CLICKED, self.sleep9, self)
+			else
+				self:AddCallback("btn_2", 	ui_events.BUTTON_CLICKED, self.sleep2, self)
+				self:AddCallback("btn_4", 	ui_events.BUTTON_CLICKED, self.sleep4, self)
+				self:AddCallback("btn_6", 	ui_events.BUTTON_CLICKED, self.sleep6, self)
+			end
+		end
+	end
+	self:AddCallback("btn_cancel", 	ui_events.BUTTON_CLICKED, self.cancel, self)
+end
+
+function sleep:OnKeyboard(dik, keyboard_action)
+	CUIScriptWnd.OnKeyboard(self,dik,keyboard_action)
+	if keyboard_action == ui_events.WINDOW_KEY_PRESSED then
+		if dik == DIK_keys.DIK_ESCAPE then
+			self:on_quit()
+		end
+	end
+	return true
+end
+
+function sleep:sleep1()
+		sleep_manager.sleep_1_hour()
+		self:on_quit()
+end
+function sleep:sleep2()
+		sleep_manager.sleep_2_hours()
+		self:on_quit()
+end
+function sleep:sleep3()
+		sleep_manager.sleep_3_hours()
+		self:on_quit()
+end
+function sleep:sleep4()
+		sleep_manager.sleep_4_hours()
+		self:on_quit()
+end
+function sleep:sleep5()
+		sleep_manager.sleep_5_hours()
+		self:on_quit()
+end
+function sleep:sleep6()
+		sleep_manager.sleep_6_hours()
+		self:on_quit()
+end
+function sleep:sleep7()
+		sleep_manager.sleep_7_hours()
+		self:on_quit()
+end
+function sleep:sleep9()
+		sleep_manager.sleep_9_hours()
+		self:on_quit()
+end
+
+function sleep:check_game()
+	local check = false
+	if level.present() and (db.actor ~= nil) and db.actor:alive() then
+		check = true
+	end
+	return check
+end
+
+function sleep:on_sleep()
+	local hours = 0
+	if hours <= 0 then
+		sleep:cancel()
+	else
+		sleep_manager.main (hours)
+	end
+	self:on_quit()
+end
+
+function sleep:on_quit()
+	self:GetHolder():start_stop_menu (self,true)
+end
+
+function sleep:cancel()
+	self:on_quit()
+end

@@ -1,0 +1,21 @@
+function on_use_item(sect)
+local actor=db.actor
+local item_name=sect:section()
+local actor_pos=db.actor:position()
+local active_slot=db.actor:active_slot()
+local active_item=db.actor:active_item()
+local pistol_in_slot=db.actor:item_in_slot(2)
+local rifle_in_slot=db.actor:item_in_slot(3)
+local outfit_in_slot=db.actor:item_in_slot(7)
+local helm_in_slot=db.actor:item_in_slot(12)
+if item_name=="wolf_pda" then
+db.actor:give_info_portion("wolf_treasure")
+db.actor:give_info_portion("wolf_treasure_target")
+elseif item_name=="borov_pda" then
+db.actor:give_info_portion("borov_treasure")
+db.actor:give_info_portion("borov_treasure_target")
+elseif item_name=="ambal_pda" then
+db.actor:give_info_portion("ambal_treasure")
+db.actor:give_info_portion("ambal_treasure_target")
+end
+end

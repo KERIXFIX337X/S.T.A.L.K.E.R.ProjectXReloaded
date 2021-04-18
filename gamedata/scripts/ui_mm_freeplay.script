@@ -1,0 +1,332 @@
+class "list_item" (CUIListItemEx)
+
+function test()
+end
+
+function list_item:__init() super()
+	self.file_name		= ""
+	self:SetWndRect		(0,0,430,22)
+	
+	local ca = 255
+	local cr = 216
+	local cg = 186
+	local cb = 140
+	
+	self.fn					= CUIStatic	()
+	self.fn:SetAutoDelete	(true)
+	self:AttachChild		(self.fn)
+	self.fn:SetWndRect		(0,0,430,22)
+	self.fn:SetText			("")
+	self.fn:SetFont			(GetFontLetterica18Russian())
+	self.fn:SetTextColor	(ca,cr,cg,cb)
+end
+
+class "ui_mm_freeplay_wnd" (CUIScriptWnd)
+ 
+function ui_mm_freeplay_wnd:__init(owner) super()
+	self.owner = owner
+	self:InitControls()
+	self:InitCallBacks()
+	self:FillProfilesList()
+	self:UpdateControls()
+end
+
+function ui_mm_freeplay_wnd:__finalize() end
+	
+function ui_mm_freeplay_wnd:InitControls(x, y, xml, handler)
+	self:Init(0,0,1024,768)
+
+	local xml = CScriptXmlInit()
+	xml:ParseFile("ui_mm_freeplay.xml")
+	self:Enable (true)
+	
+	--xml:InitStatic("background_st", self)
+	
+	self.form = xml:InitStatic("form",self)
+	
+	xml:InitStatic("form:caption",self.form)
+	
+	xml:InitStatic		("form:static_player_name",self)
+	self.player_name	= xml:InitEditBox("form:edit_player_name", self)
+	
+	-- xml:InitStatic		("form:static_use_name_policy",self)
+	-- self.use_name_policy_ctrl = xml:InitCheck("form:check_use_name_policy", self)
+	
+	
+	xml:InitStatic("form:cap_prof_list",		self)
+	self.profile = xml:InitList("form:prof_list", self)
+	self:Register(self.profile, "prof_list")
+	
+	xml:InitStatic("form:cap_difficulty",		self)
+	self.game_difficulty = xml:InitComboBox("form:spin_difficulty",	self)
+	-- self.game_difficulty = xml:InitSpinText("form:spin_difficulty",	self)
+	
+	-- ##### profile description
+	ctrl = xml:InitStatic("form:picture",		self.form)
+	ctrl:SetWindowName("static_pict")
+	xml:InitStatic("form:picture_over",			self.form)
+	
+	--self.prof_description = xml:InitStatic	("form:prof_description",self)
+	self.prof_description = xml:InitList("form:prof_description", self)
+	self:Register(self.prof_description, "prof_description")
+	
+	ctrl = xml:Init3tButton("form:btn_cancel", 	self.form)
+	self:Register(ctrl, "btn_cancel")
+	ctrl = xml:Init3tButton("form:btn_start", self.form)
+	self:Register(ctrl,"btn_start")
+	
+	local _ver = xml:InitStatic		("static_version",self)
+	local mm						= main_menu.get_main_menu()
+	_ver:SetText					("ver. " .. mm:GetGSVer() .. " + " .. xiani.getFreeplayStartVersion())
+end
+
+function ui_mm_freeplay_wnd:InitCallBacks()
+	self:AddCallback("prof_list", ui_events.LIST_ITEM_CLICKED, self.OnProfileListItemClicked, self)
+	self:AddCallback("btn_start", ui_events.BUTTON_CLICKED, self.on_start, self)
+	self:AddCallback("btn_cancel", ui_events.BUTTON_CLICKED, self.on_cancel, self)
+end
+
+function ui_mm_freeplay_wnd:UpdateControls()
+	local opt = COptionsManager()
+	
+	opt:SetCurrentValues("mm_mp_client")
+	opt:SaveBackupValues("mm_mp_client")
+	
+	opt:SetCurrentValues("mm_opt_gameplay")
+	opt:SaveBackupValues("mm_opt_gameplay")
+	
+	if self.profile:GetSize() > 0 then
+		self.profile:SetFocusedItem(0)
+		local profile = self.profile:GetSelectedItem()
+		if (profile == nil or profile == -1) then profile = 0 end
+		self:setDesctiption(profile)
+	end
+end
+
+function ui_mm_freeplay_wnd:OnProfileListItemClicked()
+	self.profile:SetFocusedItem(self.profile:GetSelectedItem())
+	
+	-- вывести описание профиля
+	local profile_index = self.profile:GetSelectedItem()
+	xiani.xlog("profile_si:%s", tostring(profile_index))
+	if (profile == nil or profile == -1) then profile = 0 end
+	self:setDesctiption(profile_index)
+end
+
+function ui_mm_freeplay_wnd:setDesctiption(profile_index)
+	self.prof_description:RemoveAll()
+	
+	local desc = self.profile_description[profile_index]
+	
+	local prof = xiani.profiles[xiani.profiles_list[profile_index]]
+	xiani.xlog(prof.profile_section)
+	
+	local picture	= self:GetStatic("static_pict")
+	if (prof.icon) then
+		picture:InitTexture(prof.icon)
+	else
+		picture:InitTexture	("ui\\ui_noise")
+	end
+	
+	local k, v
+	for k,v in pairs(desc) do
+		self:AddItemToList(self.prof_description, v)
+	end
+end
+
+function ui_mm_freeplay_wnd:on_start()
+	local opt = COptionsManager()
+	local console = get_console()
+	
+	xiani.xlog("fs_wnd_on_start")
+	
+	-- local use_name_policy_check = self.use_name_policy_ctrl:GetCheck()
+	local use_name_policy = 1
+	-- if use_name_policy_check == true then
+	-- 	use_name_policy = 0 -- use random name
+	-- end
+	-- xiani.xlog("pol:" .. tostring(use_name_policy))
+	local char_name = self.player_name:GetText()
+	if char_name=='' then
+		char_name = 's.t.a.l.k.e.r' -- default name
+		use_name_policy = 0 -- use profile specified name: usualy random name
+	end
+	
+	profile_index = self.profile:GetSelectedItem()
+	if profile_index == -1 then profile_index = 0 end
+	--profile_index = profile_index+1
+	if (xiani_config.use_name_policy == 1) then
+		local profile = xiani.profiles[xiani.profiles_list[profile_index]]
+		if (profile ~= nil and profile.player_name ~= nil and profile.player_name ~= '' and profile.player_name ~= '#custom#') then
+			char_name = profile.player_name
+		end
+	end
+	-- char_name = char_name .. "_" .. (com_index+1)
+	-- self.player_name:SetText(char_name)
+	
+	-- save options
+	opt:SaveValues("mm_opt_gameplay")
+	opt:SaveValues("mm_mp_client")
+	opt:OptionsPostAccept()
+	
+	xiani.xlog("fs_wnd_on_start:savedOptions")
+	
+	-- local start_difficulty = self.game_difficulty:GetText()
+	local start_difficulty = self.game_difficulty:CurrentID()
+	xiani.xlog("fs_wnd_on_start:diff=" .. tostring(start_difficulty))
+	-- local start_difficulty = 0
+	-- 
+	-- console:execute("start server(freeplay/single/alife/new) client(localhost)")
+	-- console:execute("main_menu off")
+	
+	xiani.freeplay_start(char_name, use_name_policy, start_difficulty, profile_index, 1)
+	
+	self:GetHolder():start_stop_menu(self, true)
+end
+
+function ui_mm_freeplay_wnd:on_cancel()
+	local opt = COptionsManager()
+	
+	opt:UndoGroup("mm_mp_client")
+	opt:UndoGroup("mm_opt_gameplay")
+	
+	get_console():execute ("disconnect")
+	get_console():execute ("main_menu on")
+	
+	-- self:GetHolder():start_stop_menu (self.owner, true)
+	-- self:GetHolder():start_stop_menu (self,true)
+	-- self.owner:Show	(true)
+end
+
+function ui_mm_freeplay_wnd:OnKeyboard(dik, keyboard_action)
+	CUIScriptWnd.OnKeyboard(self,dik,keyboard_action)
+	if keyboard_action == ui_events.WINDOW_KEY_PRESSED then
+		if dik == DIK_keys.DIK_ESCAPE then
+			self:on_cancel()
+		end
+		if dik == DIK_keys.DIK_RETURN then
+			self:on_start()
+		end
+	end
+	return true
+end
+
+function ui_mm_freeplay_wnd:AddItemToList(list_box, text)
+	local _itm		= list_item()
+	_itm.fn:SetText	(text)
+	list_box:AddItem(_itm)
+end
+
+function ui_mm_freeplay_wnd:FillProfilesList()
+	local list_box = self.profile
+	local i, profile, item_title, desc, prof_sect
+	self.profile_description = {}
+	xiani.cache_profiles()
+	xiani.cache_communities()
+	
+	-- чтоб показывать развернутое количество патронов, подготовим информацию
+	-- кусок скрипта взят из dunin_ammo.script
+	local ammo = {}
+	local i, result, section, value
+	-- отсюда возьмём размеры полных пачек
+	local sys = system_ini()
+	-- список патронов возьмём из "death_generic.ltx"
+	local ini = ini_file("misc\\death_generic.ltx")
+	local n = ini:line_count("ammo_sections")
+	for i=0,n-1 do
+		result, section, value = ini:r_line("ammo_sections",i,"","")
+		ammo[section] = sys:r_u32(section, "box_size")
+	end
+	
+	local cap_format = "%s: "
+	local item_format = ' %s,'
+	local items_format = ' %s:%d,'
+	local profile
+	local profile_sect
+	i = 0
+	-- for prof_sect,profile in pairs(xiani.profiles) do
+	-- for prof_sect_k,prof_sect in pairs(xiani.profiles_list) do
+	for i=0, table.getn(xiani.profiles_list)-1 do
+		prof_sect = xiani.profiles_list[i]
+		profile = xiani.profiles[prof_sect]
+		-- перевести название профиля
+		item_title = game.translate_string(profile.profile_name)
+		-- если название не удалось перевести то использовать текст непереведенным
+		if (item_title == "" and profile.profile_name ~= "") then
+			item_title = profile.profile_name
+		end
+		-- xiani.xlog("AddItemToList(%s, '%s'):%s", i, tostring(item_title), tostring(profile.profile_section))
+		self:AddItemToList(list_box, item_title)
+		
+		-- создаем описание профиля
+		local desc = {}
+		local tdesc = ''
+		
+		--[[
+		-- section
+		-- tdesc = string.format(cap_format, 'p_section') .. profile.profile_section
+		tdesc = string.format(cap_format, 'p_section') .. profile.icon
+		table.insert(desc, tdesc)
+
+		-- имя игрока
+		if (profile.player_name ~= '#custom#') then
+			tdesc =  string.format(cap_format, game.translate_string('mm_mp_player_name'))
+			table.insert(desc, tdesc)
+			tdesc = profile.player_name
+			table.insert(desc, tdesc)
+		end
+		]]
+		-- группировка
+		tdesc = string.format(cap_format, game.translate_string('st_fs_community'))
+		table.insert(desc, tdesc)
+		tdesc = " "..game.translate_string(xiani.comm_by_section[profile.community].title)
+		table.insert(desc, tdesc)
+		
+		-- место старта
+		local sp = profile.spawn_point
+		-- xiani.xlog(sp.sp_name)
+		-- xiani.xlog(tostring(sp.x))
+		tdesc = string.format(cap_format, game.translate_string('st_fs_spawnpoint'))
+		table.insert(desc, tdesc)
+		tdesc = " "..game.translate_string(sp.sp_name)
+		table.insert(desc, tdesc)
+		
+		-- деньги
+		if profile.money ~= nil and profile.money > 0 then
+			tdesc = string.format(cap_format, game.translate_string('id_mp_money'))
+			table.insert(desc, tdesc)
+			tdesc = string.format(' %d', profile.money)
+			table.insert(desc, tdesc)
+		end
+		--tdesc = ''
+		--table.insert(desc, tdesc)
+		
+		-- вещи
+		if profile.inventory ~= nil then
+			tdesc = string.format(cap_format, game.translate_string('st_items'))
+			table.insert(desc, tdesc)
+			
+			for k,item in pairs(profile.inventory) do
+				local inv_name = system_ini():r_string(item.section,"inv_name")
+				if inv_name ~= nil then
+					if (ammo[item.section]) then
+						-- считаем что это патроны
+						local ammo_num = item.count * ammo[item.section]
+						tdesc = string.format(items_format, game.translate_string(inv_name), ammo_num)
+					else
+						-- обычный предмет
+						if (item.count > 1) then
+							tdesc = string.format(items_format, game.translate_string(inv_name), item.count)
+						else
+							tdesc = string.format(item_format, game.translate_string(inv_name), item.count)
+						end
+					end
+					table.insert(desc, tdesc)
+				end
+			end
+		end
+		--xiani.xlog(desc)
+		self.profile_description[i] = desc
+		-- i=i+1
+	end
+end

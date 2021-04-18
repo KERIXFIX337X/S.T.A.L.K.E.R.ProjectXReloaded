@@ -1,0 +1,15 @@
+function peredacha_x16 (player, stalker)
+	dialogs.relocate_item_section(stalker, "lab_x16_documents", "out")
+end
+
+function peredacha_x18 (player, stalker)
+	dialogs.relocate_item_section(stalker, "dar_document1", "out")
+end
+
+function proverka_doc_x18 (stalker, player)
+    return db.actor:object ("dar_document1") ~= nil
+end
+
+function proverka_doc_x16 (stalker, player)
+    return db.actor:object ("lab_x16_documents") ~= nil
+end

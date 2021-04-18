@@ -1,0 +1,3 @@
+function getFreeplayStartVersion()
+  return "Project X: Reloaded, based on Freeplay start 1.21 (mixed) [OPEN BETA RELEASE : v 0.09a]."
+end

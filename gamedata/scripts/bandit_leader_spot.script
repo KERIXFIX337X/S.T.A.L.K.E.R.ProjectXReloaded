@@ -1,0 +1,12 @@
+local obj = alife():story_object( 425 )
+local obj_id = obj.id
+function add_spot_on_map(obj_id,type,text)
+    if obj_id then
+        if not text then text = "no_text" end
+        level.map_add_object_spot_ser(obj_id, type, text)
+    end
+end
+
+function add_metka_commander(obj_id,type,text)
+	bandit_leader_spot.add_spot_on_map(obj.id,"commander_location","Пахан")
+end

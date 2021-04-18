@@ -1,0 +1,233 @@
+;---------------------------------------------------------------------------------------------
+;		КОСТЮМ БАНДИТА
+;---------------------------------------------------------------------------------------------
+[bandit_outfit]:outfit_base
+GroupControlSection	= spawn_group
+discovery_dependency = 
+$spawn 			= "outfit\bandit_outfit"
+;$prefetch 		= 32
+class			= E_STLK
+cform           = skeleton
+visual          = equipments\bandit_suit
+actor_visual	= actors\bandit\stalker_bandit_9.ogf
+
+ef_equipment_type	= 3
+
+inv_name			= bandit_outfit_name
+inv_name_short		= bandit_outfit_name
+description			= bandit_outfit_description
+inv_weight			= 3.0
+inv_grid_width     = 2
+inv_grid_height    = 2
+inv_grid_x         = 33
+inv_grid_y         = 31
+full_icon_name		= npc_icon_bandit_outfit
+
+cost				= 3000
+slot				= 6
+full_scale_icon		= 0,6			;иконка сталкера в костюме в полный рост
+
+immunities_sect			= sect_bandit_outfit_immunities
+
+; NO RESISTANCE
+burn_protection 				= 0.1
+strike_protection 				= 0.1
+shock_protection 				= 0.1
+wound_protection				= 0.15
+radiation_protection 			= 0.0
+telepatic_protection 			= 0.0
+chemical_burn_protection 		= 0.1
+explosion_protection 			= 0.1
+fire_wound_protection  			= 0.15
+
+bones_koeff_protection = kurtka_antigas_damage
+
+[sect_bandit_outfit_immunities]
+burn_immunity				= 0.04			;коэффициенты иммунитета самого костюма
+strike_immunity				= 0.01
+shock_immunity				= 0.04
+wound_immunity				= 0.025
+radiation_immunity			= 0.00
+telepatic_immunity			= 0.00
+chemical_burn_immunity		= 0.04
+explosion_immunity			= 0.04
+fire_wound_immunity			= 0.015
+
+
+;===========================================Veteran_bandit========================
+[bandit_veteran_outfit]:outfit_base
+GroupControlSection	= spawn_group
+discovery_dependency = 
+$spawn 			= "outfit\bandit_outfit"
+;$prefetch 		= 32
+class			= E_STLK
+cform           = skeleton
+visual          = equipments\bandit_suit
+actor_visual	= actors\bandit\stalker_bandit_veteran.ogf
+
+ef_equipment_type	= 3
+
+inv_name			= bandit_veteran_outfit_name
+inv_name_short		= bandit_veteran_outfit_name
+description			= bandit_veteran_outfit_description
+inv_weight			= 3
+inv_grid_width     = 2
+inv_grid_height    = 3
+inv_grid_x         = 37
+inv_grid_y         = 28
+full_icon_name		= npc_icon_bandit_veteran_outfit
+
+cost				= 5000
+slot				= 6
+full_scale_icon		= 0,6
+
+; NO RESISTANCE
+burn_protection 				= 0.2
+strike_protection 				= 0.15
+shock_protection 				= 0.2
+wound_protection				= 0.15
+radiation_protection 			= 0.0
+telepatic_protection 			= 0.0
+chemical_burn_protection 		= 0.2
+explosion_protection 			= 0.15
+fire_wound_protection  			= 0.15
+
+immunities_sect			= sect_bandit_veteran_outfit_immunities
+
+[sect_bandit_veteran_outfit_immunities]
+burn_immunity				= 0.04
+strike_immunity				= 0.01
+shock_immunity				= 0.04
+wound_immunity				= 0.025
+radiation_immunity			= 0.00
+telepatic_immunity			= 0.00
+chemical_burn_immunity		= 0.04
+explosion_immunity			= 0.04
+fire_wound_immunity			= 0.015
+
+[bandit_veteran_outfit_m1]:bandit_veteran_outfit
+visual          = equipments\outfit\brown_plash_m1
+actor_visual	= actors\bandit\bandit_engineer.ogf
+description			= bandit_veteran_outfit_description
+inv_grid_width     = 2
+inv_grid_height    = 3
+inv_grid_x         = 39
+inv_grid_y         = 28
+inv_weight			= 5
+radiation_protection 			= 0.7
+chemical_burn_protection 		= 0.5
+;=====================================Master_bandit===================================================
+[bandit_master_outfit]:bandit_outfit
+GroupControlSection	= spawn_group
+discovery_dependency = 
+$spawn 			= "outfit\bandit_outfit"
+;$prefetch 		= 32
+class			= E_STLK
+cform           = skeleton
+visual          = equipments\outfit\dark_plash
+actor_visual	= actors\bandit\stalker_bandit_master.ogf
+
+ef_equipment_type	= 3
+
+inv_name			= bandit_master_outfit_name
+inv_name_short		= bandit_master_outfit_name
+description			= bandit_master_outfit_description
+inv_weight			= 3.5
+inv_grid_width     = 2
+inv_grid_height    = 3
+inv_grid_x         = 33
+inv_grid_y         = 28
+full_icon_name		= npc_icon_bandit_master_outfit
+
+cost				= 7500
+slot				= 6
+full_scale_icon		= 0,6
+
+bleeding_restore_speed			= -0.004
+
+
+; NO RESISTANCE
+burn_protection 				= 0.2
+strike_protection 				= 0.2
+shock_protection 				= 0.2
+wound_protection				= 0.2
+radiation_protection 			= 0.0
+telepatic_protection			= 0.00
+chemical_burn_protection 		= 0.2
+explosion_protection 			= 0.2
+fire_wound_protection  			= 0.2
+
+[sect_bandit_master_outfit_immunities]
+burn_immunity				= 0.04
+strike_immunity				= 0.01
+shock_immunity				= 0.04
+wound_immunity				= 0.025
+radiation_immunity			= 0.00
+telepatic_immunity			= 0.00
+chemical_burn_immunity		= 0.04
+explosion_immunity			= 0.04
+fire_wound_immunity			= 0.015
+
+[bandit_master_outfit_m1]:bandit_master_outfit
+visual          = equipments\outfit\dark_plash_m1
+actor_visual	= actors\bandit\stalker_bandit_master_m1.ogf
+inv_weight			= 5
+description			= bandit_master_outfit_description
+inv_grid_width     = 2
+inv_grid_height    = 3
+inv_grid_x         = 35
+inv_grid_y         = 28
+burn_protection 				= 0.3
+strike_protection 				= 0.3
+shock_protection 				= 0.3
+wound_protection				= 0.3
+chemical_burn_protection 		= 0.3
+explosion_protection 			= 0.35
+fire_wound_protection  			= 0.4
+;---------------------------------------------------------------------------------------------
+;		ЭКЗОСКЕЛЕТ БАНДИТА
+;---------------------------------------------------------------------------------------------
+[bandit_exo_outfit]:exo_outfit
+visual          = equipments\outfit\bandit_exo_suit
+actor_visual	= actors\bandit\bandit_exo.ogf
+
+inv_name			= bandit_exo_outfit_name
+inv_name_short		= bandit_exo_outfit_name
+description			= bandit_exo_outfit_description
+inv_weight			= 10.0
+inv_grid_width     = 2
+inv_grid_height    = 3
+inv_grid_x         = 27
+inv_grid_y         = 34
+full_icon_name		= npc_icon_bandit_exo_outfit
+nightvision_sect	= effector_nightvision_bad
+
+cost				= 35000
+
+immunities_sect			= sect_bandit_exo_outfit_immunities
+
+burn_protection 				= 0.45
+strike_protection 				= 0.8
+shock_protection 				= -0.2
+wound_protection				= 0.7
+radiation_protection 			= 0.75
+telepatic_protection 			= 0.0
+chemical_burn_protection 		= 0.45
+explosion_protection 			= 0.7
+fire_wound_protection  			= 0.55
+
+sprint_allowed					= true
+bones_koeff_protection			= exo_helmet_damage
+additional_inventory_weight		= 20
+additional_inventory_weight2	= 20 
+
+[sect_bandit_exo_outfit_immunities]
+burn_immunity				= 0.03	
+strike_immunity				= 0.01
+shock_immunity				= 0.05
+wound_immunity				= 0.01
+radiation_immunity			= 0.00
+telepatic_immunity			= 0.00
+chemical_burn_immunity		= 0.03
+explosion_immunity			= 0.03
+fire_wound_immunity			= 0.005

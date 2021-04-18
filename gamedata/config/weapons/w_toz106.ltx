@@ -1,0 +1,188 @@
+[wpn_toz106]:identity_immunities
+GroupControlSection		= spawn_group
+discovery_dependency	= 
+$spawn              	= "weapons\ak-74u"
+$npc					= on
+$prefetch 				= 8
+scheduled				= off 
+cform               	= skeleton
+class               	= WP_LR300
+min_radius          	= 30
+max_radius          	= 100
+description				= enc_weapons1_wpn_toz106
+	
+ef_main_weapon_type		= 2
+ef_weapon_type			= 6
+
+holder_range_modifier	= 1.0
+holder_fov_modifier		= 0.7
+
+cost					= 3000
+weapon_class			= assault_rifle
+	
+ammo_limit				= 210
+ammo_elapsed			= 30
+	
+ammo_mag_size			= 4
+fire_modes				= 1
+
+ammo_class				= ammo_20x70_buckshot
+
+hand_dependence			= 1
+single_handed			= 0
+	
+slot 					= 2
+animation_slot			= 2
+
+inv_name	        	= wpn-toz106
+inv_name_short			= wpn-toz106	
+inv_weight			= 3.2
+
+inv_grid_width     = 4
+inv_grid_height    = 1
+inv_grid_x         = 4
+inv_grid_y         = 36
+
+kill_msg_x			= 0
+kill_msg_y			= 123
+kill_msg_width		= 69
+kill_msg_height		= 30
+
+fire_dispersion_base			= 0.35
+control_inertion_factor			= 1.8f
+
+cam_relax_speed         		= 6
+cam_dispersion          		= 0.3
+cam_dispersion_inc			= 0.20
+cam_dispertion_frac			= 0.9
+cam_max_angle				= 9.0
+cam_max_angle_horz			= 30.0
+cam_step_angle_horz			= 1.25
+
+fire_dispersion_condition_factor 	= 5
+misfire_probability 		= 0.003
+misfire_condition_k			= 0.05
+condition_shot_dec 			= 0.0001
+
+fire_point             		=  0.0, 0.262, 0.447
+
+flame_particles				= weapons\generic_shoot_00
+smoke_particles				= weapons\generic_shoot_00
+grenade_flame_particles		= weapons\generic_weapon01
+	
+shell_point		 			= 0.00, 0.262, 0.189
+shell_particles	 			= 
+
+PDM_disp_base 				= 1.0
+PDM_disp_vel_factor 			= 0.95
+PDM_disp_accel_factor 			= 0.95
+PDM_crouch	 			= 1.0
+PDM_crouch_no_acc 			= 1.0
+
+hit_power               = 0.95
+hit_impulse		 		= 200
+hit_type 				= fire_wound
+
+fire_distance            		= 100
+bullet_speed				= 790
+rpm                      		= 40
+
+use_aim_bullet				= true
+time_to_aim					= 1.0	
+
+silencer_hit_power       		= 0.32
+silencer_hit_impulse	 		= 120
+silencer_fire_distance   		= 250
+silencer_bullet_speed	 		= 600
+
+hud                      	= wpn_toz106_hud
+
+position         	        = -0.030,-0.215,0
+orientation      	        = 0,0,0
+
+strap_position         		= -0.18,-0.45,0.2
+strap_orientation      		= -10,-5,10
+strap_bone0					= bip01_spine2
+strap_bone1					= bip01_spine1
+
+visual         		        = weapons\toz106\wpn_toz106.ogf
+
+light_color					= 0.6,0.5,0.3
+light_range					= 5
+light_var_color				= 0.05						
+light_var_range				= 0.5
+light_time 					= 0.2						
+
+ph_mass						= 5
+
+scope_status				= 0
+silencer_status				= 0
+grenade_launcher_status		= 0
+
+zoom_enabled				= true
+scope_zoom_factor	    	= 65
+
+silencer_name  			= wpn_addon_silencer
+silencer_x 				= 168
+silencer_y 				= -3					
+
+snd_shoot1					= weapons\toz106\shoot
+snd_shoot2					= weapons\toz106\shoot
+snd_shoot3					= weapons\toz106\shoot
+snd_empty					= weapons\ak_74u\empty
+snd_shoot		            = weapons\toz106\shoot
+snd_draw		            = weapons\toz106\draw
+snd_holster		            = weapons\toz106\hide
+snd_reload		            = weapons\toz106\reload_empty
+snd_shoot_grenade			= weapons\gen_grenshoot
+snd_reload_grenade			= weapons\gen_grenload 
+snd_switch					= weapons\groza_switch 
+
+silencer_smoke_particles 	= weapons\generic_shoot_00
+
+snd_silncer_shot			= weapons\silshot\762mm-1 
+
+silencer_light_color		= 0.6,0.5,0.3
+silencer_light_range		= 0.01
+silencer_light_var_color	= 0.05
+silencer_light_var_range	= 0.5
+silencer_light_time 		= 0.2
+
+[wpn_toz106_hud]
+shell_point          		= 0.0,0.0,0.0
+shell_dir			 		= 0.0,0.0,0.0
+fire_point               	= 0.0,0.0,0.0
+fire_bone                	= muzzle
+orientation              	= 3,1.5,6
+position                 	= -0.01, 0.01, -0.1
+visual                  	= weapons\toz106\wpn_toz106_hud.ogf
+
+anim_idle					= idle
+anim_idle_aim				= idle
+anim_reload					= reload_empty
+anim_reload_jammed			= reload_empty
+anim_draw					= draw
+anim_holster				= holster
+anim_shoot					= shoot
+anim_idle_sprint			= idle_sprint
+anim_idle_moving		    = idle_moving
+
+zoom_offset					= -0.0632,0.025,0.0
+zoom_rotate_x				= 0.01
+zoom_rotate_y				= 0.051
+
+[wpn_toz106_short]:wpn_toz106         ;ТОЗ 106 с ёмкостью магазина на 2пт.
+inv_grid_width     = 4
+inv_grid_height    = 1
+inv_grid_x         = 0
+inv_grid_y         = 36
+inv_weight			= 2.1
+ammo_mag_size			= 2
+cost					= 2000
+control_inertion_factor			= 1.0f
+hit_power               = 0.90
+visual         		        = weapons\toz106\wpn_toz106_short.ogf
+hud                      	= wpn_toz106_short_hud
+[wpn_toz106_short_hud]:wpn_toz106_hud
+fire_point               	= 0.0,0.0,-0.2
+visual                  	= weapons\toz106\wpn_toz106_short_hud.ogf

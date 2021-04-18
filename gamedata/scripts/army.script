@@ -1,0 +1,119 @@
+function proverka_army(actor,npc)
+   return has_alife_info("actor_military")
+end
+
+function proverka_doc_x18 (stalker, player)
+        return db.actor:object ("dar_document1") ~= nil
+end
+
+function proverka_doc_x16 (stalker, player)
+        return db.actor:object ("lab_x16_documents") ~= nil
+end
+
+function proverka_double(first_speaker, second_speaker)
+	local item_sections = {
+		["dar_document1"] = 1, 
+		["lab_x16_documents"] = 1}
+ 
+	local function calc(temp, item)
+		local sect = item:section()
+		if item_sections[sect] and item_sections[sect]>0 then
+			if item_sections[sect]==1 then
+				item_sections[sect] = nil
+			else
+				item_sections[sect] = item_sections[sect] - 1
+			end
+		end
+	end
+ 
+	db.actor:iterate_inventory(calc, db.actor)
+	return next(item_sections)==nil
+end 
+
+function task_fail()
+	if has_alife_info("esc_commander_die")
+	then
+		return true
+	else
+		return false
+	end
+end
+
+--function peredacha_x16 (player, stalker)
+--dialogs.relocate_item_section(stalker, "lab_x16_documents", "out")
+--end
+
+--function peredacha_x18 (player, stalker)
+--dialogs.relocate_item_section(stalker, "dar_document1", "out")
+--end
+
+function peredacha_x16(ss)
+    dialogs.relocate_item_section(ss, "lab_x16_documents", "out")
+end
+
+function peredacha_x18(ss)
+    dialogs.relocate_item_section(ss, "dar_document1", "out")
+end
+
+function nagrada(first_speaker, second_speaker)
+	dialogs.relocate_item_section(second_speaker, "military_outfit", "in")
+    dialogs.relocate_item_section(second_speaker, "wpn_svd_m1", "in")
+	dialogs.relocate_item_section(second_speaker, "ammo_7.62x54_7h1", "in")
+	dialogs.relocate_item_section(second_speaker, "ammo_7.62x54_7h1", "in")
+	dialogs.relocate_item_section(second_speaker, "ammo_7.62x54_7h1", "in")
+	dialogs.relocate_item_section(second_speaker, "ammo_7.62x54_7h1", "in")
+	dialogs.relocate_item_section(second_speaker, "ammo_7.62x54_7h1", "in")
+	dialogs.relocate_item_section(second_speaker, "medkit_army", "in")
+	dialogs.relocate_item_section(second_speaker, "medkit_army", "in")
+	dialogs.relocate_item_section(second_speaker, "medkit_army", "in")
+end
+
+function reputation(stalker, player)
+    db.actor:change_character_reputation(db.actor:character_reputation()+50)
+end
+
+local obj = alife():story_object( 093 )
+local obj_id = obj.id
+function add_spot_on_map(obj_id,type,text)
+    if obj_id then
+        if not text then text = "no_text" end
+        level.map_add_object_spot_ser(obj_id, type, text)
+    end
+end
+
+function add_metka_commander(obj_id,type,text)
+    army.add_spot_on_map(obj.id,"commander_location","Командир блокпоста")
+end
+
+function close_trader()
+     local sim = alife()
+       local se_obj = sim:story_object(003)  --номер обьекта в game_stori_ids
+       if se_obj then
+       sim:release(se_obj, true)
+    end
+end
+
+function close_barman()
+     local sim = alife()
+       local se_obj = sim:story_object(500)  --номер обьекта в game_stori_ids
+       if se_obj then
+       sim:release(se_obj, true)
+    end
+end
+
+local text = "raid_soldier_message"
+function raid_message()
+    news_manager.send_tip(db.actor, text, 0, "trader", 20000)
+end
+
+function money_reward(first_speaker, second_speaker)
+    dialogs.relocate_money(first_speaker, 10000, "in")
+end
+
+function money_reward_med(first_speaker, second_speaker)
+    dialogs.relocate_money(first_speaker, 15000, "in")
+end
+
+function money_ecolog(first_speaker, second_speaker)
+    dialogs.relocate_money(first_speaker, 30000, "in")
+end

@@ -1,0 +1,637 @@
+function printf(fmt, ...) 
+--	dbglog(string.format(fmt, ...)) 
+end
+
+-- запас для учёта аномалий, близких к границам ячейки
+local cell_extra = 5
+
+-- размер ячейки
+local cell_size = 75
+
+-- с запасом для пересчёта рестрикторов
+-- local rescan_distance = 15
+local rescan_distance = 25
+local rescan_distance_sqr = (rescan_distance - 2)*(rescan_distance - 2)
+
+-- ограничитель числа включенных рестрикторов (для скорости и против вылетов)
+local max_restr_count = 20
+
+-- заглушка для упрощения обработки ячеек без аномалий
+local stub_cell = { zones = {}, gen = 0 }
+
+-- nil - нету зоны
+-- false - размеры зарегистрированы, но нужно обновить gen
+-- true - полностью зарегистрирована
+known_zones = {}
+
+local cells = {}
+local bounding_box
+local row_count, col_count
+
+-- для радиусов аномалий из артефактов
+local artefact_spawn_zones = {}
+
+function initialize()
+	bounding_box = level.get_bounding_volume()
+	col_count = math.floor((bounding_box.max.x - bounding_box.min.x + cell_size - 1)/cell_size)
+	row_count = math.floor((bounding_box.max.z - bounding_box.min.z + cell_size - 1)/cell_size)
+	printf("zone_mgr.initialize: row_count=%d col_count=%d", row_count, col_count)
+
+	local i
+	local ini = system_ini()
+	for i = 0,ini:line_count("artefact_spawn_zones")-1 do
+		local result, name, value = ini:r_line("artefact_spawn_zones", i, "", "")
+		local at, to, section, radius, power =
+			string.find(value, "^([%w_]+)%s*,%s*([%d%.]+)%s*,%s*([%d%.]+)$")
+		if section == nil or radius == nil or power == nil then
+			abort("can't parse parameter '%s' in [artefact_spawn_zones]", name)
+		end
+--		printf("ASZ: section='%s' radius=%f", section, radius)
+		artefact_spawn_zones[section] = radius
+	end
+end
+
+function xz_to_cell_id(x, z)
+	local col = math.floor((x - bounding_box.min.x)/cell_size)
+	local row = math.floor((z - bounding_box.min.z)/cell_size)
+	return row_count * col + row
+end
+
+function vector_to_cell_id(v)
+	return xz_to_cell_id(v.x, v.z)
+end
+
+function get_cell(cell_id)
+	local cell = cells[cell_id]
+	if cell == nil then
+		cells[cell_id] = { zones = {}, gen = 0 }
+		cell = cells[cell_id]
+	end
+	return cell
+end
+
+local function cell_difference(cell_id1, cell_id2)
+	local d = math.abs(cell_id1 - cell_id2)
+	if d <= 1 then
+		return d
+	elseif d >= row_count and d <= row_count + 1 then
+		return d - row_count
+	else
+		return 2
+	end
+end
+
+-- не нужна
+function cell_bounding_box(cell_id)
+	local x = bounding_box.min.x + math.floor(cell_id / row_count)
+	local z = bounding_box.min.z + math.floor(cell_id % row_count)
+	local min, max = vector(), vector()
+	min:set(x - cell_extra, bounding_box.min.y, z - cell_extra)
+	max:set(x + cell_size + cell_extra, bounding_box.max.y, z + cell_size + cell_extra)
+	return min, max
+end
+
+local function insert_zone(zones, id)
+	local i
+	for i = 1,table.getn(zones) do
+		if id < zones[i] then
+			table.insert(zones, i, id)
+			return
+		elseif id == zones[i] then
+			return
+		end
+	end
+	table.insert(zones, id)
+end
+
+local function __register_zone(id, cell, min_cell_id, max_cell_id, now)
+	if now then
+		known_zones[id] = true
+		cell.gen = cell.gen + 1
+	else
+		known_zones[id] = false
+	end
+	insert_zone(cell.zones, id)
+	if min_cell_id < max_cell_id then
+		insert_zone(get_cell(min_cell_id + 1).zones, id)
+		if min_cell_id + 1 < max_cell_id then
+			insert_zone(get_cell(max_cell_id - 1).zones, id)
+			insert_zone(get_cell(max_cell_id).zones, id)
+		end
+	elseif min_cell_id + 1 < max_cell_id then
+		insert_zoned(get_cell(max_cell_id).zones, id)
+	end
+end
+
+local function replace_artefact_spawned_zone(se_obj)
+	local radius = artefact_spawn_zones[se_obj:section_name()]
+	if radius == nil then
+		abort("'%s' looks like an artefact spawned zone, but has no entry", se_obj:name())
+	end
+	printf("creating replacement zone at pos=(%f,%f,%f)",
+			se_obj.position.x, se_obj.position.y, se_obj.position.z)
+	local top_lvid, top_gvid = utils2.get_top_graph_ids()
+	local se_obj2 = alife():create(se_obj:section_name(), se_obj.position, top_lvid, top_gvid)
+	fixup_cse_anomalous_zone(se_obj2, radius, db.actor:id())
+	preregister_zone(se_obj2, radius)
+	local time_out = 120
+	if string.find(se_obj:name(),"caps_mine_field") then
+		time_out = 8640
+	end
+	utils2.deferred_release(se_obj2.id, time_out)
+	utils2.deferred_release(se_obj.id)
+end
+
+function register_zone_from_packet(se_obj, packet, size)
+	if bounding_box == nil or se_obj.id == 65535 then
+		-- рано ещё
+		return
+	end
+	local cell = get_cell(vector_to_cell_id(se_obj.position))
+	local registered = known_zones[se_obj.id]
+	if registered == true then
+		return
+	elseif registered == false then
+		cell.gen = cell.gen + 1
+		known_zones[se_obj.id] = true
+	end
+
+	-- если имя совпадает с секцией, то это аномалия из артефакта (на 1.0004)
+	if se_obj:section_name() == se_obj:name() then
+		replace_artefact_spawned_zone(se_obj)
+		return
+	end
+
+	local min, max = vector(), vector()
+	min:set(bounding_box.max)
+	max:set(bounding_box.min)
+
+	local offset = packet:r_tell()
+	packet:r_advance(18)
+	packet:r_stringZ()
+	packet:r_advance(8)
+	local center = vector()
+	local i, mask, radius
+	for i = 1,packet:r_u8() do
+		if packet:r_u8() == 0 then
+			packet:r_vec3(center)
+			radius = packet:r_float()
+			center:add(se_obj.position)
+			max.x = math.max(max.x, center.x + radius)
+			min.x = math.min(min.x, center.x - radius)
+			max.z = math.max(max.z, center.z + radius)
+			min.z = math.min(min.z, center.z - radius)
+		else
+            		local axis0, axis1, axis2, temp = vector(), vector(), vector(), vector()
+            		packet:r_vec3(axis0)
+            		packet:r_vec3(axis1)
+            		packet:r_vec3(axis2)
+            		packet:r_vec3(center)
+            		center:add(se_obj.position)
+            		axis0:mul(0.5)
+            		axis1:mul(0.5)
+            		axis2:mul(0.5)
+            		-- положительное направление
+            		temp:add(center, axis0)
+            		temp:add(axis1)
+            		temp:add(axis2)
+            		max:max(temp)
+            		-- отрицательное направление
+            		temp:sub(center, axis0)
+            		temp:sub(axis1)
+            		temp:sub(axis2)
+            		min:min(temp)
+--[[
+			local temp, axis0, axis1, axis2 = vector(), vector(), vector(), vector()
+			packet:r_vec3(axis0)
+			packet:r_vec3(axis1)
+			packet:r_vec3(axis2)
+			packet:r_vec3(center)
+			center:add(se_obj.position)
+			-- непрямоугольных параллелепипедов вроде нет, но мало ли
+			for mask = 0,7 do
+				temp:set(center)
+				if bit_and(mask, 1) then temp:add(axis0) end
+				if bit_and(mask, 2) then temp:add(axis1) end
+				if bit_and(mask, 4) then temp:add(axis2) end
+				min:min(temp)
+				max:max(temp)
+			end
+]]
+		end
+	end
+	local restrictor_type = packet:r_u8()
+	packet:r_seek(offset)
+	if restrictor_type == 2 then
+		printf("register_zone_from_packet(%s/%d): autorestricted", se_obj:name(), se_obj.id)
+		known_zones[se_obj.id] = true
+		return
+	end
+
+	local min_cell_id = xz_to_cell_id(min.x - cell_extra, min.z - cell_extra)
+	local max_cell_id = xz_to_cell_id(max.x + cell_extra, max.z + cell_extra)
+
+	if cell_difference(min_cell_id, max_cell_id) <= 1 then
+		__register_zone(se_obj.id, cell, min_cell_id, max_cell_id, true)
+--		printf("register_zone_from_packet(%s/%d): min=(%f,%f) max=(%f,%f) cell_id=%d registered",
+--				se_obj:name(), se_obj.id, min.x, min.z, max.x, max.z, vector_to_cell_id(se_obj.position))
+	else
+		-- аномалия слишком большая, игнорируем её
+		printf("register_zone_from_packet(%s/%d): min=(%f,%f) max=(%f,%f) ignored",
+				se_obj:name(), se_obj.id, min.x, min.z, max.x, max.z)
+	end
+end
+
+function preregister_zone(se_obj, radius)
+	local cell = get_cell(vector_to_cell_id(se_obj.position))
+	if known_zones[se_obj.id] ~= nil then
+		abort("preregister_zone(%s/%d): already known", se_obj:name(), se_obj.id)
+	end
+
+	local min_cell_id = xz_to_cell_id(se_obj.position.x - radius - cell_extra,
+			se_obj.position.z - radius - cell_extra)
+	local max_cell_id = xz_to_cell_id(se_obj.position.x + radius + cell_extra,
+			se_obj.position.z + radius + cell_extra)
+
+	if cell_difference(min_cell_id, max_cell_id) <= 1 then
+		__register_zone(se_obj.id, cell, min_cell_id, max_cell_id, false)
+		printf("preregister(%s/%d): cell_id=%d",
+				se_obj:name(), se_obj.id, vector_to_cell_id(se_obj.position))
+	else
+		-- аномалия слишком большая, игнорируем её
+		printf("register_zone_from_packet(%s/%d): min=(%f,%f) max=(%f,%f) ignored",
+				se_obj:name(), se_obj.id, min.x, min.z, max.x, max.z)
+	end
+end
+
+function unregister_zone(se_obj)
+	if db.actor == nil then
+		-- либо слишком рано, либо слишком поздно
+		return
+	end
+	if known_zones[se_obj.id] == nil then
+		if se_obj:section_name() == se_obj:name() then
+			printf("unregister_zone(%s/%d): artefact spawned", se_obj:name(), se_obj.id)
+			return
+		else
+			abort("unregister_zone(%s/%d): never registered", se_obj:name(), se_obj.id)
+		end
+	end
+	known_zones[se_obj.id] = nil
+
+	local cell_id = vector_to_cell_id(se_obj.position)
+	local i,j,k
+	-- лесенка, блин
+	for i = -1,1 do
+		for j = -1,1 do
+			local cell = cells[cell_id + i + j*row_count]
+			if cell ~= nil then
+				for k = 1,table.getn(cell.zones) do
+					if cell.zones[k] == se_obj.id then
+						table.remove(cell.zones, k)
+						cell.gen = cell.gen + 1
+						break
+					end
+				end
+			end
+		end
+	end
+local pt = profile_timer()
+pt:start()
+	-- надёжности ради проверяем всех
+	local name = se_obj:name()
+	local st
+	if db.creature ~= nil then
+		for i,k in pairs(db.creature) do
+			st = db.storage[i]
+			if st ~= nil and st.zone_mgr ~= nil and
+			   table.getn(st.zone_mgr.near_zones) ~= 0 then
+				st.zone_mgr.object:remove_restrictions("", name)
+			end
+		end
+	end
+pt:stop()
+printf("unregister_zone(%s/%d): time=%.2fms", se_obj:name(), se_obj.id, pt:time()*0.001)
+end
+
+function fixup_cse_anomalous_zone(se_obj, radius, owner_id)
+	local packet1 = utils2.packet_pool_get()
+	local packet2 = utils2.packet_pool_get()
+	cse_anomalous_zone.STATE_Write(se_obj, packet1)
+	utils2.packet_copy(packet2, packet1, 18)
+	packet2:w_stringZ(packet1:r_stringZ())
+	utils2.packet_copy(packet2, packet1, 8)
+	local shape_count = packet1:r_u8()
+	if shape_count == 0 then
+--		printf("fixup id=%d radius=%f", se_obj.id, radius)
+		packet2:w_u8(1)
+		packet2:w_u8(0)
+		packet2:w_float(0)
+		packet2:w_float(0)
+		packet2:w_float(0)
+		packet2:w_float(radius)
+
+		packet1:r_u8()
+		packet2:w_u8(0)
+
+		if owner_id ~= nil then
+			packet2:w_float(packet1:r_float())
+			packet1:r_s32()
+			packet2:w_s32(owner_id)
+		end
+	else
+		packet2:w_u8(shape_count)
+	end
+	utils2.packet_copy(packet2, packet1, packet1:w_tell() - packet1:r_tell())
+	cse_anomalous_zone.STATE_Read(se_obj, packet2)
+	utils2.packet_pool_put(packet1)
+	utils2.packet_pool_put(packet2)
+end
+
+class "zone_mgr"
+function zone_mgr:__init(npc)
+	self.object = npc
+	self.is_stalker = IsStalker(npc)
+	self:reset()
+end
+
+function zone_mgr:reset()
+	self.near_zones = {}
+	self.last_pos = self.object:position()
+	self.last_cell_gen = -1
+	self.last_cell_id = -1
+	self.cached_true = false
+end
+
+-- Пересчёт нужен если отошли достаточно далеко от точки предыдущего
+-- пересчёта либо если изменилась ячейка/её поколение.
+function zone_mgr:need_rescan_near_zones()
+	-- на время отладки для предотвращения забивания лога.
+	-- впрочем, за оптимизацию тоже сойдёт.
+	if self.cached_true == true then
+		return true
+	end
+	local pos = self.object:position()
+	if self.last_pos:distance_to_sqr(pos) >= rescan_distance_sqr then
+		printf("[%s]->need_rescan: last_pos=(%f,%f,%f) pos=(%f,%f,%f) dist=%f", self.object:name(),
+			self.last_pos.x, self.last_pos.y, self.last_pos.z, pos.x, pos.y, pos.z, self.last_pos:distance_to(pos))
+		self.cached_true = true
+		return true
+	end
+	local cell_id = vector_to_cell_id(pos)
+	if cell_id ~= self.last_cell_id then
+		printf("[%s]->need_rescan: new cell id=%d old=%d", self.object:name(), cell_id, self.last_cell_id)
+		self.cached_true = true
+		return true
+	end
+	local cell = cells[cell_id] or stub_cell
+	if cell.gen ~= self.last_cell_gen then
+		printf("[%s]->need_rescan: new cell gen=%d old=%d", self.object:name(), cell.gen, self.last_cell_gen)
+		self.cached_true = true
+		return true
+	end
+	return false
+end
+
+function zone_mgr:rescan_near_zones()
+local pt = profile_timer()
+pt:start()
+	printf("[%s]->rescan: cell_id=%d", self.object:name(), vector_to_cell_id(self.object:position()))
+	local pos = self.object:position()
+	local cell_id = vector_to_cell_id(pos)
+	local cell = cells[cell_id] or stub_cell
+
+	local path = nil
+	if self.is_stalker then
+		path = self.object:patrol()
+		-- перестраховка
+		if path == nil then
+			abort("[%s]->rescan: nil patrol path", self.object:name())
+		end
+		if path == "" then
+			path = nil
+		else
+			path = patrol(path)
+		end
+	end
+
+	local remove_zones, add_zones = {}, {}
+	local new_near_zones = {}
+
+	local zone
+	local i, n = 1, table.getn(self.near_zones)
+	local j, new_n = 1, table.getn(cell.zones)
+printf("[%s]->rescan: n=%d new_n=%d", self.object:name(), n, new_n)
+	local id, new_id
+	while i <= n or j <= new_n do
+printf("[%s]->rescan: i=%d j=%d", self.object:name(), i, j)
+		id = self.near_zones[i] or 65535
+		new_id = cell.zones[j] or 65535
+printf("[%s]->rescan: id=%d new_id=%d", self.object:name(), id, new_id)
+		if id == new_id then
+			i = i + 1
+			j = j + 1
+			zone = level.object_by_id(id)
+if zone ~= nil then
+	printf("[%s]->rescan: same zone[%s]", self.object:name(), zone:name())
+else
+	printf("[%s]->rescan: same zone id=%d nil", self.object:name(), new_id)
+end
+			if zone ~= nil then
+				if zone:inside(pos, rescan_distance) == true then
+					table.insert(new_near_zones, id)
+				else
+					table.insert(remove_zones, zone:name())
+				end
+			end
+		elseif id < new_id then
+			zone = level.object_by_id(id)
+if zone ~= nil then
+	printf("[%s]->rescan: remove zone[%s]", self.object:name(), zone:name())
+else
+	printf("[%s]->rescan: remove zone id=%d nil", self.object:name(), id)
+end
+			if zone ~= nil then
+				table.insert(remove_zones, zone:name())
+			end
+			i = i + 1
+		else
+			zone = level.object_by_id(new_id)
+if zone ~= nil then
+	printf("[%s]->rescan: add zone[%s] dist=%f near=%s", self.object:name(), zone:name(),
+			pos:distance_to(zone:position()), tostring(zone:inside(pos, rescan_distance)))
+else
+	printf("[%s]->rescan: add zone id=%d nil", self.object:name(), new_id)
+end
+			if zone ~= nil and zone:inside(pos, rescan_distance) and
+			   (path == nil or self:safe_zone(zone, path)) then
+				table.insert(add_zones, zone:name())
+				table.insert(new_near_zones, new_id)
+			end
+			j = j + 1
+		end
+	end
+
+	if table.getn(remove_zones) ~= 0 or table.getn(add_zones) ~= 0 then
+		printf("[%s]->rescan: was=%s", self.object:name(), self.object:base_in_restrictions())
+	end
+	if table.getn(remove_zones) ~= 0 then
+		printf("[%s]->rescan: rem:%s", self.object:name(), table.concat(remove_zones, ","))
+		self.object:remove_restrictions("", table.concat(remove_zones, ","))
+		printf("[%s]->rescan: nw1:%s", self.object:name(), self.object:base_in_restrictions())
+	end
+	if table.getn(add_zones) ~= 0 then
+		printf("[%s]->rescan: add:%s", self.object:name(), table.concat(add_zones, ","))
+		self.object:add_restrictions("", table.concat(add_zones, ","))
+		printf("[%s]->rescan: nw2:%s", self.object:name(), self.object:base_in_restrictions())
+	end
+
+	self.near_zones = new_near_zones
+	self.last_pos:set(pos)
+	self.last_cell_gen = cell.gen
+	self.last_cell_id = cell_id
+	self.cached_true = false
+pt:stop()
+printf("[%s]->rescan: time=%.2fms", self.object:name(), pt:time()*0.001)
+end
+
+-- Не перекрывает ли зона какую-нибудь опорную точку пути?
+-- По идее, можно ослабить требования:
+--  1) Разрешать перекрытие точек без флагов, ходить по ePathTypeLevelPath
+--     и забить на потерю callback.patrol_path_in_point в них.
+--  2) Разрешать перекрытие уже пройденных точек.
+function zone_mgr:safe_zone(zone, path)
+--	printf("[%s]->safe_zone(%s): enter", self.object:name(), zone:name())
+	local i, pos
+	for i = 0,path:count()-1 do
+		pos = path:point(i)
+		if zone:inside(pos) then
+			printf("[%s]->safe_zone: zone[%s] denies path[%s:%s]",
+					self.object:name(), zone:name(), self.object:patrol(), path:name(i))
+			return false
+		end
+	end
+--	printf("[%s]->safe_zone(%s): leave", self.object:name(), zone:name())
+	return true
+end
+
+function zone_mgr:neutralize_unsafe_zones(path)
+--	printf("[%s]->neutralize: enter", self.object:name())
+	local i,k,v,zone
+	local remove_zones = {}
+	for k,v in pairs(self.near_zones) do
+		zone = level.object_by_id(v)
+		if zone ~= nil then
+			for i = 0,path:count()-1 do
+				if zone:inside(path:point(i)) then
+					table.insert(remove_zones, zone:name())
+				end
+			end
+		end
+	end
+	if table.getn(remove_zones) ~= 0 then
+		printf("[%s]->neutralize_unsafe_zones: remove=%s", self.object:name(), table.concat(remove_zones, ","))
+		self.object:remove_restrictions("", table.concat(remove_zones, ","))
+	end
+--	printf("[%s]->neutralize: leave", self.object:name())
+end
+
+function zone_mgr:debug_denied()
+--	printf("[%s]->debug_denied: enter", self.object:name())
+	local pos = self.object:position()
+	local k,v,zone
+	for k,v in pairs(self.near_zones) do
+		zone = level.object_by_id(v)
+		if zone ~= nil and zone:inside(pos) then
+			printf("[%s]->debug_denied: INSIDE zone[%s] accessible=%s dist=%f",
+					self.object:name(), zone:name(), tostring(self.object:accessible(pos)),
+					pos:distance_to(zone:position()))
+		end
+	end
+--	printf("[%s]->debug_denied: leave", self.object:name())
+end
+
+function dump_cells()
+	local i
+	for i=0,row_count*col_count-1 do
+		printf("cell_id=%d", i)
+		local cell = cells[i]
+		if cell ~= nil then
+			local a,b
+			for a,b in ipairs(cell.zones) do
+				printf("....id=%d", b)
+			end
+		end
+	end
+end
+
+local zone_clsids = {
+	[clsid.zone_mbald_s]		= true,
+	[clsid.zone_acid_fog]		= true,
+--	[clsid.zone_bfuzz]			= true,
+--	[clsid.zone_bfuzz_s]		= true,
+	[clsid.zone_dead]			= true,
+	[clsid.zone_galant_s]		= true,
+	[clsid.zone_galantine]		= true,
+	[clsid.zone_mbald_s]		= true,
+	[clsid.zone_mincer]			= true,
+	[clsid.zone_mincer_s]		= true,
+--	[clsid.zone_mosquito_bald]	= true,
+--	[clsid.zone_radioactive]	= true,
+--	[clsid.zone_rusty_hair]		= true,
+--	[clsid.nogravity_zone]		= true,
+--	[clsid.ameba_zone]			= true,
+--	[clsid.torrid_zone]			= true,
+}
+function dump_on_map()
+	local i, id, se_obj
+	local packet = net_packet()
+	local ini = system_ini()
+	for id=1,65535 do
+		se_obj = alife():object(id)
+		if se_obj ~= nil and se_obj.clsid ~= nil and zone_clsids[se_obj:clsid()] ~= nil then
+			packet:w_begin(0)
+			packet:r_seek(2)
+
+			local desc = se_obj:name() .. "\\n"
+
+			cse_alife_space_restrictor.STATE_Write(se_obj, packet)
+
+			packet:r_advance(18)
+			packet:r_stringZ()
+			local story_id = packet:r_s32()
+			if story_id ~= -1 then
+				desc = desc .. "  story_id: " .. string.format("%d", story_id) .. "\\n"
+			end
+			packet:r_advance(4)
+			local center = vector()
+			for i = 1,packet:r_u8() do
+				if packet:r_u8() == 0 then
+					packet:r_vec3(center)
+					local radius = packet:r_float()
+					desc = desc .. "  sphere: " .. string.format("%f", radius) .. "\\n"
+				else
+					local axis0, axis1, axis2 = vector(), vector(), vector()
+					packet:r_vec3(axis0)
+					packet:r_vec3(axis1)
+					packet:r_vec3(axis2)
+					packet:r_vec3(center)
+					desc = desc .. "  box: \\n"
+				end
+			end
+			local map_spot_name = "map_spot_white_dot"
+			local min_af_count = utils2.r_num(ini, se_obj:section_name(), "min_artefact_count", 0)
+			local max_af_count = utils2.r_num(ini, se_obj:section_name(), "max_artefact_count", 0)
+			local spawn_af = utils2.r_bool(ini, se_obj:section_name(), "spawn_blowout_artefacts", false)
+			if max_af_count ~= 0 then
+				if min_af_count == 0 then
+					map_spot_name = "map_spot_green_dot"
+				else
+					map_spot_name = "map_spot_red_dot"
+				end
+			end
+			desc = desc .. string.format("artefacts: %d/%d", min_af_count, max_af_count)
+			level.map_add_object_spot_ser(se_obj.id, map_spot_name, desc)
+		end
+	end
+end

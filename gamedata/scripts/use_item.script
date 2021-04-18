@@ -1,0 +1,402 @@
+-- -------------------------------------------------- --
+-- -------------- MEDICINE RC ver. 1.0 -------------- --
+-- -------------------------------------------------- --
+-- Модуль с реакциями на использование "съедобных" предметов.
+--   Убирание оружия при использовании;
+--   Медленное восстановление параметров;
+--   Запрет на использование подряд нескольких предметов (аптечки, бинт, антирад);
+--   Прерывание восстановления здоровья при получении критического хита;
+-- -------------------------------------------------- --
+-- Create by ColR_iT
+-- 25/03/2013
+-- Update: 04/07/2013
+-- Thanks: Charsi, Gun12, malandrinus
+-- -------------------------------------------------- --
+-- -------------------------------------------------- --
+-- NOTE:
+-- Для работы требуется xr_s.script за авторством xStream. (Я использовал от ЗП 1.6.0.2)
+-- -------------------------------------------------- --
+
+-- -------------------------------------------------- --
+-- НАСТРАЕВЫЕМЫЕ ПАРАМЕТРЫ
+-- -------------------------------------------------- --
+-- Вкл/Выкл убвирание оружия.
+local hide = true
+-- Частота апдейта в секундах. Чем меньше, тем плавнее будет восстанавливаться параметры.
+-- Не рекомендуется ставить меньше 0.1 секунды.
+local refreshRate = 0.5
+-- Вкл/Выкл прерывание восстановления здоровья при получении хита.
+local abortHP = true
+-- Значение критического хита.
+local criticalValueHP = 0.15
+-- Вкл/Выкл сообщение о том, что запрещено повторно использовать предмет.
+local showMessage = true
+-- -------------------------------------------------- --
+-- Также настройке поддаются параметры в таблице itemParam расположенной ниже,
+-- при этом желаетльно знать, что менять и как.
+-- -------------------------------------------------- --
+
+-- -------------------------------------------------- --
+-- Кешируем актора, дабы по несколько раз не обращаться в табличку.
+local actor = db.actor
+-- Табичка будет хранить сколько нужно восстановить определенного паарметра
+-- и как долго это нужно делать.
+local restore = {
+	["health"]		= {howMuch = 0, timeRestore = 0},
+	["psy_health"]	= {howMuch = 0, timeRestore = 0},
+	["radiation"]	= {howMuch = 0, timeRestore = 0},
+	["power"]		= {howMuch = 0, timeRestore = 0},
+}
+-- Табличка для хранения используемых предметов.
+local usingItem = {}
+-- Флажок будет свидетельствовать получение критического хита.
+local extraCase = 0
+
+-- Функция обновления параметров актора.
+-- Возвращает функцию, которая в зависимости от переданныз данных
+-- будет восстанавливать сторого определенный параметр.
+function RestoreParam()
+	-- Время следующего апдейта.
+	local timeUpdate = 0
+	return function(data)
+		-- Текущее время.
+		local timeNow = time_global()
+		-- Нужно ли обновлять парамтр?
+		if timeNow >= timeUpdate then
+			-- Вычисляем время следующего апдейта.
+			timeUpdate = timeNow + refreshRate * 1000
+			-- Определим получили ли мы критический хит здоровья.
+			extraCase = data.lastValue and (abortHP and (data.lastValue - actor[data.nameParam] > criticalValueHP)) and -1 or 0
+			-- Если вышло время...
+			if (timeNow >= data.timeRestore * 1000 + data.time) or
+			   -- или в случае, когда обновляем здоровье, мы получили критический хит, то...
+			   (extraCase == -1) then
+				-- убираем функцию из апдейта, обнуляем данные в табличке restore
+				-- и заканчиваем обновлять кокретный параметр, переданный в качестве параметра.
+				xr_s.unregister_callback("update", use_item["Restore_"..data.nameParam])
+				restore[data.nameParam].howMuch = 0
+				restore[data.nameParam].timeRestore = 0
+				return
+			end
+			-- Обновляем параметр.
+			actor[data.nameParam] = data.howMuch * refreshRate / data.timeRestore
+			-- Запоминаем сколько ещё осталось восстановить.
+			restore[data.nameParam].howMuch = restore[data.nameParam].howMuch - (data.howMuch * refreshRate / data.timeRestore)
+			-- Запоминаем время, которое ещё нужно восстанавливать.
+			restore[data.nameParam].timeRestore = restore[data.nameParam].timeRestore - refreshRate
+			-- И в случае если восстанавливаем здоровье, запоминаем последнее значение.
+			if data.lastValue then data.lastValue = actor[data.nameParam] end
+		end
+	end
+end
+-- Функция обновления здоровья.
+Restore_health		= RestoreParam()
+-- Функция обновления пси-здоровья.
+Restore_psy_health	= RestoreParam()
+-- Функция обновления радиации.
+Restore_radiation	= RestoreParam()
+-- Функция обновления выносливости.
+Restore_power		= RestoreParam()
+
+-- Функция блокировки для запрета повторного использования предметов.
+-- Возвращает функцию, которая запрещает использование конкретного предмета,
+-- в зависимости от того, что было переданно в качестве параметра.
+function Ban()
+	return function(data)
+		-- Если время уже вышло или
+		-- мы получили критический хит то...
+		if time_global() >= data.time + data.timeReusing or (extraCase == -1 and data.name == "health") then
+			-- отключим "блокировку" от апдейта
+			-- и удалим используемый предмет из таблички, для повторного использования оного.
+			xr_s.unregister_callback("update", use_item["Ban_"..data.name])
+			usingItem[data.name] = nil
+		end
+	end
+end
+-- Запрет на использование аптечек.
+Ban_medkit	= Ban()
+-- Запрет на использование антирада.
+Ban_antirad	= Ban()
+-- Запрет на использование бинта.
+Ban_bandage	= Ban()
+
+-- Wondering, what it is?
+local hard = false
+
+-- Таблица с параметрами для каждого предмета.
+-- Описание параметров:
+-- howMuch		- сколько нужно восстановить определённого параметра;
+-- timeRestore	- время, которое этот параметр нужно восстанавливать;
+-- timeHideWpn	- время на которое нужно убрать оружие;
+-- notRepeatUse	- запрещено использовать предмет повторно;
+-- timeReusing	- время, через которое предмет можно использовать вновь;
+-- sound		- звук при использовании;
+local itemParam = {
+-- -------------------------------------------------- --
+-- Аптечки
+-- -------------------------------------------------- --
+	["medkit"]			= {
+		health 			= {
+			howMuch		= hard and ((1.0 - actor.health) * 0.25) or 0.25,
+			timeRestore = 5,
+		},
+		psy_health		= {
+			howMuch		= 0.0001,
+			timeRestore	= 5,
+		},
+		power			= {
+			howMuch		= -0.1,
+			timeRestore = 5,
+		},
+		timeHideWpn		= 4000,
+		notRepeatUse	= true,
+		timeReusing		= 5000,
+		sound			= "inv_medkit",
+		name			= "medkit",
+	},
+	["medkit_army"]		= {
+		health 			= {
+			howMuch		= hard and ((1.0 - actor.health) * 0.55) or 0.55,
+			timeRestore = 9,
+		},
+		psy_health		= {
+			howMuch		= 0.0001,
+			timeRestore	= 6,
+		},
+		radiation		= {
+			howMuch		= hard and ((0 - db.actor.radiation) * 0.2) or -0.2,
+			timeRestore = 6,
+		},
+		power			= {
+			howMuch		= -0.15,
+			timeRestore = 6,
+		},
+		timeHideWpn		= 4000,
+		notRepeatUse	= true,
+		timeReusing		= 9000,
+		sound			= "inv_medkit",
+		name			= "medkit",
+	},
+	["medkit_scientic"]	= {
+		health 			= {
+			howMuch		= hard and ((1.0 - actor.health) * 0.85) or 0.85,
+			timeRestore = 14,
+		},
+		psy_health		= {
+			howMuch		= 0.13,
+			timeRestore	= 9,
+		},
+		radiation		= {
+			howMuch		= hard and ((0 - db.actor.radiation) * 0.5) or -0.5,
+			timeRestore = 9,
+		},
+		power			= {
+			howMuch		= -0.2,
+			timeRestore = 9,
+		},
+		timeHideWpn		= 4000,
+		notRepeatUse	= true,
+		timeReusing		= 14000,
+		sound			= "inv_medkit",
+		name			= "medkit",
+	},
+-- -------------------------------------------------- --
+-- Бинт
+-- -------------------------------------------------- --
+	["bandage"]			= {
+		power			= {
+			howMuch		= -0.25,
+			timeRestore = 5,
+		},
+		timeHideWpn		= 4000,
+		notRepeatUse	= true,
+		timeReusing		= 3000,
+		sound			= "inv_bandage",
+		name			= "bandage",	
+	},
+-- -------------------------------------------------- --
+-- Антирад
+-- -------------------------------------------------- --
+	["antirad"]			= {
+		radiation		= {
+			howMuch		= -1.0,
+			timeRestore = 15,
+		},
+		power			= {
+			howMuch		= -0.3,
+			timeRestore = 10,
+		},
+		timeHideWpn		= 3000,
+		notRepeatUse	= true,
+		timeReusing		= 20000,
+		sound			= "inv_pills",
+		name			= "antirad",
+	},
+-- -------------------------------------------------- --
+-- Водка
+-- -------------------------------------------------- --
+	["vodka"]			= {
+		health 			= {
+			howMuch		= 0.0001,
+			timeRestore = 4,
+		},
+		psy_health		= {
+			howMuch		= 0.0,
+			timeRestore	= 9,
+		},
+		radiation		= {
+			howMuch		= hard and ((0 - db.actor.radiation) * 0.1) or -0.1,
+			timeRestore = 6,
+		},
+		power			= {
+			howMuch		= -0.2,
+			timeRestore = 9,
+		},
+		timeHideWpn		= 5000,
+		sound			= "inv_vodka",
+	},
+-- -------------------------------------------------- --
+-- Энергетик
+-- -------------------------------------------------- --
+	["energy_drink"]	= {
+		power			= {
+			howMuch		= 1.0,
+			timeRestore = 15,
+		},
+		timeHideWpn		= 3000,
+		sound			= "inv_softdrink",
+	},
+-- -------------------------------------------------- --
+-- Еда
+-- -------------------------------------------------- --
+	["conserva"]		= {
+		power			= {
+			howMuch		= 0.2,
+			timeRestore = 12,
+		},
+		timeHideWpn		= 4000,
+		sound			= "inv_conserva",
+	},
+	["kolbasa"]			= {
+		power			= {
+			howMuch		= 0.15,
+			timeRestore = 10,
+		},
+		timeHideWpn		= 3000,
+		sound			= "inv_food",
+	},
+	["bread"]			= {
+		power			= {
+			howMuch		= 0.1,
+			timeRestore = 8,
+		},
+		timeHideWpn		= 3000,
+		sound			= "inv_food",
+	},
+-- -------------------------------------------------- --
+}
+
+-- Проверяем нужный ли предмет мы использоваил.
+-- Вызывать из колбека на юз актора.
+function CheckSection(itemSection)
+	if itemParam[itemSection] then
+		use_item.Rehabilitation(itemSection)
+	end
+end
+
+-- Табличка правильных окончаний текста сообщений.
+local nameItem = {medkit = "й аптечки", bandage = "го бинта", antirad = "го антирада"}
+
+
+local function Formula(a,b)
+	return math.abs(a) < math.abs(b) and (a / 3 + b) or (b / 3 + a)
+end
+-- Время, на которое спрятано оружие.
+local hiddenTime = 0
+
+-- Функция для запуска нужных эффектов:
+-- убирание оружия, запрет на повторное использование, медленное восстановление.
+-- В качестве параметра принимает имя секции использованного предмета.
+function Rehabilitation(itemSection)
+	-- Хешируем табличку параметров для предмета с указанной секцией.
+	local IP = itemParam[itemSection]
+	
+	-- Нужно ли прятать оружие и не спрятано ли оно уже?
+	if hide and hiddenTime < IP.timeHideWpn then
+		-- Нужно - прячим.
+		xr_s.register_callback("update", use_item.HideWeapon, {timeHideWpn = IP.timeHideWpn, time = time_global()})
+	end
+
+	-- Запрещено ли повторное использование и не используется ли уже предмет?
+	if IP.notRepeatUse and usingItem[IP.name] then
+		-- Запрещено.
+		-- Если нужно выдадим сообщение.
+		if showMessage then actor:give_game_news("Действие предыдуще"..nameItem[IP.name].." не закончено.", "ui\\ui_iconstotal", Frect():set(0,658,83,47), 1000, 5000) end
+		-- И вернём предмет в рюкзак.
+		alife():create(itemSection, vector(), 0, 0, 0)
+		return
+	end
+
+	-- Играем звук поедания.
+	PlaySound (IP.sound)
+
+	-- Если съеденный предмет нельзя использовать повторно,
+	-- то занесём предмет в табличку и запустим "блокировку".
+	if IP.notRepeatUse then
+		usingItem[IP.name] = IP.notRepeatUse
+		xr_s.register_callback("update", use_item["Ban_"..IP.name], {timeReusing = IP.timeReusing, name = IP.name, time = time_global()})
+	end
+
+	-- Проверим какие параметры нужно восстанавливать.
+	for whatRestore, paramRestore in pairs(restore) do
+	-- whatRestore	- имя параметра;
+	-- paramRestore	- табличка со значениями сколько и как долго восстанавливать.
+		-- Проверим, а нужно ли восстанавливать параметр?
+		if IP[whatRestore] then
+			-- Нужно, поэтому...
+			-- Определим сколько нужно восстановить
+			paramRestore.howMuch = (paramRestore.howMuch ~= 0) and Formula(paramRestore.howMuch, IP[whatRestore].howMuch) or IP[whatRestore].howMuch
+			-- и как долго это нужно делать.
+			paramRestore.timeRestore = paramRestore.timeRestore > IP[whatRestore].timeRestore and paramRestore.timeRestore or IP[whatRestore].timeRestore
+			-- Запускаем функцию восстановления определённого параметра.
+			xr_s.register_callback("update", use_item["Restore_"..whatRestore], {howMuch = restore[whatRestore].howMuch, timeRestore = restore[whatRestore].timeRestore, nameParam = whatRestore, time = time_global(), lastValue = whatRestore == "health" and actor.health or nil})
+		end
+	end
+end
+
+-- Время, которое оружие будет спрятано.
+local timeWpnUpdate = 0
+-- Функция убирания оружия.
+-- Обновляется раз в секунду.
+function HideWeapon(data)
+	-- Текущее время.
+	local timeNow = time_global()
+	-- Нужно ли произвести обновление?
+	if timeNow >= timeWpnUpdate then
+		-- Определим время следующего апдейта.
+		timeWpnUpdate = timeNow + 1000
+		-- Если орижие ещё не спрятано - спрячем его.
+		if hiddenTime == 0 then
+			bind_stalker.hide_weapon()
+		end
+		-- Определим время, на которое оружие будет спрятано.
+		hiddenTime = data.time + data.timeHideWpn - timeNow
+		-- Если время вышло или мы получили критический хит, то...
+		if timeNow >= data.time + data.timeHideWpn or extraCase == -1 then
+			-- восстановим оружие, убирём функцию из аптдейта и обнулим время.
+			bind_stalker.restore_weapon()
+			xr_s.unregister_callback("update", use_item.HideWeapon)
+			hiddenTime = 0
+			return
+		end
+	end
+end
+
+-- Функция для проигрывания звука в "голове" актора.
+function PlaySound(sound)
+	-- Имя папки со звуками, относительно папки gamedata\sounds.
+	local soundsFolder = "interface"
+	local soundObj = sound_object(soundsFolder..[[\]]..sound)
+	soundObj:play_no_feedback(actor, sound_object.s2d, 0, vector(), 1.0)
+end
+-- -------------------------------------------------- --

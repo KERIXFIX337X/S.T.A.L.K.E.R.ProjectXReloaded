@@ -1,0 +1,25 @@
+[logic]
+active = walker@stay_at_position
+combat_ignore = combat_ignore
+danger = danger_ignore
+on_death = death
+ 
+[walker@stay_at_position]
+path_walk = stalker_yantar_walk
+path_look = stalker_yantar_look
+on_info = {+lets_raid_atp} walker@to_raid_atp
+def_state_standing = binocular
+
+[walker@to_raid_atp]
+path_walk = stalker_yantar_atp_walk
+path_look = stalker_yantar_atp_look
+def_state_standing = ward
+ 
+[combat_ignore]
+combat_ignore_cond = always
+ 
+[danger_condition]
+ignore_distance = 10
+
+[death]
+on_info = %+yantar_death%

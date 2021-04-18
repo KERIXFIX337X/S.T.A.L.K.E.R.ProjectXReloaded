@@ -1,0 +1,92 @@
+[profiles_list]
+001_actor_profile
+002_actor_freedom_profile
+003_actor_dolg_profile
+004_military_profile
+005_killer_profile
+006_bandit_profile
+007_ecolog_profile
+
+; base_profile - не использовать. только наследовать в других профилях
+[base_profile]
+profile_name = base ; это имя будет отображаться в списке профилей
+icon = ui_npc_u_actor ; иконка только для отображение во время выбора профиля при старте игры.. иконку нужно менять в профиле персонажа
+community = actor
+inventory = inv_actor
+character_profile = fp_actor_default
+money = 50
+; give_infoportions =   ;инфопорции которые будут выданы при старте, через запятую
+; disable_infoportions =   ;инфопорции которые будут отключаться при старте, через запятую ... например при игре за Монолит можно насильно включить Выжигатели
+spawn_point = actor_spawn_point ; место в котором будет стартовать игрок с выбраным профилем
+
+; пока что этот профиль повторяет базовый но его всеравно надо переопределять чтоб когда ктото изменит базовый то не менялся этот
+[001_actor_profile]:base_profile
+profile_name = Loners
+icon = npc_icon_stalker_screen_selector
+community = actor
+inventory = inv_actor
+character_profile = fp_actor_default
+give_infoportions = actor_loner, stalker_tec
+spawn_point = actor_spawn_point
+
+[002_actor_freedom_profile]:base_profile
+profile_name = Freedom
+icon = npc_icon_freedom_screen_selector
+community = actor_freedom
+inventory = inv_actor_freedom
+character_profile = fp_actor_freedom
+give_infoportions = mil_leader_attach_community
+spawn_point = actor_freedom_spawn_point
+
+[003_actor_dolg_profile]:base_profile
+profile_name = Duty
+icon = npc_icon_duty_screen_selector
+community = actor_dolg
+inventory = inv_actor_dolg
+character_profile = fp_actor_dolg
+give_infoportions = self_duty_technic, bar_dolg_community_leader_done, bar_dolg_community_start, bar_dolg_community_leader
+spawn_point = actor_dolg_spawn_point
+
+[004_military_profile]:base_profile
+profile_name = Military
+icon = npc_icon_soldier_screen_selector
+community = military
+inventory = inv_military
+character_profile = fp_actor_military
+give_infoportions = actor_military, actor_military_tec, close_trader, close_barman
+spawn_point = military_spawn_point
+
+[005_killer_profile]:base_profile
+profile_name = Killers
+icon = npc_icon_killer_screen_selector
+community = killer
+inventory = inv_killer
+character_profile = fp_actor_killer
+give_infoportions = actor_killer, self_killer_leader, close_trader, close_barman
+spawn_point = killer_spawn_point
+
+[006_bandit_profile]:base_profile
+profile_name = Bandits
+icon = npc_icon_bandit_screen_selector
+community = bandit
+inventory = inv_bandit
+character_profile = fp_actor_bandit
+give_infoportions = close_trader, close_barman, trader_bd_spot, leader_bd_spot, engineer_bd_spot
+spawn_point = bandit_spawn_point
+
+;[007_monolith_profile]:base_profile
+;profile_name = Monolith
+;icon = npc_icon_monolth_screen_selector
+;community = monolith
+;inventory = inv_monolith
+;character_profile = fp_actor_monolith
+;give_infoportions = zombied_psy_immunity, pri_monolith_spawn1, pri_monolith_spawn2, close_trader, close_barman
+;spawn_point = monolith_spawn_point
+
+[007_ecolog_profile]:base_profile
+profile_name = Scientists
+icon = npc_icon_ecolog_screen_selector
+community = ecolog
+inventory = inv_ecolog
+character_profile = fp_actor_ecolog
+spawn_point = ecolog_spawn_point

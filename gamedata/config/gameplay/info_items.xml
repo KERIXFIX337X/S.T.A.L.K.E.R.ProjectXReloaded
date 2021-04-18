@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding="windows-1251"?>
+
+<game_information_portions>
+
+    <!-- item_dialog_stop -->
+    <info_portion id="borov_item_stop_1"></info_portion>
+	<info_portion id="borov_item_stop_2"></info_portion>
+	
+	<info_portion id="ecolog_item_stop_1"></info_portion>
+	<info_portion id="ecolog_item_stop_2"></info_portion>
+	
+	
+	<!-- item_trade_apply -->
+	<info_portion id="bandit_trade_up_x18"></info_portion>
+	<info_portion id="bandit_trade_up_x16"></info_portion>
+	
+	<info_portion id="ecolog_trade_up_x18"></info_portion>
+	<info_portion id="ecolog_trade_up_x16"></info_portion>
+</game_information_portions>

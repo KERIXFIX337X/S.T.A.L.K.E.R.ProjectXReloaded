@@ -1,0 +1,199 @@
+function icon_mag_ak74u(first_speaker, second_speaker)
+    db.actor:give_talk_message(game.translate_string "mag_45_descr"..game.translate_string "price_5000", "ui\\icon_upgrades", Frect():set(332,0,83,47), "iconed_answer_item")
+end
+
+function icon_dmr_ak74u(first_speaker, second_speaker)
+    db.actor:give_talk_message(game.translate_string "dmr_ak74u_descr"..game.translate_string "price_5000", "ui\\icon_upgrades", Frect():set(498,0,83,47), "iconed_answer_item")
+end
+
+function icon_dmr_pm(first_speaker, second_speaker)
+    db.actor:give_talk_message(game.translate_string "dmr_ak74u_descr"..game.translate_string "price_sil_pbs", "ui\\icon_upgrades", Frect():set(664,0,83,47), "iconed_answer_item")
+end
+
+function icon_swith_9x18_mp5(first_speaker, second_speaker)
+    db.actor:give_talk_message(game.translate_string "swith_9x18_descr"..game.translate_string "price_4000", "ui\\icon_upgrades", Frect():set(830,0,83,47), "iconed_answer_item")
+end
+
+function icon_priklad_mp5(first_speaker, second_speaker)
+    db.actor:give_talk_message(game.translate_string "mp5_priklad_descr"..game.translate_string "price_4000", "ui\\icon_upgrades", Frect():set(0,94,83,47), "iconed_answer_item")
+end
+
+function icon_sil(first_speaker, second_speaker)
+    db.actor:give_talk_message(game.translate_string "sil_descr"..game.translate_string "price_1000", "ui\\icon_upgrades", Frect():set(166,94,83,47), "iconed_answer_item")
+end
+
+function icon_mp5_baraban(first_speaker, second_speaker)
+    db.actor:give_talk_message(game.translate_string "mag_50_descr"..game.translate_string "price_7000", "ui\\icon_upgrades", Frect():set(332,94,83,47), "iconed_answer_item")
+end
+
+function icon_mag_pb(first_speaker, second_speaker)
+    db.actor:give_talk_message(game.translate_string "mag_12_descr"..game.translate_string "price_1500", "ui\\icon_upgrades", Frect():set(498,94,83,47), "iconed_answer_item")
+end
+
+function icon_deltapoint(first_speaker, second_speaker)
+    db.actor:give_talk_message(game.translate_string "deltapoint_descr"..game.translate_string "price_1500", "ui\\icon_upgrades", Frect():set(664,94,83,47), "iconed_answer_item")
+end
+
+function icon_fort_dmr(first_speaker, second_speaker)
+    db.actor:give_talk_message(game.translate_string "dmr_ak74u_descr"..game.translate_string "price_2000", "ui\\icon_upgrades", Frect():set(830,94,83,47), "iconed_answer_item")
+end
+
+function icon_mag_ak74(first_speaker, second_speaker)
+    db.actor:give_talk_message(game.translate_string "mag_50_descr"..game.translate_string "price_5000", "ui\\icon_upgrades", Frect():set(332,0,83,47), "iconed_answer_item")
+end
+
+function icon_priklad_ak74(first_speaker, second_speaker)
+    db.actor:give_talk_message(game.translate_string "mp5_priklad_descr"..game.translate_string "price_sil_pbs", "ui\\icon_upgrades_big", Frect():set(0,162,298,149), "iconed_answer_item")
+end
+
+function icon_aim_ak74(first_speaker, second_speaker)
+    db.actor:give_talk_message(game.translate_string "aimpoint_descr"..game.translate_string "price_3000", "ui\\icon_upgrades", Frect():set(249,47,83,47), "iconed_answer_item")
+end
+
+function icon_reload_toz(first_speaker, second_speaker)
+    db.actor:give_talk_message(game.translate_string "reload_descr"..game.translate_string "price_5000", "ui\\icon_upgrades_big", Frect():set(0,490,298,149), "iconed_answer_item")
+end
+
+function icon_nar_stvol(first_speaker, second_speaker)
+    db.actor:give_talk_message(game.translate_string "stvol_descr"..game.translate_string "price_1000", "ui\\icon_upgrades_big", Frect():set(0,654,298,149), "iconed_answer_item")
+end
+
+function icon_lozha_bm16(first_speaker, second_speaker)
+    db.actor:give_talk_message(game.translate_string "lozha_descr"..game.translate_string "price_500", "ui\\icon_upgrades_big", Frect():set(309,0,298,149), "iconed_answer_item")
+end
+
+function icon_sfera_08(first_speaker, second_speaker)
+    db.actor:give_talk_message(game.translate_string "sfera_08_descr"..game.translate_string "price_5000", "ui\\icon_upgrades", Frect():set(0,188,83,47), "iconed_answer_item")
+end
+
+function icon_medbag(first_speaker, second_speaker)
+    db.actor:give_talk_message(game.translate_string "medbag_descr"..game.translate_string "price_3000", "ui\\icon_upgrades", Frect():set(166,188,83,47), "iconed_answer_item")
+end
+
+function icon_bag(first_speaker, second_speaker)
+    db.actor:give_talk_message(game.translate_string "bag_descr"..game.translate_string "price_5000", "ui\\icon_upgrades", Frect():set(332,188,83,47), "iconed_answer_item")
+end
+
+function icon_up_leather(first_speaker, second_speaker)
+    db.actor:give_talk_message(game.translate_string "up_leather_descr"..game.translate_string "price_1000", "ui\\icon_upgrades", Frect():set(498,188,83,47), "iconed_answer_item")
+end
+
+function icon_up_ballon(first_speaker, second_speaker)
+    db.actor:give_talk_message(game.translate_string "up_ballon_descr"..game.translate_string "price_2000", "ui\\icon_upgrades", Frect():set(664,188,83,47), "iconed_answer_item")
+end
+
+function icon_up_rukzak(first_speaker, second_speaker)
+    db.actor:give_talk_message(game.translate_string "bag_descr"..game.translate_string "price_5000", "ui\\icon_upgrades", Frect():set(830,188,83,47), "iconed_answer_item")
+end
+
+function icon_up_pnv(first_speaker, second_speaker)
+    db.actor:give_talk_message(game.translate_string "pnv_descr"..game.translate_string "price_2000", "ui\\icon_upgrades", Frect():set(0,282,83,47), "iconed_answer_item")
+end
+
+function icon_up_kevlar(first_speaker, second_speaker)
+    db.actor:give_talk_message(game.translate_string "kevlar_descr"..game.translate_string "price_2000", "ui\\icon_upgrades", Frect():set(166,282,83,47), "iconed_answer_item")
+end
+
+function icon_up_mediumruksak(first_speaker, second_speaker)
+    db.actor:give_talk_message(game.translate_string "medruksak_descr"..game.translate_string "price_5000", "ui\\icon_upgrades", Frect():set(332,282,83,47), "iconed_answer_item")
+end
+
+function icon_magsizep(first_speaker, second_speaker)
+    db.actor:give_talk_message(game.translate_string "magsizep_descr"..game.translate_string "price_2000", "ui\\icon_upgrades", Frect():set(498,282,83,47), "iconed_answer_item")
+end
+
+function icon_freefire(first_speaker, second_speaker)
+    db.actor:give_talk_message(game.translate_string "freefire_descr"..game.translate_string "price_4000", "ui\\icon_upgrades", Frect():set(664,282,83,47), "iconed_answer_item")
+end
+
+function icon_highprivod(first_speaker, second_speaker)
+    db.actor:give_talk_message(game.translate_string "highprivod_descr"..game.translate_string "price_20000", "ui\\icon_upgrades", Frect():set(830,282,83,47), "iconed_answer_item")
+end
+
+function icon_higharmor_not(first_speaker, second_speaker)
+    db.actor:give_talk_message(game.translate_string "exo_higharmor_descr"..game.translate_string "nothing", "ui\\icon_upgrades", Frect():set(83,376,83,47), "iconed_answer_item")
+end
+
+function icon_highprivod_apply(first_speaker, second_speaker)
+    db.actor:give_talk_message(game.translate_string "highprivod_descr"..game.translate_string "mod_apply", "ui\\icon_upgrades", Frect():set(913,282,83,47), "iconed_answer_item")
+end
+
+function icon_higharmor(first_speaker, second_speaker)
+    db.actor:give_talk_message(game.translate_string "exo_higharmor_descr"..game.translate_string "price_30000", "ui\\icon_upgrades", Frect():set(0,376,83,47), "iconed_answer_item")
+end
+
+function icon_mp5_aim(first_speaker, second_speaker)
+    db.actor:give_talk_message(game.translate_string "aimpoint_descr"..game.translate_string "price_7000", "ui\\icon_upgrades", Frect():set(83,47,83,47), "iconed_answer_item")
+end
+
+function icon_mag60(first_speaker, second_speaker)
+    db.actor:give_talk_message(game.translate_string "mag60_descr"..game.translate_string "price_5000", "ui\\icon_upgrades", Frect():set(415,47,83,47), "iconed_answer_item")
+end
+
+function icon_pka(first_speaker, second_speaker)
+    db.actor:give_talk_message(game.translate_string "pka_descr"..game.translate_string "price_3000", "ui\\icon_upgrades", Frect():set(581,47,83,47), "iconed_answer_item")
+end
+
+function icon_sil_svd(first_speaker, second_speaker)
+    db.actor:give_talk_message(game.translate_string "sil_svd_descr"..game.translate_string "price_3000", "ui\\icon_upgrades", Frect():set(166,94,83,47), "iconed_answer_item")
+end
+
+function icon_mag_svd(first_speaker, second_speaker)
+    db.actor:give_talk_message(game.translate_string "mag_svd_descr"..game.translate_string "price_3000", "ui\\icon_upgrades", Frect():set(747,47,83,47), "iconed_answer_item")
+end
+
+function icon_sil_sig(first_speaker, second_speaker)
+    db.actor:give_talk_message(game.translate_string "sil_sig_descr"..game.translate_string "price_3000", "ui\\icon_upgrades", Frect():set(166,94,83,47), "iconed_answer_item")
+end
+
+function icon_march_scope(first_speaker, second_speaker)
+    db.actor:give_talk_message(game.translate_string "march_scope_descr"..game.translate_string "price_5000", "ui\\icon_upgrades", Frect():set(913,47,83,47), "iconed_answer_item")
+end
+
+function icon_sig_grip(first_speaker, second_speaker)
+    db.actor:give_talk_message(game.translate_string "sig_grip_descr"..game.translate_string "price_5000", "ui\\icon_upgrades", Frect():set(83,141,83,47), "iconed_answer_item")
+end
+
+function icon_sig552_grip(first_speaker, second_speaker)
+    db.actor:give_talk_message(game.translate_string "sig552_grip_descr"..game.translate_string "price_5000", "ui\\icon_upgrades", Frect():set(249,141,83,47), "iconed_answer_item")
+end
+
+function icon_mag84(first_speaker, second_speaker)
+    db.actor:give_talk_message(game.translate_string "mag84_descr"..game.translate_string "price_3000", "ui\\icon_upgrades", Frect():set(415,141,83,47), "iconed_answer_item")
+end
+
+function icon_mag12(first_speaker, second_speaker)
+    db.actor:give_talk_message(game.translate_string "mag12_descr"..game.translate_string "price_3000", "ui\\icon_upgrades", Frect():set(498,282,83,47), "iconed_answer_item")
+end
+
+function icon_mag15(first_speaker, second_speaker)
+    db.actor:give_talk_message(game.translate_string "mag15_descr"..game.translate_string "price_3000", "ui\\icon_upgrades", Frect():set(498,282,83,47), "iconed_answer_item")
+end
+
+function icon_mag17(first_speaker, second_speaker)
+    db.actor:give_talk_message(game.translate_string "mag17_descr"..game.translate_string "price_3000", "ui\\icon_upgrades", Frect():set(498,282,83,47), "iconed_answer_item")
+end
+
+function icon_switch_9x18(first_speaker, second_speaker)
+    db.actor:give_talk_message(game.translate_string "swith_9x18_descr"..game.translate_string "price_2000", "ui\\icon_upgrades", Frect():set(664,282,83,47), "iconed_answer_item")
+end
+
+function icon_mag20(first_speaker, second_speaker)
+    db.actor:give_talk_message(game.translate_string "mag20_descr"..game.translate_string "price_3000", "ui\\icon_upgrades", Frect():set(498,282,83,47), "iconed_answer_item")
+end
+
+function icon_compensator_eagle(first_speaker, second_speaker)
+    db.actor:give_talk_message(game.translate_string "compensator_eagle_descr"..game.translate_string "price_3000", "ui\\icon_upgrades", Frect():set(581,141,83,47), "iconed_answer_item")
+end
+
+function icon_mag_svu(first_speaker, second_speaker)
+    db.actor:give_talk_message(game.translate_string "mag20_descr"..game.translate_string "price_4000", "ui\\icon_upgrades", Frect():set(747,47,83,47), "iconed_answer_item")
+end
+
+function icon_up_dark_plash(first_speaker, second_speaker)
+    db.actor:give_talk_message(game.translate_string "kevlar_descr"..game.translate_string "price_5000", "ui\\icon_upgrades", Frect():set(747,141,83,47), "iconed_answer_item")
+end
+
+function icon_up_brown_plash(first_speaker, second_speaker)
+    db.actor:give_talk_message(game.translate_string "up_ballon_descr"..game.translate_string "price_5000", "ui\\icon_upgrades", Frect():set(664,188,83,47), "iconed_answer_item")
+end

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="windows-1251" ?>
+<string_table>
+
+	<string id="list_trader_repair_0">
+		<text>Repair cost of the primary weapon: </text>
+	</string>
+	<string id="list_trader_repair_1">
+		<text>Repair cost of the secondary weapon: </text>
+	</string>
+	<string id="list_trader_repair_2">
+		<text>Repair cost of the armor: </text>
+	</string>
+	
+	<string id="common_repair_dialog_0">
+		<text>Can you repair some of my gear?</text>
+	</string>
+	<string id="common_repair_dialog_01">
+		<text>Sorry, i do not understand anything in that</text>
+	</string>
+	<string id="common_repair_dialog_1">
+		<text>Yes, sure.\n \nRepair list:</text>
+	</string>
+	<string id="common_repair_dialog_2">
+		<text>My primary weapon.</text>
+	</string>
+	<string id="common_repair_dialog_3">
+		<text>My secondary weapon.</text>
+	</string>
+	<string id="common_repair_dialog_4">
+		<text>My armor.</text>
+	</string>
+	<string id="common_repair_dialog_5">
+		<text>Oh..I'm a bit short of cash, I will come back later.</text>
+	</string>
+	<string id="common_repair_dialog_6">
+		<text>It's almost done...</text>
+	</string>
+	<string id="common_repair_dialog_7">
+		<text>Here you go.</text>
+	</string>
+	<string id="common_repair_dialog_8">
+		<text>Ahh! Looks as new...Thanks!</text>
+	</string>
+	<string id="common_repair_dialog_9">
+		<text>Indeed, excellent work!</text>
+	</string>
+	<string id="common_repair_dialog_10">
+		<text>Do you have time to repair something else?</text>
+	</string>
+	<string id="common_repair_dialog_11">
+		<text>Of course, what you need to repair?\n \nRepair list:</text>
+	</string>
+</string_table>

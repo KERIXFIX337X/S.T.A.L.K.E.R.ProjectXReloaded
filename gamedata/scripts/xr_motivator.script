@@ -1,0 +1,597 @@
+--[[------------------------------------------------------------------------------------------------------------------
+автор: Диденко Руслан (Stohe)
+
+порядок вызова методов биндера:
+reload
+reinit
+load
+net_spawn
+--------------------------------------------------------------------------------------------------------------------]]
+memtsg = {} --' временная таблица
+lasthealth = 0
+lastime = nil
+
+----------------------------------------------------------------------------------------------------------------------
+class "motivator_binder" (object_binder)
+
+function motivator_binder:__init (obj) super(obj)
+	self.loaded = false
+	self.last_update = 0
+	----memusage.collect_info(self.object, "__init")
+
+    self.first_update = false
+end
+
+function motivator_binder:extrapolate_callback(cur_pt)
+	if self.st.active_section then
+		xr_logic.issue_event(self.object, self.st[self.st.active_scheme], "extrapolate_callback")
+		self.st.move_mgr:extrapolate_callback(self.object)
+	end
+
+	if patrol(self.object:patrol()):flags(cur_pt):get() == 0 then
+		return true
+	end
+	return false
+end
+
+function motivator_binder:reinit()
+    object_binder.reinit(self)
+    --memusage.collect_info(self.object, "reinit_start")
+    --printf("motivator_binder:reinit(): self.object:name()='%s'", self.object:name())
+
+    -- КОЛЛБЕКИ ЗДЕСЬ СТАВИТЬ НЕЛЬЗЯ! Здесь еще неизвестна активная схема.
+    -- Ставьте коллбеки в методе update в отмеченном комментарием месте.
+
+    local char_ini = self.object:spawn_ini() or ini_file("scripts\\dummy.ltx")
+
+----------------------------------------------------------------------------------------------------------------------
+-- Общие скрипты
+----------------------------------------------------------------------------------------------------------------------
+    db.storage[self.object:id()] = {  followers = {} }
+    self.st = db.storage[self.object:id()]
+
+    --' Создание менеджера контроля положений тела
+    --memusage.collect_info(self.object, "before_statemgr")
+	self.st.state_mgr = state_mgr.bind_manager(self.object)
+
+	self.st.move_mgr = move_mgr.move_mgr(self.object)
+	self.st.move_mgr:initialize()
+
+	self.st.zone_mgr = zone_mgr.zone_mgr(self.object)
+	
+	--memusage.collect_info(self.object, "after_statemgr")
+	--memusage.collect_info(self.object, "reinit_end")
+end
+----------------------------------------------------------------------------------------------------------------------
+function motivator_binder:net_spawn(sobject)
+	printf("motivator_binder:net_spawn(): self.object:name()='%s'", self.object:name())
+	--memusage.collect_info(self.object, "netspawn_start")
+	if not object_binder.net_spawn(self, sobject) then
+		return false
+	end
+
+--	if self.object:spawn_ini():section_exist("dont_spawn_online") then
+--		printf("!!!OFFLINE")
+--		alife():object(self.object:id()).dont_spawn_online = true
+--	end
+
+	db.add_obj(self.object)
+
+	-- Все CALLBACK-и ставить здесь:
+	self.object:set_patrol_extrapolate_callback(motivator_binder.extrapolate_callback, self)
+	self.object:set_callback(callback.hit, motivator_binder.hit_callback, self)
+	self.object:set_callback(callback.death, motivator_binder.death_callback, self)
+	self.object:set_callback(callback.use_object, motivator_binder.use_callback, self)
+	--memusage.collect_info(self.object, "after__callback")
+
+	--self.object:set_callback(callback.sound, motivator_binder.hear_callback, self)
+
+    --' Загрузка историй для лагеря.
+	if self.loaded == false then
+		local char_ini = self.object:spawn_ini() or ini_file("scripts\\dummy.ltx")
+		xr_info.loadInfo(self.object, char_ini)
+	end
+
+	if not self.object:alive() then
+		return true
+	end
+
+	local manager = self.object:motivation_action_manager()
+	manager:remove_evaluator  (stalker_ids.property_anomaly)
+	manager:add_evaluator   (stalker_ids.property_anomaly, property_evaluator_const(false))
+  --' Для зомбированных чуваков говорим что аномалий не существует
+  if self.object:character_community() == "zombied" then
+    if xiani_config.use_outfit_evaluator and outfit_evaluator then
+      manager:add_evaluator(1101, property_evaluator_const(false))
+    end
+  else
+    local manager = self.object:motivation_action_manager()
+--    manager:remove_evaluator  (stalker_ids.property_anomaly)
+--    manager:add_evaluator   (stalker_ids.property_anomaly, property_evaluator_const(false))
+    if xiani_config.use_outfit_evaluator and outfit_evaluator then
+      manager:add_evaluator(1101, outfit_evaluator.evaluator_outfit(self.object,"evaluator_outfit"))
+      local action = manager:action (xr_actions_id.alife) 
+      action:add_precondition   (world_property(1101,    false))
+    end
+  end
+
+  
+    --' загрузка озвучки
+    --memusage.collect_info(self.object, "before_soundmgr")
+    xr_sound.load_sound(self.object)
+    --memusage.collect_info(self.object, "after_soundmgr_netspawn_end")
+
+	xr_gulag.setup_gulag_and_logic_on_spawn( self.object, self.st, sobject, modules.stype_stalker, self.loaded )
+
+	return true
+end
+
+function motivator_binder:net_destroy()
+	--printf("motivator_binder:net_destroy(): self.object:name()='%s'", self.object:name())
+	-- dbglog("motivator_binder:net_destroy(): self.object:name()='%s' self.object:id()='%s'", self.object:name(), tostring(self.object:id()))
+
+	local st = db.storage[self.object:id()]
+	if st.active_scheme then
+		xr_logic.issue_event(self.object, st[st.active_scheme], "net_destroy", self.object)
+	end
+
+	db.del_obj(self.object)
+
+	db.storage[self.object:id()] = nil
+
+	self:clear_callbacks()
+	self.object:set_callback(callback.use_object, nil)
+
+	object_binder.net_destroy(self)
+end
+
+function motivator_binder:clear_callbacks()
+	self.object:set_patrol_extrapolate_callback(nil)
+	self.object:set_callback(callback.hit, nil)
+	self.object:set_callback(callback.death, nil)
+end
+
+function motivator_binder:hit_callback(obj, amount, local_direction, who, bone_index)
+	-- FIXME: коллбеки неплохо было бы регистрировать в общем storage, а не посхемно...
+	-- просто всегда ставить их при включении схемы и снимать при отключении.
+	if self.object == nil then
+		-- dbglog("motivator_binder:hit_callback on NIL object !!!")
+	else
+		-- dbglog("motivator_binder:hit_callback (" .. tostring(self.object:id()) .. ":" .. self.object:name() .. ")")
+	end
+	
+	if self.st.active_section then
+		xr_logic.issue_event(self.object, self.st[self.st.active_scheme], "hit_callback", obj, amount, local_direction, who, bone_index)
+	end
+	if self.st.combat_ignore then
+		xr_logic.issue_event(self.object, self.st.combat_ignore, "hit_callback", obj, amount, local_direction, who, bone_index)
+	end
+	if self.st.combat then
+		xr_logic.issue_event(self.object, self.st.combat, "hit_callback", obj, amount, local_direction, who, bone_index)
+	end
+	if self.st.hit then
+		xr_logic.issue_event(self.object, self.st.hit, "hit_callback", obj, amount, local_direction, who, bone_index)
+	end
+	if amount > 0 then
+		printf("HIT_CALLBACK: %s amount=%s bone=%s", obj:name(), amount, tostring(bone_index))
+		sr_territory.issue_event(self.object, "hit_callback", obj, amount, local_direction, who, bone_index)
+		xr_wounded.hit_callback(self.object:id())
+	end
+	
+	if xiani_config.check_npc_arm_hit then
+		if amount > 0 then
+			-- bone 34 ... r arm
+			-- bone 33 ... r forearm
+			-- bone 38 ... r "pointer" finger
+			-- bone 20 ... l forearm
+			-- bone 21 ... l arm
+			-- bone 25 .... l finger ... which one? .. 22 - 23 same?
+			local r = -1
+			local need_drop = false
+			local drop_hit = 0.5
+			local drop_prob_mod = amount/drop_hit
+			if (bone_index == 33) then
+				-- right forearm hit
+				r = math.random()*100
+				need_drop = (r<10)
+			end
+			if ((bone_index >= 34) and (bone_index <= 38)) then
+				-- right arm or fingers hit
+				r = math.random()*100
+				need_drop = (r<30)
+			end
+			-- if ((bone_index >= 20) and (bone_index <= 25)) then
+			--	-- left hand hit
+			--	need_drop = (math.random()<0.3)
+			-- end
+			
+			-- собсна выбрасываем пушку, точнее активный предмет
+			if need_drop then
+				local act_item = self.object:active_item()
+				if act_item then self.object:drop_item(act_item) end
+			end
+		end
+	end
+	-- dbglog("motivator_binder:hit_callback done")
+end
+
+function motivator_binder:death_callback(victim, who)
+	-- dbglog("motivator_binder:death_callback :: start (" .. tostring(self.object:id()) .. ":" .. self.object:name() .. ")")
+	if who:id() == db.actor:id() then
+		xr_statistic.addKillCount(self.object)
+	end
+	
+	if self.st.death then
+		xr_logic.issue_event(self.object, self.st.death, "death_callback", victim, who)
+	end
+	if self.st.active_section then
+		xr_logic.issue_event(self.object, self.st[self.st.active_scheme], "death_callback", victim, who)
+	end
+	sr_territory.issue_event(self.object, "death_callback", victim, who)
+
+	sr_light.check_light(self.object)
+
+	smart_terrain.on_death( self.object:id() )
+	
+	death_manager.drop_manager(self.object):create_release_item()
+	
+	-- dbglog("motivator_binder:death_callback :: before self:clear_callbacks()")
+	self:clear_callbacks()
+
+	--' Наносим небольшой импульс вперед.
+	local h = hit()
+	h.draftsman = self.object
+	h.type = hit.fire_wound
+	h.direction = db.actor:position():sub(self.object:position())
+	h:bone("pelvis")
+	h.power = 1
+	h.impulse = 10
+	self.object:hit(h)
+
+	-- dbglog("motivator_binder:death_callback :: before remove from ranking")
+	if(actor_stats.remove_from_ranking~=nil)then
+		local community = self.object:character_community()
+		if community == "zombied" or
+		   --community == "monolith" or
+		   community == "arena_enemy"
+		then
+			return
+		end
+		actor_stats.remove_from_ranking(self.object:id())
+	end
+	-- dbglog("motivator_binder:death_callback :: done ok")
+end
+
+function motivator_binder:use_callback(obj, who)
+	if ((not self.object) and (obj)) then
+		xiani.xlog("object is nil but we have obj.. should use obj?")
+		self.object = obj
+	end
+	if self.object:alive() then
+		xr_use.notify_on_use(obj, who)
+		if self.st.active_section then
+			xr_logic.issue_event(self.object, self.st[self.st.active_scheme], "use_callback", obj, who)
+		end
+	else
+		treasure_manager.get_treasure_manager():use(self.object)
+		_z.on_npc_body_search(db.actor, self.object)
+	end
+end
+
+function motivator_binder:update(delta)
+	object_binder.update(self, delta)
+	self.st.zone_mgr:debug_denied()
+
+    if self.first_update == false then
+        if self.object:alive() == false then
+			death_manager.drop_manager(self.object):create_release_item()
+        end
+        self.first_update = true
+    end
+
+    if time_global() - self.last_update > 1000 then
+       sr_light.check_light(self.object)
+       self.last_update = time_global()
+    end
+
+	--' Апдейт менеджера состояний тела
+	if self.st.state_mgr then
+		if self.object:alive() then
+			self.st.state_mgr:update()
+			-- Апдейт торговли
+			if self.st.state_mgr.combat == false and
+			   self.st.state_mgr.alife == false
+			then
+				trade_manager.update(self.object)
+			end			
+		else
+			self.st.state_mgr = nil
+		end
+	end
+	
+	--' Апдейт саундменеджера
+	if self.object:alive() then
+		xr_sound.update(self.object)
+	end
+
+	if self.object:alive() then
+		if self.object:is_talk_enabled() then
+			self.object:set_tip_text("character_use")
+		else
+			self.object:set_tip_text("")
+		end
+	else
+		self.object:set_tip_text_default()
+	end
+
+
+	self.object:info_clear()
+	local best_enemy = self.object:best_enemy()
+	if best_enemy then
+		self.object:info_add('enemy -- ' .. best_enemy:name())
+	end
+	local active_section = db.storage[self.object:id()].active_section
+	if active_section then
+		self.object:info_add('section -- ' .. active_section)
+	end
+	self.object:info_add('name -- ' .. self.object:name())
+	
+	--if (self.object:alive() == true) and (string.find(self.object:name(), "bar_zastava")) then
+	-- + ------ ADDED by xStream
+	if xiani_config.check_npc_on_fire_line and (self.object:alive() == true) then
+		if (self.chk_f_t or 0) < time_global() then
+			self.chk_f_t = time_global()+100
+			-- if (self.can_fire == nil) then self.prev_can_fire = true end
+			-- self.prev_can_fire = self.can_fire
+			self.can_fire = true
+			if self.object:best_enemy() then self:check_objects() end
+		end
+		if not self.can_fire and self.object:active_item() and self.object:best_enemy() then
+			state_mgr.set_state( self.object, "assault", nil, nil, {look_object = self.object:best_enemy()} )
+			self.object:set_item(object.idle,self.object:active_item())
+			-- amk.send_tip(self.object:name() .. ": stop fire","watcher: Info",0,15,"gen_info")
+		end
+	end
+	-- ------ ADDED by xStream
+	
+	--' Проверка потери жизни
+--[[
+	if lasttime == nil or
+	   game.get_game_time():diffSec(lasttime) > 1
+	then
+		printf("%f * %f", self.object.health, self.object.health - lasthealth)
+		lasthealth = self.object.health
+		lasttime = game.get_game_time()
+	end
+]]
+--[[	if not self.debug_smrt then
+		for k, v in pairs( db.smart_terrain_by_id ) do
+			self.debug_smrt = true
+
+			local o = alife():object( self.object:id() )
+
+			if v:enabled(o) then
+				v:register(o)
+			end
+
+			break
+		end
+	end]]
+	
+	if self.object:alive() == false then
+		-- dbglog("motivator_binder:update :: dead update done ok (" .. tostring(self.object:id()) .. ":" .. self.object:name() .. ")")
+	end
+end
+
+-- + ------ ADDED by xStream
+function motivator_binder:check_objects()
+    -- if not self.can_fire then self.can_fire=true end
+    
+    self.objects={}
+    self.objects.monsters={}
+    self.objects[game_object.friend]={}
+    self.objects[game_object.neutral]={}
+    self.objects[game_object.enemy]={}
+    
+    local npc = self.object
+    for o in npc:memory_visible_objects() do
+        --xrs_utils.mylog(tostring(o.object_info))
+        self:check_single_object(o:object())
+    end
+    for o in npc:memory_sound_objects() do
+        --xrs_utils.mylog(tostring(o.object_info))
+        self:check_single_object(o:object())
+    end
+    
+    local nnonf,fnonf = true,true
+    for k,v in pairs(self.objects[game_object.friend]) do
+        if self:check_npc_on_fire_line(v)==true then
+            fnonf = false
+            break
+        end
+    end
+    for k,v in pairs(self.objects[game_object.neutral]) do
+        if self:check_npc_on_fire_line(v)==true then
+            nnonf = false
+            break
+        end
+    end
+        --[[
+        for o in npc:not_yet_visible_objects() do
+            check_item(o)
+        end
+        ]]
+    self.can_fire = nnonf and fnonf
+end
+
+function motivator_binder:check_single_object(obj)
+ local npc = self.object
+ if obj and obj.clsid and obj:alive() and npc:id()~=obj:id() then
+  --local sobj=alife():object(obj:id())
+  if IsStalker(obj) then --and not obj:wounded() and not obj:critically_wounded() then
+   self.objects[npc:relation(obj)][obj:id()] = obj
+  elseif IsMonster(obj) then
+   self.objects.monsters[obj:id()] = obj
+  end 
+ end
+end
+
+function motivator_binder:check_npc_on_fire_line(obj)
+ local npc = self.object
+ local npc_pos = npc:bone_position("bip01_spine")
+ 
+ local be = npc:best_enemy()
+ local be_pos = be:bone_position("bip01_spine")
+ --local be_dist = be_pos:distance_to(npc_pos)
+ local be_dist = npc_pos:distance_to(be_pos)
+ 
+ local friend_pos = obj:bone_position("bip01_spine")
+ local radius=1
+ local friend_dist=npc_pos:distance_to(friend_pos)-radius
+
+ if (be_dist>3) and (friend_dist < be_dist) then
+  local dir_aim = utils.vector_copy_by_val(be_pos):sub(npc_pos)
+  --считаем попадает ли текущий солдат в сектор обстрела
+  local dir_obj = utils.vector_copy_by_val(friend_pos):sub(npc_pos)
+  local x=dir_obj.x*dir_aim.x+dir_obj.z*dir_aim.z
+  local y=-dir_obj.z*dir_aim.x+dir_obj.x*dir_aim.z -- повернули систему координат     
+  local angle=math.atan2(y,x) -- угол доворота от -180 до 180   
+  
+  local div=radius/friend_dist
+  
+  if angle >= -div and angle <= div then
+	-- amk.send_tip(self.object:name() .. " cant_fire coz of " .. obj:name() ,"combat: Info",0,15,"gen_info")
+	return true 
+  end
+ end
+ return false
+end
+-- ------ ADDED by xStream
+
+function motivator_binder:reload(section)
+	--memusage.collect_info(self.object, "reload_start")
+	object_binder.reload(self, section)
+	--printf("motivator_binder:reload(): self.object:name()='%s'", self.object:name())
+	--self.object:set_pda_callback(pda_callback)
+	--memusage.collect_info(self.object, "reload_end")
+end
+
+function motivator_binder:net_save_relevant()
+	--printf("motivator_binder:net_save_relevant(): self.object:name()='%s'", self.object:name())
+	return true
+end
+
+function motivator_binder:save(packet)
+	printf("motivator_binder:save(): self.object:name()='%s'", self.object:name())
+	object_binder.save(self, packet)
+
+	packet:w_bool(false)
+
+	xr_logic.save_obj(self.object, packet)
+	dialog_manager.save(self.object, packet)
+	trade_manager.save(self.object, packet)
+end
+
+function motivator_binder:load(reader)
+	self.loaded = true
+
+	printf("motivator_binder:load(): self.object:name()='%s'", self.object:name())
+	object_binder.load(self, reader)
+	printf("motivator_binder:object_binder.load(): self.object:name()='%s'", self.object:name())
+
+	if reader:r_eof() then
+		abort("SAVE FILE IS CORRUPT")
+	end
+
+
+	local unused = reader:r_bool()
+
+	xr_logic.load_obj(self.object, reader)
+	
+	-- dbglog("npc_script_version is %s for %s",tostring(self.npc_script_version), self.object:name())
+	--if _z.game_version() < 7 then
+		dialog_manager.load(self.object, reader, 7)
+	--else
+	--	self.npc_script_version = alife():object(self.object:id()).script_version
+	--	dialog_manager.load(self.object, reader, self.npc_script_version)
+	--end
+	
+	trade_manager.load(self.object, reader)
+end
+
+function motivator_binder:hear_callback(self, who, sound_type, sound_position, sound_power)
+	if who:id() == self:id() then
+		return
+	end
+	local type = "NIL"
+	if bit_and(sound_type, snd_type.weapon) == snd_type.weapon then
+		type = "WPN"
+		if bit_and(sound_type, snd_type.weapon_shoot) == snd_type.weapon_shoot then
+			type = "WPN_shoot"
+		elseif bit_and(sound_type, snd_type.weapon_empty) == snd_type.weapon_empty then
+			type = "WPN_empty"
+		elseif bit_and(sound_type, snd_type.weapon_bullet_hit) == snd_type.weapon_bullet_hit then
+			type = "WPN_hit"
+		elseif bit_and(sound_type, snd_type.weapon_reload) == snd_type.weapon_reload then
+			type = "WPN_reload"
+		end
+	elseif bit_and(sound_type, snd_type.item) == snd_type.item then
+		type = "ITM"
+		if bit_and(sound_type, snd_type.item_pick_up) == snd_type.item_pick_up then
+			type = "ITM_pckup"
+		elseif bit_and(sound_type, snd_type.item_drop) == snd_type.item_drop then
+			type = "ITM_drop"
+		elseif bit_and(sound_type, snd_type.item_hide) == snd_type.item_hide then
+			type = "ITM_hide"
+		elseif bit_and(sound_type, snd_type.item_take) == snd_type.item_take then
+			type = "ITM_take"
+		elseif bit_and(sound_type, snd_type.item_use) == snd_type.item_use then
+			type = "ITM_use"
+		end
+	elseif bit_and(sound_type, snd_type.monster) == snd_type.monster then
+		type = "MST"
+		if bit_and(sound_type, snd_type.monster_die) == snd_type.monster_die then
+			type = "MST_die"
+		elseif bit_and(sound_type, snd_type.monster_injure) == snd_type.monster_injure then
+			type = "MST_damage"
+		elseif bit_and(sound_type, snd_type.monster_step) == snd_type.monster_step then
+			type = "MST_step"
+		elseif bit_and(sound_type, snd_type.monster_talk) == snd_type.monster_talk then
+			type = "MST_talk"
+		elseif bit_and(sound_type, snd_type.monster_attack) == snd_type.monster_attack then
+			type = "MST_attack"
+		elseif bit_and(sound_type, snd_type.monster_eat) == snd_type.monster_eat then
+			type = "MST_eat"
+		end
+	end
+	if type ~= "NIL" then
+		printf("SND *%s* dist: %d [%f], %s -> %s", type, self:position():distance_to(who:position()), sound_power, who:name(), self:name())
+	end
+end
+
+function AddToMotivator(npc)
+	if alife() then
+		npc:bind_object(this.motivator_binder(npc))
+	end
+end
+
+-- Эвалюаторы, которые имеют высший приоритет, и, соответственно, перебивают остальные скрипты собой
+function addCommonPrecondition(action)
+	--action:add_precondition (world_property(xr_evaluators_id.reaction,false))
+
+
+	action:add_precondition (world_property(xr_evaluators_id.stohe_meet_base + 1,false))
+	action:add_precondition (world_property(xr_evaluators_id.sidor_wounded_base + 0,  false))
+	action:add_precondition (world_property(xr_evaluators_id.chugai_heli_hunter_base, false))
+	action:add_precondition (world_property(xr_evaluators_id.abuse_base, false))
+	
+  if xiani_config.use_outfit_evaluator and outfit_evaluator then
+    action:add_precondition (world_property(1101,false)) -- outfit evaluator
+  end
+  
+  
+	action:add_precondition (world_property(utils2.evaluators_id.anomaly_scanner_base + 0, false))
+	if watcher_act then
+    action:add_precondition(world_property(watcher_act.evid_see_stuff, false))
+	end
+end

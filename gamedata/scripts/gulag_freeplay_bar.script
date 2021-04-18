@@ -1,0 +1,136 @@
+local t = {}
+
+function load_job(sj, gname, type, squad, groups)
+	-- Посетители Бара
+	if type == "bar_100r" then
+		xiani.xlog('freeplay_bar_load_jobs:type=bar_100r')
+		
+		-- table 1 place 1 where hunter was
+		t = { section = "logic@bar_100r_hunter",
+			idle = 0,
+			prior = 0, state = {0}, squad = squad, group = groups[0],
+			in_rest = "", out_rest = ""
+		}
+		table.insert(sj, t)
+		
+		-- table 1 place 2
+		t = { section = "logic@bar_100r_table_1_place_2",
+			idle = 0,
+			prior = 0, state = {0}, squad = squad, group = groups[0],
+			in_rest = "", out_rest = ""
+		}
+		table.insert(sj, t)
+		
+		-- table 2 where 'bandit' stalker was
+		t = { section = "logic@bar_100r_table_2",
+			idle = 0,
+			prior = 0, state = {0}, squad = squad, group = groups[0],
+			in_rest = "", out_rest = ""
+		}
+		table.insert(sj, t)
+		
+		-- table 3 place 1 where drunk_dolg was
+		t = { section = "logic@bar_100r_drunk_dolg",
+			idle = 0,
+			prior = 0, state = {0}, squad = squad, group = groups[0],
+			in_rest = "", out_rest = ""
+		}
+		table.insert(sj, t)
+		
+		
+		-- table 5 place 1 where lisiy was
+		t = { section = "logic@bar_100r_table_5_place_1",
+			idle = 0,
+			prior = 0, state = {0}, squad = squad, group = groups[0],
+			in_rest = "", out_rest = ""
+		}
+		table.insert(sj, t)
+		
+		-- table 5 place 2
+		t = { section = "logic@bar_100r_table_5_place_2",
+			idle = 0,
+			prior = 0, state = {0}, squad = squad, group = groups[0],
+			in_rest = "", out_rest = ""
+		}
+		 table.insert(sj, t)
+		
+		-- table 6 place 1
+		--t = { section = "logic@bar_100r_table_6_place_1",
+		--	idle = 0,
+		--	prior = 0, state = {0}, squad = squad, group = groups[0],
+		--	in_rest = "", out_rest = ""
+		--}
+		--table.insert(sj, t)
+	end
+	
+end
+
+function load_states(gname, type)
+	if type == "bar_100r" then
+		return function(gulag)
+			return 0
+		end
+	end
+end
+
+function fill_tbl(section, idle, prior, states, squad, group, in_rest, out_rest, online, gulag_name)
+	local tbl = {}
+ 
+	tbl.section = "logic@" .. gulag_name .. "_" .. section
+	tbl.idle = idle
+	tbl.prior = prior	
+	tbl.state = {}
+ 
+	for index = 1, #states do
+	table.insert(tbl.state, states[index])
+	end
+ 
+	tbl.squad = squad
+	tbl.group = group
+	tbl.in_rest = in_rest
+	tbl.out_rest = out_rest
+	tbl.online = online
+	return tbl
+end
+
+if type == "deadcity_killer_base_smart_terrain" then
+	local t = table.insert(sj, fill_tbl("killer_walk_base", 0, 100, {0}, squad, groups[1], "", "", true, type))
+	t.timeout = 0
+	t.position_threshold = 100
+	t.predicate = function(obj_info) return obj_info.rank >= 900 end
+	table.insert(sj, t)
+end
+
+if type == "deadcity_killer_base_smart_terrain" then
+	return function(gulag)
+		if not db.actor then
+			return gulag.state
+		end
+		if level.get_time_hours() >= 5 and level.get_time_hours() <= 22 then
+		        return 0  -- переключает всех мутантов/нпс на дневную работу
+		else
+			return 1  -- ереключает всех мутантов/нпс на ночную работу
+		end
+	end
+end
+
+if gulag_type == "deadcity_killer_base_smart_terrain" then
+	return npc_community == "killer"
+end
+--------------------------------------------------------------------------
+-- Dynamic ltx
+--------------------------------------------------------------------------
+function load_ltx(gname, type)
+	return nil
+end
+
+function checkStalker(npc_community, gulag_type)
+	if gulag_type == "bar_100r" then
+		return true
+	end
+	return false
+end
+
+function checkMonster(npc_community, gulag_type, npc_rank, se_obj)
+	return false
+end

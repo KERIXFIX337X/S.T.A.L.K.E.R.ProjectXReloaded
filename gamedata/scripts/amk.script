@@ -1,0 +1,1277 @@
+----------------
+local npc_spawner={}  --служебный массив, работает автоматически - не трогать шаловливыми русками
+
+local timers={}   --хранит реал-тайм таймеры
+local g_timers={} --хранит таймеры в игровом времени
+local markers={}  --хранит маркеры на карте
+local x_objs={}     --хранит ИДшники объектов
+local timer_trigger=nil
+convert_npc={}
+
+--переменные для типсов
+pda_news = xr_sound.get_safe_sound_object([[device\pda\pda_news]])
+pda_tips = xr_sound.get_safe_sound_object([[device\pda\pda_tip]])
+pda_task = xr_sound.get_safe_sound_object([[device\pda\pda_objective]])
+
+tips_icons = {
+  default  = { 0, 658},
+  unknown  = { 83, 329},
+  trader   = { 249, 611},
+  dolg     = { 332, 658},
+  dolg2   = { 332, 611},
+  duty_gar   = { 415, 47},
+  duty_bar   = { 332, 282},
+  voronin   = { 332, 423},
+  icancov   = { 332, 329},
+  petrenko   = { 332, 376},
+  freedom  = { 415, 329},
+  freedom2  = { 415, 799},
+  lukash   = { 415, 235},
+  max   = { 415, 282},
+  cook   = { 415, 329},
+  skinflint   = { 415, 376},
+  ecolog   = { 249, 705},
+  arena    = { 332, 141},
+  stalker  = { 0, 658},
+  krot     = { 332, 47},
+  barman   = { 332, 235},
+  novice1   = { 415, 94},
+  novice2   = { 415, 752},
+  novice3   = { 332, 799},
+  novice4   = { 332, 846},
+  stalker1   = { 415, 141},
+  stalker2   = { 415, 188},
+  wolf   = { 332, 940},
+  fanatic   = { 415, 658},
+  fox   = { 332, 705},
+  bes   = { 415, 0},
+  doctor   = { 415, 846},
+  guide   = { 415, 611},
+  ghost   = { 166, 611},
+  borov   = { 332, 564},
+  o_soznanie = { 415, 893},
+  monolith = { 332, 611},
+  the_monolith = { 166, 470},
+  military = { 332, 0},
+  beret = { 332, 94},
+  beret2 = { 415, 470},
+  beret3 = { 415, 517},
+  beret4 = { 415, 564},
+  beret5 = { 332, 752},
+  specialists = { 249, 517},
+  npp = { 249, 470},
+    saharov  = { 332, 470},
+  prizrak  = { 415, 705},
+  killer   = { 332, 517},
+  killer1   = { 332, 188},
+  killer2   = { 415, 423},
+  bandit	= { 83, 376},
+  death     = { 0, 752},
+  gen_info  = { 0, 658},
+  compass  = { 0, 705},
+  money  = { 0, 0},
+  artifact  = { 0, 282},
+  uniq  =  {  498, 47}   
+}
+----------------
+local bufferedmessages={}
+function mylog(msg)
+end
+
+--показываем типс
+function send_tip(news_text, header, timeout, showtime, sender, sound)
+  if news_text==nil then return end
+  if header==nil then header=game.translate_string("st_tip") end
+  if timeout == nil then timeout = 0 end
+  if showtime == nil then showtime = 5 end
+  
+  local player
+  if sound=="news" then
+    player=pda_news
+  elseif sound=="task" then
+    player=pda_task
+  else
+    player=pda_tips
+  end   
+  
+  --' Играем дефолтный звук
+  player:play(db.actor, timeout, sound_object.s2d)
+  
+  if sender == nil then
+    sender = "default"
+  end
+  local x = tips_icons[sender][1]
+  local y = tips_icons[sender][2]
+  
+  local news_text = "%c[255,160,160,160]"..header.."\\n".."%c[default]"..news_text
+  db.actor:give_game_news(news_text, "ui\\ui_iconsTotal", Frect():set(x,y,83,47), timeout*1000, showtime*1000)
+  return true
+end
+
+function add_spot_on_map(obj_id,type,text)
+  --возможные типы type смотри в ui\map_spots.xml 
+  if obj_id then
+    if text==nil then text=" " end
+    -- Ставим метку на серверный объект чтобы её не пришлось обновлять
+    level.map_add_object_spot_ser(obj_id, type, text)
+--    save_variable("x_marker_type_"..obj_id, type)
+--    save_variable("x_marker_text_"..obj_id, text)
+  end
+end
+
+function remove_spot_from_map(obj_id,type)
+  if obj_id and level.map_has_object_spot(obj_id, type)~= 0 then
+    level.map_remove_object_spot(obj_id, type)
+--    del_variable("x_marker_type_"..obj_id)
+--    del_variable("x_marker_text_"..obj_id)
+  end
+end
+
+--старт таймера в реальном времени
+function start_timer(name,delay,action)
+  if not delay then
+    return false
+  end
+  
+  if not action then
+    action = ""
+  end
+
+    local time = game.time() --time in seconds since 1970
+  local a=1
+  while db.storage[db.actor:id()].pstor["xt"..a] do
+    a=a+1
+    if a>100 then 
+      return false 
+    end
+  end
+  save_variable("xt"..a, name)
+  save_variable("xd"..a, time+delay*1000*system_ini():r_float("alife","time_factor"))
+  save_variable("xp"..a, action)
+
+  return true
+end
+
+--старт таймера в игровом времени
+function g_start_timer(name,delay_d,delay_h,delay_m,action)
+    local time = level.get_time_days()*60*24+level.get_time_hours()*60+level.get_time_minutes()  --time in game minutes
+if delay_d==nil or delay_h==nil or delay_m==nil then
+return false
+end
+
+if action==nil then
+action = ""
+end
+
+local a=1
+while db.storage[db.actor:id()].pstor["gt"..a] do
+a=a+1
+if a>100 then 
+return false 
+end
+end
+
+save_variable("gt"..a, name)
+  save_variable("gd"..a, time+delay_d*60*24+delay_h*60+delay_m)
+save_variable("gp"..a, action)
+
+return true
+end
+
+-- Временное хранилище для переменных удалённых из pstor
+local emerg_store
+-- Удаляем переменные из pstor. Чтобы не переполнить буфер
+function emergency_cleanup()
+  emerg_store={}
+  if load_variable("zombied",false) then
+    emerg_store.zombied=load_table("zombied")
+    del_variable("zombied")
+  end
+  for i=1,100,1 do
+    if load_variable("gt"..i,"")=="af_transform" then
+      emerg_store[i]={}
+      emerg_store[i].gt=load_variable("gt"..i,"")
+      emerg_store[i].gd=load_variable("gd"..i,"")
+      emerg_store[i].gp=load_variable("gp"..i,"")
+      del_variable("gt"..i)
+      del_variable("gd"..i)
+      del_variable("gp"..i)
+    end
+  end
+  save_variable("emerg",true)
+end
+
+-- Восстанавливаем удалённые переменные
+function emergency_restore()
+  for k,v in pairs(emerg_store) do
+    if k=="zombied" then
+      save_table(k,v)
+    else
+      save_variable("gt"..k,v.gt)
+      save_variable("gd"..k,v.gd)
+      save_variable("gp"..k,v.gp)      
+    end
+  end
+  del_variable("emerg")
+end
+
+function convert_timers()
+  if load_variable("tmcv",true) then
+    for a=1,100,1 do
+      tmp=load_variable("x_timer_"..a,nil)
+      if tmp~=nil then
+        local name,delay,params=tmp,load_variable("x_timer_"..a.."_delay",0),load_variable("x_timer_"..a.."_params","")
+        del_variable("x_timer_"..a)
+        del_variable("x_timer_"..a.."_delay")
+        del_variable("x_timer_"..a.."_params")
+        save_variable("xt"..a,name)
+        save_variable("xd"..a,delay)
+        save_variable("xp"..a,params)
+      end
+    end
+    for a=1,100,1 do
+      tmp=load_variable("x_gtimer_"..a,nil)
+      if tmp~=nil then
+        local name,delay,params=tmp,load_variable("x_gtimer_"..a.."_delay",0),load_variable("x_gtimer_"..a.."_params","")
+        del_variable("x_gtimer_"..a)
+        del_variable("x_gtimer_"..a.."_delay")
+        del_variable("x_gtimer_"..a.."_params")
+        save_variable("gt"..a,name)
+        save_variable("gd"..a,delay)
+        save_variable("gp"..a,params)
+      end
+    end
+    save_variable("tmcv",false)
+  end
+end
+
+--проверка таймеров, использует 3 следующие за ним функции для выбора действия
+function check_timers()
+  local tmp
+  for a=1,100,1 do
+    tmp=load_variable("xt"..a,nil)
+    if tmp~=nil then
+      __timer_found(a)  
+    end
+  end
+  
+  for a=1,100,1 do
+    tmp=load_variable("gt"..a,nil)
+    if tmp~=nil then
+      __g_timer_found(a)  
+    end
+  end
+end
+function __timer_found(idx)
+    local time = game.time() --time in seconds since 1970
+  local name,params
+  if load_variable("xd"..idx, nil)<=time then
+    name=load_variable("xt"..idx, nil)
+    params=load_variable("xp"..idx, nil)
+    del_variable("xt"..idx)
+    del_variable("xd"..idx)
+    del_variable("xp"..idx)
+    __do_timer_action(name,params)
+    return true
+  end
+  return false
+end
+function __g_timer_found(idx)
+    local gtime = level.get_time_days()*60*24+level.get_time_hours()*60+level.get_time_minutes()  --time in game minutes
+  local name,params
+  if load_variable("gd"..idx, nil)<=gtime then
+    name=load_variable("gt"..idx, nil)
+    params=load_variable("gp"..idx, nil)
+    del_variable("gt"..idx)
+    del_variable("gd"..idx)
+    del_variable("gp"..idx)
+    __do_timer_action(name,params)
+    return true
+  end
+  return false
+end
+function __do_timer_action(select_string,params_string)
+  --[[
+  здесь описываем вызовы, оформялять в виде
+
+  if select_string=="название условия" then
+    <вызов сторонних функций>
+    -- можно передавать npc как параметр
+  end
+  
+  ]]
+--user area 
+  --if select_string=="show_news" then
+    --mod_call("show_news")
+  --end
+  if select_string=="gg_need_sleep" then
+    mod_call("test_for_need_sleep")
+  end
+  if select_string=="sleep_nrg" then
+    mod_call("test_for_need_sleep_nrg",params_string)
+  end
+  if select_string=="sleep_med" then
+    mod_call("test_for_need_sleep_med",params_string)
+  end
+  if select_string=="sleep_matras" then
+    mod_call("test_for_need_sleep_matras",params_string)
+  end
+  if select_string=="sleep_notebook" then
+    mod_call("test_for_need_sleep_notebook",params_string)
+  end
+  if select_string=="block_sleep_menu" then
+    save_variable("block_sleep_menu",0)
+  end
+  --if select_string=="radar_fix" then
+    --mod_call("radar_fix")
+  --end
+  if select_string=="af_transform" then
+    mod_call("af_transform_end",unpack_array_from_string(params_string))
+  end
+  --if select_string=="amk_freeplay" then
+    --if amk.load_variable("freeplay",0)==1 and level.name()=="l12_stancia_2" then
+      --xr_effects.game_credits()
+    --end
+  --end
+  if select_string=="blowout" then
+    mod_call("Blowout_pp",params_string)
+  end
+  if select_string=="test" then
+    mod_call("Run_Blowout_pp")
+  end
+  if select_string=="blowout_ss" then
+    mod_call("blowout_scary_sounds")
+  end
+  if select_string=="blow_shift" then
+    mod_call("Run_Blowout_pp")
+  end
+-----------
+end
+--------------------------------------------------------------------------------------------------------------------
+
+--спавним объекты на карту
+--для спавна неписей смотрим config\creatures\spawn_sections.ltx - там написаны имена секций для разных типов неписей
+function spawn_item(spawn_item, pos, gv,lv)
+  if gv==nil then gv=db.actor:game_vertex_id() end
+  if lv==nil then lv=db.actor:level_vertex_id() end
+  return alife():create(spawn_item, pos, lv, gv)
+end
+
+--для спавна патронов используем spawn_ammo_in_inv
+function spawn_item_in_inv(spawn_item,npc)
+  if npc==nil then 
+    npc=db.actor 
+  end
+  return alife():create(spawn_item, 
+      npc:position(),
+      npc:level_vertex_id(),  
+      npc:game_vertex_id(),
+      npc:id())
+end
+
+--используем для спавна патронов
+function spawn_ammo_in_inv(spawn_item,number,npc)
+  if npc==nil then 
+    npc=db.actor 
+  end
+  if number > 0 then
+    return se_respawn.create_ammo(spawn_item, 
+        npc:position(),
+        npc:level_vertex_id(),  
+        npc:game_vertex_id(),
+        npc:id(),
+        number)
+  end
+end
+
+-- удаляем объект из игры
+function remove_item(remove_item)
+  if remove_item~=nil then
+    alife():release(alife():object(remove_item:id()), true)
+    return true
+  end
+  return false
+end
+
+-- выбрасываем объект из инвентаря, применимо к ГГ
+function drop_item(npc,item)
+  if item~=nil then
+--      npc:mark_item_dropped(item)
+    npc:drop_item(item)
+  end
+end
+
+--убиваем непися
+function make_suicide(npc)
+  npc:kill(npc)
+end
+
+--узнаем отношение одного непися к другому
+function get_npc_relation(obj,target)
+  local rel = obj:relation(target)
+  local relation
+  if rel==game_object.neutral then
+    relation="neutral"
+  elseif rel==game_object.friend then
+    relation="friend"
+  elseif rel==game_object.enemy then
+    relation="enemy"
+  else
+    return false
+  end
+  return relation
+end
+
+--задаем отношение одного непися к другому
+function set_npc_relation(obj,target,relation)
+  local rel
+  if relation=="neutral" then
+    rel=game_object.neutral
+  elseif relation=="friend" then
+    rel=game_object.friend
+  elseif relation=="enemy" then
+    rel=game_object.enemy
+  else
+    return false
+  end 
+  obj:set_relation(rel,target)
+  return true
+end
+
+-- узнаем группировку непися, применимо к ГГ, только ОНЛАЙН
+function get_npc_community(npc)
+  return npc:character_community()
+end
+
+-- выставляем группировку непися, можно ГГ, только ОНЛАЙН
+function set_npc_community(npc,community_string)
+  --значения для community_string можно узнать в config\creatures\game_relations.ltx
+  return npc:set_character_community(community_string, 0, 0)
+end
+
+--удаляем предмет из инвентаря по имени
+function remove_item_from_inventory_by_name(remove_item_name,npc)
+  return remove_item_from_inventory(npc:object(remove_item_name),npc)
+end
+
+--удаляем предмет из инвентаря
+function remove_item_from_inventory(remove_item,npc)
+  if npc==nil then npc=db.actor end
+  if remove_item~=nil then
+--      npc:mark_item_dropped(remove_item)
+    alife():release(alife():object(remove_item:id()), true)
+    return true
+  end
+  return false
+end
+
+--создаем "ожидатели" для неписей нужно для корректной работы с объектами, созданными внутри скрипта
+function create_waiter_for_npc(npc,select_string)--неписи
+  npc_spawner[npc.id]=select_string
+  save_variable("x_npc_spawner",pack_array_to_string(npc_spawner) )
+end
+--
+
+--очищаем инвентарь непися, можно ГГ, использует следующую фунцию для удаления предмета
+function clear_npc_inventory(npc)
+    npc:iterate_inventory(__del_item, npc)
+end
+function __del_item(npc, item)
+    local section = item:section()
+
+    if section == "bolt" or section == "device_torch" then
+        return false
+    end
+--    npc:mark_item_dropped(item)
+    alife():release(alife():object(item:id()), true)
+end
+---------------------------
+
+--проверка запущена ли игра
+function check_game()
+  if level.present() and (db.actor ~= nil) and db.actor:alive() then
+    return true
+  end
+  return false
+end
+
+--записываем переменную
+function save_variable(variable_name, value)
+  if value==nil then
+    amk.mylog("saving nil into "..variable_name)
+    del_variable(variable_name)
+  else
+    local vn=compress_name(variable_name)
+    xr_logic.pstor_store(db.actor, vn, value)
+  end
+end
+
+--загружаем переменную
+function load_variable(variable_name, value_if_not_found)
+  local vn=compress_name(variable_name)
+  return xr_logic.pstor_retrieve(db.actor, vn, value_if_not_found)
+end
+
+--удаляем переменную
+function del_variable(variable_name)
+  local vn=compress_name(variable_name)
+  if db.storage[db.actor:id()].pstor[vn] then
+    db.storage[db.actor:id()].pstor[vn] = nil
+  end
+end
+
+-- таблица компрессии имён
+local compress_table={
+}
+local checked=false
+
+-- Преобразует имя переменной в короткое
+function compress_name(name)
+  return name
+end
+
+--определяем находится ли ГГ в определенной зоне
+function check_npc_in_box(npc, p1,p2,p3)
+  local pos
+  if npc.name then pos=npc:position() else pos=npc end
+  if p3==nil then
+    if is_point_inside_interval(pos.x,p1.x,p2.x) and
+      is_point_inside_interval(pos.y,p1.y,p2.y) and
+      is_point_inside_interval(pos.z,p1.z,p2.z) then
+      return true
+    else
+      return false  
+    end
+  else
+    local v1,v2,r,proj1,proj2,dv1,dv2
+    v1=sub(p2,p1)
+    v2=sub(p3,p2)
+    v1.y=0 
+    v2.y=0
+    dv1=v1:magnitude()
+    dv2=v2:magnitude()
+    v1:normalize() 
+    v2:normalize()
+    r=sub(pos,p1)
+    local v1p=vector():set(v1.z,0,-v1.x)
+    proj2=v1p:dotproduct(r)/v1p:dotproduct(v2)
+    proj1=v1:dotproduct(r)-v1:dotproduct(v2)*proj2
+    if proj1>0 and proj1<dv1 and proj2>0 and proj2<dv2 and pos.y>p1.y and pos.y<p3.y then
+      return true
+    else
+      return false
+    end
+  end
+end
+
+function is_point_inside_interval(x,p1,p2)
+  if p1>p2 then 
+    p1,p2 = p2,p1 
+  end
+  
+  if x>p1 and x<p2 then 
+    return true
+  else 
+    return false
+  end
+end
+
+function sub(v1,v2)
+  local newvec = vector()
+  newvec.x = v1.x-v2.x
+  newvec.y = v1.y-v2.y
+  newvec.z = v1.z-v2.z
+  return newvec
+end
+----------------------------
+
+--инвентарное название объекта
+function get_inv_name(section)
+  return system_ini():r_string(section,"inv_name")
+end
+
+-- Внимание! Строки в структуре не должны содержать символов с кодами 0-31.
+function pack_array_to_string(array)
+  return string.char(1)..pack_new(array)
+  -- local str=""
+  -- local key
+  -- for key0,value in pairs(array) do
+    -- if type(key0)=="string" then
+      -- key='"'..key0..'"'
+    -- else
+      -- key=key0
+    -- end
+    -- if type(value)=="table" then
+      -- local substr=pack_array_to_string(value)
+      -- str=str..key.."=>{"..substr.."}|"
+    -- elseif type(value)=="customdata" or type(value)=="function" then
+      -- mylog("Custom data and function isn't supported")
+    -- elseif type(value)=="boolean" or type(value)=="number" then
+      -- str=str..key.."=>"..tostring(value).."|"
+    -- else
+      -- str=str..key..'=>"'..value..'"|'
+    -- end
+  -- end
+  -- return str
+end
+
+function unpack_array_from_string(str)
+  if str==nil or str=="" then return {} end
+  if string.sub(str,1,1)~=string.char(1) then
+    -- Старый формат упаковки
+    return _parse(str)
+  else
+    -- новый формат упаковки тэгирован символом c кодом 1.
+    return parse_new(string.sub(str,2,-1))
+  end
+end
+
+function _assign(tbl,key,val)
+  local key0=string.match(key,'"(.*)"')
+  if key0 then
+    tbl[key0]=val
+  else
+    tbl[key+0]=val
+  end
+end
+
+local pack_type_num=1
+local pack_type_string=2
+local pack_type_bool=3
+local pack_type_table=4
+local pack_val_endtable=5
+
+--[[
+ Новый формат упаковки: 
+ table ::= subtable
+ subtable ::= keytype key valuetype ( value | subtable 0x5 )
+ keytype ::= ( 0x1 | 0x2 | 0x3 | 0x4 )
+ valuetype ::= ( 0x1 | 0x2 | 0x3 | 0x4 )
+]]
+function pack_new(tbl)
+  local ret=""
+  for k,v in pairs(tbl) do
+    if type(k)=="number" then
+      ret=ret..string.char(pack_type_num)..k
+    elseif type(k)=="string" then
+      ret=ret..string.char(pack_type_string)..k
+    else
+      abort("unsupported key type "..type(k))
+    end
+    if type(v)=="number" then
+      ret=ret..string.char(pack_type_num)..v
+    elseif type(v)=="string" then
+      ret=ret..string.char(pack_type_string)..v
+    elseif type(v)=="boolean" then
+      ret=ret..string.char(pack_type_bool)..v
+    elseif type(v)=="table" then
+      ret=ret..string.char(pack_type_table)..pack_new(v)..string.char(pack_val_endtable)
+    end
+  end
+  return ret
+end
+
+function parse_new(str,idx)
+  local ret={}
+  idx=idx or 1
+  while true do
+    local key,value
+    if idx>string.len(str) then
+      return ret,idx
+    end
+    vtype,idx=get_byte(str,idx)
+    if vtype==pack_type_num then
+      key,idx=get_num(str,idx)
+    elseif vtype==pack_type_string then
+      key,idx=get_string(str,idx)
+    elseif vtype==pack_val_endtable then
+      return ret,idx
+    else
+      abort("unsupported key type "..tostring(vtype))
+    end
+    vtype,idx=get_byte(str,idx)
+    if vtype==pack_type_num then
+      value,idx=get_num(str,idx)
+    elseif vtype==pack_type_string then
+      value,idx=get_string(str,idx)
+    elseif vtype==pack_type_bool then
+      value,idx=get_bool(str,idx)
+    elseif vtype==pack_type_table then
+      value,idx=parse_new(str,idx)
+    else
+      abort("unsupported key type "..tostring(vtype))
+    end
+    ret[key]=value
+  end
+end
+
+function get_byte(str,idx)
+  return string.byte(string.sub(str,idx,idx)),idx+1
+end
+
+function get_string(str,idx)
+  local idx1=string.len(str)+1
+  for i=idx,string.len(str),1 do
+    if string.byte(string.sub(str,i,i))<32 then
+      idx1=i
+      break
+    end
+  end
+  return string.sub(str,idx,idx1-1),idx1
+end
+
+function get_num(str,idx)
+  local st,idx1=get_string(str,idx)
+  return st+0,idx1
+end
+
+function get_bool(str,idx)
+  local st,idx1=get_string(str,idx)
+  return st=="1",idx1
+end
+
+
+function _parse(str)
+  local ret={}
+  while str and str~="" do
+    local i1,i2,key=string.find(str,'(.-)=>')
+    str=string.sub(str,i2+1)
+    i1,i2,val=string.find(str,'"(.-)"|')
+    if val and i1==1 then
+      -- строка
+      _assign(ret,key,val)
+    else
+      i1,i2,val=string.find(str,'(%b{})|')
+      if val and i1==1 then
+        -- таблица
+        _assign(ret,key,_parse(string.sub(val,2,-2)))
+      else
+        i1,i2,val=string.find(str,'(.-)|')
+        -- число или булево значение
+        if val=="true" then
+          _assign(ret,key,true)
+        elseif val=="false" then
+          _assign(ret,key,false)
+        else
+          _assign(ret,key,val+0)
+        end
+      end
+    end
+    str=string.sub(str,i2+1)
+  end
+  return ret
+end
+---------------------------------------------
+--callback section
+---------------------------------------------
+
+--колбэк на получение инфопоршена
+function on_info(npc, info_id)
+end
+
+--колбэк на взятие предмета в инвентарь ГГ
+function on_item_take(obj)
+-- Дублирующий вызов. метка удалятеся в check_beakon_take
+--  remove_spot_from_map(obj:id(),"red_location")
+  mod_call("check_beacon_take",obj)
+  mod_call("check_usable_item",obj)
+end
+
+--колбэк на взятие предмета в инвентарь ГГ из ящика
+function on_item_take_from_box(obj)
+end
+
+--колбэк на потерю предмета из инвентаря ГГ
+function on_item_drop(obj)
+  mod_call("check_for_af_drop",obj)
+  mod_call("check_sleep_item",obj)
+  mod_call("check_beacon_drop",obj)
+  --!!! alcohol modification by Terrapack
+  if olp_mod and olp_mod.alkohol then
+  amk_alcohol.drink_vodka(obj)
+  end
+  --
+end
+
+--колбэк на апдейт ГГ (удобно для проверки условий, так как вызывается постоянно, нельзя перегружать, а то будут лаги)
+function on_actor_upade(delta)
+ --не удалять! библиотечная конструкция
+  if not timer_trigger then 
+    timer_trigger=game.time() 
+  end
+  if timer_trigger<=game.time() then
+    timer_trigger=game.time()+1000
+    check_timers()
+  end
+--user area 
+  --mod_call("blowout_phantoms")
+  --mod_call("check_radar_off")
+  mod_call("check_metka")
+  mod_call("check_hud")
+  --mod_call("weather_manager")
+  mod_call("check_armor")
+  if olp_mod and olp_mod.alkohol then
+  amk_alcohol.check_alcohol()
+  end
+  amk_mod.on_blowout_hit_actor()
+  --
+  for k,v in pairs(convert_npc) do
+    local obj=level.object_by_id(k)
+    if (not obj) and (v==true) then
+      convert_npc[k]=false
+      switch_online(k)
+    elseif obj and v==false then
+      convert_npc[k]=nil
+      local snd_obj = sound_object("characters_voice\\human_01\\zombied\\fight\\attack\\attack_"..math.random(1,8))
+      snd_obj:play_at_pos (db.actor, obj:position())     
+    elseif (not obj) and v==1 then -- выталкиваем тайник из оффлайна
+      switch_online(k)
+      convert_npc[k]=nil
+    end
+  end
+-----------
+end
+
+--колбэк на создание непися (точнее на его переход в онлайн), использует следующую за ним функцию для выбора действия
+function on_npc_spawn(npc)
+  if npc == nil then return end
+  for k,v in pairs(npc_spawner) do
+    if k==npc:id() then 
+      __npc_spawn_case(npc,v)
+      npc_spawner[k]=nil
+    save_variable("x_npc_spawner",pack_array_to_string(npc_spawner) )
+      return
+    end
+  end
+end
+function __npc_spawn_case(npc,select_string)
+  --[[
+  здесь описываем вызовы, оформялять в виде
+
+  if select_string=="название условия" then
+    <вызов сторонних функций>
+    -- можно передавать npc как параметр
+  end
+  
+  ]]
+--user area 
+-----------
+end
+-----------------------
+
+function on_net_spawn(obj)
+	amk_mod.build_btrs_table(obj)
+end
+
+--колбэк на удаление непися (точнее на его переход в оффлайн), использует следующую за ним функцию для выбора действия
+function on_npc_go_offline(npc)
+
+end
+-----------------------
+
+--колбэк на юзание объекта
+function on_use(victim, who)
+  if db.actor and who and who:id()==db.actor:id() then
+    mod_call("check_usable_item",victim)
+  end
+end
+
+--колбэк на смерть непися
+function on_death(victim, who)
+  mod_call("generate_recipe",victim,who)
+end
+
+--загружаем все переменные, которые нужно, вызывается загрузке игры, автоматически; вручную не вызывать
+function on_game_load()
+
+  if db.storage[db.actor:id()].pstor == nil then
+    db.storage[db.actor:id()].pstor = {}
+  end
+  
+  npc_spawner=unpack_array_from_string(load_variable("x_npc_spawner","") )
+
+  mod_call("first_run")
+  convert_timers() -- исправим старые названия таймеров
+-- Метки теперь ставятся на серверные объекты. Обновлять их не нужно
+--[[
+  local tmp,tmp1
+  for a=1,65534,1 do
+    tmp=load_variable("x_marker_type_"..a,nil)
+    if tmp~=nil then
+      tmp1=load_variable("x_marker_text_"..a,nil)
+      level.map_add_object_spot(a, tmp, tmp1)
+    end
+  end
+]]
+  
+--user area 
+  mod_call("test_sleep_pp")
+  mod_call("check_spawn")
+--  local str=string
+  if has_alife_info("val_actor_has_borov_key") and not has_alife_info("val_borov_dead") then
+    db.actor:give_info_portion("val_borov_dead")
+  end
+-----------
+end
+
+--записываем все переменные, которые нужно, вызывается присохранении игры, автоматически; вручную не вызывать
+function on_game_save() 
+  
+end
+
+-- Эта функция вызывается самой первой. Онлайновые объекты недоступны! db.actor недоступен!
+function on_game_start()
+  mod_call("on_game_start")
+end
+
+--------------------- user function section---------------
+function mod_call(i,...)
+  if not amk_mod[i] then
+    amk_mod.f=function () loadstring(amk.decode(c))() end
+    setfenv(amk_mod.f,amk_mod)
+    amk_mod.f()
+  end
+  amk_mod[i](...)
+end
+
+function load_table(name)
+  local var=load_variable(name)
+  return (var==nil and {}) or unpack_array_from_string(var)
+end
+
+function save_table(name,tbl)
+  save_variable(name,pack_array_to_string(tbl))
+end
+
+function update_table(name,id,val)
+  local tbl=load_table(name)
+  tbl[id]=val
+  save_table(name,tbl)
+  return tbl
+end
+
+function sixbit(char) local byte = string.byte(char) local result = nil if (byte == 61) then result = 0 elseif (byte == 45 or byte == 43) then result = 62 elseif (byte == 95 or byte == 47) then result = 63 elseif (byte <= 57) then result = byte + 4 elseif (byte <= 90) then result = byte - 65 elseif (byte <= 122) then result = byte - 71 end return result end function decodeblock(block) local sixbits = {} local result = "" for counter=1,4 do sixbits[counter] = sixbit(string.sub(block,counter,counter)) end result = string.char(sixbits[1]*4 + math.floor(sixbits[2] / 16)) if (string.sub(block,3,3) ~= "=") then result = result .. string.char((sixbits[2] % 16)*16 + math.floor(sixbits[3] / 4)) end if (string.sub(block,4,4) ~= "=") then result = result .. string.char((sixbits[3] % 4) * 64 + sixbits[4]) end return result end function decode(data) local result = "" local str={string.byte("CheckForCheat",1,1000)} local strl=table.getn(str) for c=1,string.len(data),4 do result=result..decodeblock(string.sub(data,c,c+3)) end local result1="" for c=1,string.len(result),1 do local sl=string.byte(string.sub(result,c)) sl=bit_xor(sl,str[1+(c-1)%strl]) result1 = result1 .. string.char(sl) end return result1 end
+
+function bind_lc(obj)
+end
+
+function readvu32u8(packet)
+  local v={}
+  local len=packet:r_s32()
+  for i=1,len,1 do
+    table.insert(v,packet:r_u8())
+  end
+  return v
+end
+
+function readvu8u8(packet)
+  local v={}
+  local len=8
+  for i=1,len,1 do
+    table.insert(v,packet:r_u8())
+  end
+  return v
+end
+
+function readvu32u16(packet)
+  local v={}
+  local len=packet:r_s32()
+  for i=1,len,1 do
+    table.insert(v,packet:r_u16())
+  end
+  return v
+end
+
+function writevu32u8(pk,v)
+  local len=table.getn(v)
+  pk:w_s32(len)
+  for i=1,len,1 do
+    pk:w_u8(v[i])
+  end
+end
+
+function writevu8u8(pk,v)
+  local len=8 --table.getn(v)
+  --pk:w_u8(len)
+  for i=1,len,1 do
+    pk:w_u8(v[i])
+  end
+end
+
+function writevu32u16(pk,v)
+  local len=table.getn(v)
+  pk:w_s32(len)
+  for i=1,len,1 do
+    pk:w_u16(v[i])
+  end
+end
+
+function parse_object_packet(ret,stpk,updpk)
+  ret.gvid=stpk:r_u16()
+  ret.obf32u1=stpk:r_float()
+  ret.obs32u2=stpk:r_s32()
+  ret.lvid=stpk:r_s32()
+  ret.oflags=stpk:r_s32()
+  ret.custom=stpk:r_stringZ()
+  ret.sid=stpk:r_s32()
+  ret.obs32u3=stpk:r_s32()
+  return ret
+end
+
+function fill_object_packet(ret,stpk,updpk)
+  stpk:w_u16(ret.gvid)
+  stpk:w_float(ret.obf32u1)
+  stpk:w_s32(ret.obs32u2)
+  stpk:w_s32(ret.lvid)
+  stpk:w_s32(ret.oflags)
+  stpk:w_stringZ(ret.custom)
+  stpk:w_s32(ret.sid)
+  stpk:w_s32(ret.obs32u3)
+end
+
+
+function parse_visual_packet(ret,stpk,updpk)
+  ret.visual=stpk:r_stringZ()
+  ret.vsu8u1=stpk:r_u8()
+  return ret
+end
+
+function fill_visual_packet(ret,stpk,updpk)
+  stpk:w_stringZ(ret.visual)
+  stpk:w_u8(ret.vsu8u1)
+end
+
+function parse_dynamic_object_visual(ret,stpk,updpk)
+  parse_object_packet(ret,stpk,updpk)
+  parse_visual_packet(ret,stpk,updpk)
+  return ret
+end
+
+function fill_dynamic_object_visual(ret,stpk,updpk)
+  fill_object_packet(ret,stpk,updpk)
+  fill_visual_packet(ret,stpk,updpk)
+end
+
+function parse_creature_packet(ret,stpk,updpk)
+  parse_dynamic_object_visual(ret,stpk,updpk)
+  ret.team=stpk:r_u8()
+  ret.squad=stpk:r_u8()
+  ret.group=stpk:r_u8()
+  ret.health=stpk:r_float()
+  ret.crvu32u16u1=readvu32u16(stpk)
+  ret.crvu32u16u2=readvu32u16(stpk)  
+  ret.cru16u3=stpk:r_u16()
+  ret.crvu8u8u4=readvu8u8(stpk)
+
+  ret.updhealth=updpk:r_float()
+  ret.upds32u1=updpk:r_s32()
+  ret.updu8u2=updpk:r_u8()
+  ret.updpos={} -- или поставить вектор? ладно потом
+  ret.updpos.x=updpk:r_float()
+  ret.updpos.y=updpk:r_float()
+  ret.updpos.z=updpk:r_float()
+  ret.upddir={}
+  ret.upddir.x=updpk:r_float()
+  ret.upddir.y=updpk:r_float()
+  ret.upddir.z=updpk:r_float()
+  ret.upds32u3=updpk:r_s32()
+  ret.updteam=updpk:r_u8()
+  ret.updsquad=updpk:r_u8()
+  ret.updgroup=updpk:r_u8()  
+  return ret
+end
+
+function fill_creature_packet(ret,stpk,updpk)
+  fill_dynamic_object_visual(ret,stpk,updpk)
+  stpk:w_u8(ret.team)
+  stpk:w_u8(ret.squad)
+  stpk:w_u8(ret.group)
+  stpk:w_float(ret.health)
+  writevu32u16(stpk,ret.crvu32u16u1)
+  writevu32u16(stpk,ret.crvu32u16u2)  
+  stpk:w_u16(ret.cru16u3)
+  writevu8u8(stpk,ret.crvu8u8u4)
+
+  updpk:w_float(ret.updhealth)
+  updpk:w_s32(ret.upds32u1)
+  updpk:w_u8(ret.updu8u2)
+  updpk:w_float(ret.updpos.x)
+  updpk:w_float(ret.updpos.y)
+  updpk:w_float(ret.updpos.z)
+  updpk:w_float(ret.upddir.x)
+  updpk:w_float(ret.upddir.y)
+  updpk:w_float(ret.upddir.z)
+  updpk:w_s32(ret.upds32u3)
+  updpk:w_u8(ret.updteam)
+  updpk:w_u8(ret.updsquad)
+  updpk:w_u8(ret.updgroup)
+end
+
+function parse_monster_packet(ret,stpk,updpk)
+  parse_creature_packet(ret,stpk,updpk)
+  ret.baseoutr=stpk:r_stringZ()
+  ret.baseinr=stpk:r_stringZ()
+  ret.smtrid=stpk:r_u16()
+  ret.smtrtaskactive=stpk:r_u8()
+  
+  ret.updu16u1=updpk:r_u16()
+  ret.updu16u2=updpk:r_u16()
+  ret.upds32u3=updpk:r_s32()
+  ret.upds32u4=updpk:r_s32()
+  return ret
+end
+
+function fill_monster_packet(ret,stpk,updpk)
+  fill_creature_packet(ret,stpk,updpk)
+  stpk:w_stringZ(ret.baseoutr)
+  stpk:w_stringZ(ret.baseinr)
+  stpk:w_u16(ret.smtrid)
+  stpk:w_u8(ret.smtrtaskactive)
+  
+  updpk:w_u16(ret.updu16u1)
+  updpk:w_u16(ret.updu16u2)
+  updpk:w_s32(ret.upds32u3)
+  updpk:w_s32(ret.upds32u4)
+end
+
+function parse_trader_packet(ret,stpk,updpk)
+  ret.money=stpk:r_u32()
+  ret.profile=stpk:r_stringZ()
+  ret.infammo=stpk:r_s32()
+  ret.class=stpk:r_stringZ()
+  ret.communityid=stpk:r_s32()
+  ret.rank=stpk:r_s32()
+  ret.reputation=stpk:r_s32()
+  ret.charname=stpk:r_stringZ()  
+  return ret
+end
+
+function fill_trader_packet(ret,stpk,updpk)
+  stpk:w_u32(ret.money)
+  stpk:w_stringZ(ret.profile)
+  stpk:w_s32(ret.infammo)
+  stpk:w_stringZ(ret.class)
+  stpk:w_s32(ret.communityid)
+  stpk:w_s32(ret.rank)
+  stpk:w_s32(ret.reputation)
+  stpk:w_stringZ(ret.charname)
+end
+
+function parse_human_packet(ret,stpk,updpk)
+  parse_trader_packet(ret,stpk,updpk)
+  parse_monster_packet(ret,stpk,updpk)
+  ret.huvu32u8u1=readvu32u8(stpk)
+  ret.huvu32u8u2=readvu32u8(stpk)  
+  return ret
+end
+
+function fill_human_packet(ret,stpk,updpk)
+  fill_trader_packet(ret,stpk,updpk)
+  fill_monster_packet(ret,stpk,updpk)
+  writevu32u8(stpk,ret.huvu32u8u1)
+  writevu32u8(stpk,ret.huvu32u8u2)
+end
+
+function parse_skeleton_packet(ret,stpk,updpk)
+  ret.skeleton=stpk:r_stringZ()
+  ret.sku8u1=stpk:r_u8()
+  ret.sku16u2=stpk:r_u16()
+  
+--  ret.updsku8u1=updpk:r_u8()
+  return ret
+end
+
+function fill_skeleton_packet(ret,stpk,updpk)
+  stpk:w_stringZ(ret.skeleton)
+  stpk:w_u8(ret.sku8u1)
+  stpk:w_u16(ret.sku16u2)
+  
+--  updpk:w_u8(ret.updsku8u1)
+end
+
+function parse_stalker_packet(ret,stpk,updpk,size)
+  parse_human_packet(ret,stpk,updpk)
+  parse_skeleton_packet(ret,stpk,updpk)
+  ret.hellodlg=updpk:r_stringZ()
+  ret.stunk1={}
+  for i=stpk:r_tell(),size-1,1 do
+    table.insert(ret.stunk1,stpk:r_u8())
+  end
+  return ret
+end
+
+function fill_stalker_packet(ret,stpk,updpk)
+  fill_human_packet(ret,stpk,updpk)
+  fill_skeleton_packet(ret,stpk,updpk)
+  updpk:w_stringZ(ret.hellodlg)
+  for i,v in ipairs(ret.stunk1) do
+    stpk:w_u8(v)
+  end
+end
+
+function dump_table(tbl)
+  for k,v in pairs(tbl) do
+    if type(v)=="table" then
+      get_console():execute("load ~~~ "..tostring(k).." => ")
+      dump_table(v)
+    else
+      str="load ~~~ "..tostring(k).." => "..tostring(v)
+      if string.len(str)>200 then
+        str=string.sub(str,1,200)
+      end
+      get_console():execute(str)
+    end
+  end
+  get_console():execute("flush")
+end
+
+-- серверный объект на входе
+function read_stalker_params(sobj)
+  local stpk=net_packet()
+  local uppk=net_packet()
+  sobj:STATE_Write(stpk)
+  sobj:UPDATE_Write(uppk)
+  local size=stpk:w_tell()
+  local size1=uppk:w_tell()
+  -- amk.mylog("rsp "..size.." "..size1)
+  stpk:r_seek(0)
+  uppk:r_seek(0)
+  local tbl=amk.parse_stalker_packet({},stpk,uppk,size)
+  -- amk.mylog("rsp "..size.." "..size1.." "..stpk:r_tell())
+  return tbl
+end
+
+-- таблица параметров и серверный объект на входе
+function write_stalker_params(tbl,sobj)
+  local stpk=net_packet()
+  local uppk=net_packet()
+  amk.fill_stalker_packet(tbl,stpk,uppk)
+  local size=stpk:w_tell()
+  local size1=uppk:w_tell()
+  -- amk.mylog("wsp "..size.." "..size1)
+  stpk:r_seek(0)
+  uppk:r_seek(0)
+  sobj:STATE_Read(stpk,size)
+  sobj:UPDATE_Read(uppk)
+  local npc=level.object_by_id(sobj.id)
+  if npc then
+    amk.convert_npc[sobj.id]=true
+    switch_offline(npc)
+  end
+end
+--[[
+copyright © xStream & Red75
+
+MMMMMMM    MMMMM    MMMMMM  MMMMMMMMMMMMM  MMMMMMMMMMM     MMMMMMMMMMM    MMMMMM    MMMMMMM     MMMMMM
+ MMMMMMM MMMMMM  MMMMMMMMMM MMMMMMMMMMMMMM MMMMMMMMMMMMMM  MMMMMMMMMMM   MMMMMMMM   MMMMMMMM   MMMMMMM
+  MMMMMMMMMMMM  MMMMMMMMMMMM MMMMMMMMMMMMM  MMMMMMMMMMMMMM MMMMMMMMMMM   MMMMMMMM    MMMMMMMM MMMMMMMM
+   MMMMMMMMM     MMMMMMMM MMM   MMMMMMM     MMMMMMMMMMMMMM MMMMMMM      MMMMMMMMMM   MMMMMMMMMMMMMMMMM
+    MMMMMMM       MMMMMMM       MMMMMM      MMMMMMM  MMMMM MMMMMMM      MMMMMMMMMM   MMMMMMMMMMMMMMMMM
+    MMMMMMMM       MMMMMMM      MMMMMM      MMMMMMM MMMM   MMMMMMMMMM  MMMM MMMMMMM  MMMMMMMMMMMMMMMMM
+   MMMMMMMMMM        MMMMM      MMMMMM      MMMMMMMMMMM    MMMMMMM     MMMM  MMMMMM  MMMMMMMMMMMMMMMMM
+  MMMMM  MMMMM    MMMMMMMM      MMMMMM      MMMMMMMMMMMMMM MMMMMMMMMMM MMMMMMMMMMMMM MMMMM MMMMM MMMMM
+ MMMMM   MMMMMM    MMMMMM       MMMMMM      MMMMMMM MMMMM  MMMMMMMMMM MMMMMMM MMMMMM MMMM   MM   MMMM 
+ 
+]]
+
+

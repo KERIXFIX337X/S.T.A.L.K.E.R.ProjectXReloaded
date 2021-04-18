@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="windows-1251" ?>
+
+<cheat>	
+	<background x="0" y="0" width="400" height="340" stretch="1">
+		<texture x="0" y="0" width="350" height="460">ui\ui_dg_inventory</texture>
+	</background>
+
+	<caption x="175" y="175" width="50" height="35">
+		<text font="letterica18">Введите здесь название для сохроняемых координат.</text>
+	</caption>
+	
+	<caption2 x="175" y="185" width="50" height="35">
+		<text font="letterica18" r="255" g="255" b="0">Название не должно содержать больше 30 символов!!! </text>
+	</caption2>
+	
+	<btn_1 x="40" y="270" width="117" height="29">
+	<texture_e>ui_button_ordinary_e</texture_e>
+	<texture_t>ui_button_ordinary_t</texture_t>
+	<texture_h>ui_button_ordinary_h</texture_h>
+		<text>Сохранить</text>
+	</btn_1>
+
+	<edit_box x="45" y="220" width="310" height="23">
+		<texture>ui_linetext_e</texture>
+		<text font="letterica18" r="240" g="217" b="182"/>
+	</edit_box>
+
+
+<btn_quit x="240" y="270" width="117" height="29">
+	<texture_e>ui_button_ordinary_e</texture_e>
+	<texture_t>ui_button_ordinary_t</texture_t>
+	<texture_h>ui_button_ordinary_h</texture_h>
+	<text>ui_inv_exit</text>
+</btn_quit>
+</cheat>

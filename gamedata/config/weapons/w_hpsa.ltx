@@ -1,0 +1,188 @@
+[wpn_hpsa]:identity_immunities
+GroupControlSection			= spawn_group
+discovery_dependency 		= 
+$spawn               	    = "weapons\hpsa"					; option for Level Editor
+$npc						= on				; option for Level Editor
+$prefetch 					= 8
+scheduled            		= off              ; option for ALife Simulator
+cform                    	= skeleton
+class                    	= WP_HPSA
+min_radius               	= 0
+max_radius               	= 30
+description					= enc_weapons1_wpn-hpsa
+	
+ef_weapon_type				= 5
+
+;--- scope weapons -----------------------------------------------------------------
+holder_range_modifier	= 1.0               ; во сколько раз увеличивается eye_range 
+holder_fov_modifier		= 1.0              ; во сколько раз увеличивается eye_fov
+;-----------------------------------------------------------------------------------
+
+cost					 	= 2500
+
+ammo_limit		 			= 120
+ammo_current		 		= 0
+ammo_elapsed		 		= 0
+
+ammo_mag_size		 		= 13
+ammo_class		 			= ammo_9x19_fmj, ammo_9x19_pbp
+
+
+hand_dependence		 		= 1
+single_handed				= 1
+
+slot 			 			= 1		; // primary
+animation_slot				= 1		; type of the animation that will be used
+
+inv_name					= wpn_hpsa
+inv_name_short				= wpn_hpsa
+inv_weight					= 0.88	;.5
+
+inv_grid_width     = 2
+inv_grid_height    = 1
+inv_grid_x         = 12
+inv_grid_y         = 24
+
+kill_msg_x			= 126
+kill_msg_y			= 154
+kill_msg_width		= 35
+kill_msg_height		= 23
+
+;-----------------------------------------------------------------------------------
+;базовая дисперсия
+fire_dispersion_base		= 0.1 		;угол (в градусах) базовой дисперсии оружия (оружия зажатого в тисках)
+
+;отдача
+cam_relax_speed         	= 8.2;1.2	;скорость возврата в исходное положение
+cam_dispersion          	= 1.0	;увеличения угла (в градусах) с каждым выстрелом
+cam_dispersion_inc		= 0.0	;увеличениe cam_dispersion с каждым выстрелом
+cam_dispertion_frac		= 1.0	;ствол будет подыматься на cam_dispersion*cam_dispertion_frac +- cam_dispersion*(1-cam_dispertion_frac)
+cam_max_angle			= 20.0	;максимальный угол отдачи
+cam_max_angle_horz		= 10.0	;(degree) maximum shot horizontal degree 
+cam_step_angle_horz		= 1.2	;(degree) size of step camera moved in horizontal position while shooting
+
+fire_dispersion_condition_factor = 5	;увеличение дисперсии в процентах при максимальном износе 
+misfire_probability 		= 0.005	    ;вероятность осечки при максимальном износе 
+condition_shot_dec 		= 0.00043	;увеличение износа при каждом выстреле
+;-----------------------------------------------------------------------------------
+
+direction                	= 0, 0, 1
+fire_point               	= 0.0, 0.129, 0.179
+
+flame_particles		   		= weapons\generic_weapon03
+smoke_particles		   		= weapons\generic_shoot_00
+
+shell_point		 			= 0.0, 0.129, 0.05
+shell_dir		 			= 0.0, 0.0, 0.4
+shell_particles	 			= amik\weapons\9x18\9x18_r_01
+rpm_empty_click 	 		= 200
+
+PDM_disp_base 			= 0.3
+PDM_disp_vel_factor 		= 0.7
+PDM_disp_accel_factor 		= 0.7
+PDM_crouch	 		= 0.1
+PDM_crouch_no_acc 		= 0.1
+
+; ttc
+hit_power                	= 0.35
+hit_impulse		 	= 125
+hit_type 			= fire_wound
+fire_distance            	= 70
+
+bullet_speed			= 355		;начальная скорость пули
+rpm                      	= 320
+; end ttc
+
+use_aim_bullet				= true		;Поддерживается ли первая суппер пуля
+time_to_aim					= 1.0	
+
+silencer_hit_power       	= 0.50
+silencer_hit_impulse	 	= 60
+silencer_fire_distance   	= 100
+silencer_bullet_speed	 	= 230
+
+hud                      	= wpn_hpsa_hud
+normal                   	= 0, 1, 0
+position                 	= -0.021, -0.085, 0.0
+orientation              	= 0, 0, 0
+
+startup_ammo             	= 90
+visual                   	= weapons\hpsa\wpn_hpsa.ogf
+
+light_color		 			= 0.6,0.5,0.3
+light_range		 			= 2.0
+light_var_color		 		= 0.05
+light_var_range		 		= 0.5
+light_time 		 			= 0.2
+
+ph_mass			 			= 1
+;cost			 			= 450
+
+;addons
+scope_status				= 0
+silencer_status				= 0
+grenade_launcher_status		= 0
+
+zoom_enabled				= true
+scope_zoom_factor	    	= 70
+
+;звуки
+snd_draw					= weapons\hpsa\draw
+snd_holster					= weapons\hpsa\holster
+snd_shoot					= weapons\hpsa\shot
+snd_shoot1					= weapons\hpsa\shot1
+snd_shoot2					= weapons\hpsa\shot2
+snd_shoot3					= weapons\hpsa\shot3       
+snd_empty					= weapons\hpsa\empty
+snd_reload					= weapons\p226r\reload_empty
+snd_reload_jammed			= weapons\walther\reload_jammed
+snd_close					= weapons\hpsa\holster
+
+silencer_name  				= wpn_addon_silencer		; section name for the attachable silencer
+silencer_x 					= 68						; offset in inventory icon
+silencer_y 					= -16					
+
+silencer_smoke_particles 	= weapons\generic_shoot_00
+snd_silncer_shot			= weapons\silshot\9mm-2
+silencer_light_color		= 0.6,0.5,0.3
+silencer_light_range		= 0.01
+silencer_light_var_color	= 0.05
+silencer_light_var_range	= 0.5
+silencer_light_time 		= 0.2
+ 
+[wpn_hpsa_hud]
+shell_point			        = 0,0,-0.27
+fire_point			        = 0.0,0.0,-0.2
+fire_bone                	= muzzle
+orientation              	= 3,1,0.1
+position                 	= -0.02,-0.14,-0.2
+visual                   	= weapons\hpsa\wpn_hpsa_hud.ogf
+
+anim_holster				= holster
+anim_idle					= idle
+anim_empty					= idle_empty
+anim_reload					= reload
+anim_reload_empty				= reload_empty
+anim_reload_jammed          = reload_jammed
+anim_draw					= draw
+anim_draw_empty				= draw_empty
+anim_shoot					= shoot
+anim_shot_last				= shoot_last
+anim_close					= holster
+anim_idle_aim				= idle_aim
+anim_idle_sprint				= idle_sprint
+anim_idle_moving		    = idle_moving
+
+zoom_offset			= -0.0931,0.012,0.0
+zoom_rotate_x		= -0.01
+zoom_rotate_y		= 0.072
+zoom_hide_crosshair	= true
+
+[wpn_hpsa_m1]:wpn_hpsa      ;FN Browning HP-SA + Магазин на 17пт.
+$spawn               	    = "weapons\hpsa_m1"
+description					= enc_weapons1_wpn-hpsa_m1
+ammo_mag_size 					= 17
+inv_grid_width     = 2
+inv_grid_height    = 1
+inv_grid_x         = 12
+inv_grid_y         = 25	

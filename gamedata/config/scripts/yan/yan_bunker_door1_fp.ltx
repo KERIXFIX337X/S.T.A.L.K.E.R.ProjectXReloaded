@@ -1,0 +1,42 @@
+[logic]
+active = ph_door@locked
+
+[ph_door@locked]
+locked = false
+closed = true
+snd_init = trader_door_unlock
+snd_open_start = trader_door_open_start
+snd_close_start = trader_door_close_start
+snd_close_stop = trader_door_close_stop
+on_info = {=ecolog_friendly +yan_bunker_door_2_open -yan_scientist_door_1_open} ph_door@unlocked,{+yan_scientist_door_1_open} ph_door@scientist_locked, {+yan_scientist_door_2_open} ph_door@scientist_unlocked
+on_use = {=ecolog_friendly} ph_door@unlocked
+
+[ph_door@unlocked]
+locked = false
+closed = false
+snd_init = trader_door_unlock
+snd_open_start = trader_door_open_start
+snd_close_start = trader_door_close_start
+snd_close_stop = trader_door_close_stop
+on_info = {-yan_bunker_door_2_open -yan_scientist_door_1_open} ph_door@locked,{+yan_scientist_door_2_open} ph_door@scientist_unlocked,{+yan_scientist_door_1_open} ph_door@scientist_locked
+on_use = ph_door@locked
+
+[ph_door@scientist_unlocked]
+locked = false
+closed = false
+snd_init = trader_door_unlock
+snd_open_start = trader_door_open_start
+snd_close_start = trader_door_close_start
+snd_close_stop = trader_door_close_stop
+on_info = {-yan_scientist_door_2_open +yan_scientist_door_1_open} ph_door@scientist_locked,{-yan_scientist_door_2_open -yan_scientist_door_1_open} ph_door@locked
+on_use = ph_door@locked
+
+[ph_door@scientist_locked]
+locked = false
+closed = true
+snd_init = trader_door_unlock
+snd_open_start = trader_door_open_start
+snd_close_start = trader_door_close_start
+snd_close_stop = trader_door_close_stop
+on_info = {+yan_scientist_door_2_open -yan_scientist_door_1_open} ph_door@scientist_unlocked,{-yan_scientist_door_2_open -yan_scientist_door_1_open} ph_door@locked
+on_use = ph_door@unlocked

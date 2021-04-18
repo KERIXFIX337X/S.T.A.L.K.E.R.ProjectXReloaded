@@ -1,0 +1,475 @@
+<?xml version="1.0" encoding="windows-1251" ?>
+<string_table>
+    <string id="give_treasure">
+		<text>%c[255,1,255,255]Получена информация о схроне!</text>
+	</string>
+    <string id="dtk_descr">
+		<text>%c[10,145,161,255]Установка ДТК%c[default] </text>
+	</string>
+	<string id="price_dtk">
+		<text>\n \n%c[188,241,255,86]Стоимость: 3000%c[default] </text>
+	</string>
+	<string id="sil_pbs_descr">
+		<text>%c[10,145,161,255]Установка глушителя ПБС%c[default] </text>
+	</string>
+	<string id="price_sil_pbs">
+		<text>\n \n%c[188,241,255,86]Стоимость: 3000%c[default] </text>
+	</string>
+	<string id="mag_45_descr">
+		<text>%c[10,145,161,255]Установка расширенного магазина [60 пт.]%c[default] </text>
+	</string>
+	<string id="price_6000">
+		<text>\n \n%c[188,241,255,86]Стоимость: 6000%c[default] </text>
+	</string>
+	<string id="dmr_ak74u_descr">
+		<text>%c[10,145,161,255]Увеличение скорострельности%c[default] </text>
+	</string>
+	<string id="swith_9x18_descr">
+		<text>%c[10,145,161,255]Смена калибра [9x18]%c[default] </text>
+	</string>
+	<string id="mp5_priklad_descr">
+		<text>%c[10,145,161,255]Установка улучшенного приклада%c[default] </text>
+	</string>
+	<string id="sil_descr">
+		<text>%c[10,145,161,255]Установка глушителя%c[default] </text>
+	</string>
+	<string id="price_4000">
+		<text>\n \n%c[188,241,255,86]Стоимость: 4000%c[default] </text>
+	</string>
+	<string id="price_1000">
+		<text>\n \n%c[188,241,255,86]Стоимость: 1000%c[default] </text>
+	</string>
+	<string id="price_7000">
+		<text>\n \n%c[188,241,255,86]Стоимость: 7000%c[default] </text>
+	</string>
+	<string id="mag_50_descr">
+		<text>%c[10,145,161,255]Установка расширенного магазина [60 пт.]%c[default] </text>
+	</string>
+	<string id="price_1500">
+		<text>\n \n%c[188,241,255,86]Стоимость: 1500%c[default] </text>
+	</string>
+	<string id="mag_12_descr">
+		<text>%c[10,145,161,255]Установка расширенного магазина [12 пт.]%c[default] </text>
+	</string>
+	<string id="deltapoint_descr">
+		<text>%c[10,145,161,255]Установка прицела [Leupold Deltapoint]%c[default] </text>
+	</string>
+	<string id="price_2000">
+		<text>\n \n%c[188,241,255,86]Стоимость: 2000%c[default] </text>
+	</string>
+	<string id="price_10000">
+		<text>\n \n%c[188,241,255,86]Стоимость: 10000%c[default] </text>
+	</string>
+	<string id="aimpoint_descr">
+		<text>%c[10,145,161,255]Установка прицела ["Ракурс"]%c[default] </text>
+	</string>
+	<string id="price_5000">
+		<text>\n \n%c[188,241,255,86]Стоимость: 5000%c[default] </text>
+	</string>
+	<string id="reload_descr">
+		<text>%c[10,145,161,255]Замена основных компонентов%c[default] </text>
+	</string>
+	<string id="stvol_descr">
+		<text>%c[10,145,161,255]Установка нарезного ствол [Не стреляет дробью]%c[default] </text>
+	</string>
+	<string id="lozha_descr">
+		<text>%c[10,145,161,255]Установка полной ложи%c[default] </text>
+	</string>
+	<string id="price_500">
+		<text>\n \n%c[188,241,255,86]Стоимость: 500%c[default] </text>
+	</string>
+	<string id="sfera_08_descr">
+		<text>%c[10,145,161,255]Установка шлема "Сфера - 08" [Повышенная защита от аномалий и пулевых ранений, ПНВ] %c[default] </text>
+	</string>
+	<string id="price_12000">
+		<text>\n \n%c[188,241,255,86]Стоимость: 12000%c[default] </text>
+	</string>
+	<string id="medbag_descr">
+		<text>%c[10,145,161,255]Установка медицинского подсумка [Пассивный эффект: регенерация] %c[default] </text>
+	</string>
+	<string id="bag_descr">
+		<text>%c[10,145,161,255]Установка дополнительного вещмешка [Грузоподъёмность: + 10 кг.] %c[default] </text>
+	</string>
+	<string id="price_15000">
+		<text>\n \n%c[188,241,255,86]Стоимость: 15000%c[default] </text>
+	</string>
+	<string id="up_leather_descr">
+		<text>%c[10,145,161,255]Нанесение износостойкой кожи [Надёжность: + 50 %] %c[default] </text>
+	</string>
+	<string id="up_ballon_descr">
+		<text>%c[10,145,161,255]Установка кислородного баллона [Защита от аномалий.] %c[default] </text>
+	</string>
+	<string id="pnv_descr">
+		<text>%c[10,145,161,255]Установка ПНВ 3 - го поколения %c[default] </text>
+	</string>
+	<string id="kevlar_descr">
+		<text>%c[10,145,161,255]Установка бронированных элементов [Защита от ранений] %c[default] </text>
+	</string>
+	<string id="price_12000">
+		<text>\n \n%c[188,241,255,86]Стоимость: 12000%c[default] </text>
+	</string>
+	<string id="medruksak_descr">
+		<text>%c[10,145,161,255]Установка туристического рюкзака [Переносимый вес: +25 кг.] %c[default] </text>
+	</string>
+	<string id="magsizep_descr">
+		<text>%c[10,145,161,255]Установка расширенного магазина [20 пт.]%c[default] </text>
+	</string>
+	<string id="freefire_descr">
+		<text>%c[10,145,161,255]Установка дополнительного режима огня [Очередь с отсечкой по три патрона]%c[default] </text>
+	</string>
+	<string id="price_20000">
+		<text>\n \n%c[188,241,255,86]Стоимость: 20000%c[default] </text>
+	</string>
+	<string id="highprivod_descr">
+		<text>%c[10,145,161,255]Установка усиленных сервоприводов[Возможность бега]%c[default] </text>
+	</string>
+	<string id="exo_higharmor_descr">
+		<text>%c[10,145,161,255]Установка титаного доспеха "Кирасир"[Защита от ранений]%c[default] </text>
+	</string>
+	<string id="nothing">
+		<text>\n \n%c[red]Необходима предшествующая модификация!%c[default] </text>
+	</string>
+	<string id="mod_apply">
+		<text>\n \n%c[green]Модификация уже установлена!%c[default] </text>
+	</string>
+	<string id="price_30000">
+		<text>\n \n%c[188,241,255,86]Стоимость: 30000%c[default] </text>
+	</string>
+	<string id="mag60_descr">
+		<text>%c[10,145,161,255]Установка расширенного магазина [60 пт.]%c[default] </text>
+	</string>
+	<string id="pka_descr">
+		<text>%c[10,145,161,255]Установка коллиматорного прицела "ПК-А"%c[default] </text>
+	</string>
+	<string id="price_3000">
+		<text>\n \n%c[188,241,255,86]Стоимость: 3000%c[default] </text>
+	</string>
+	<string id="sil_svd_descr">
+		<text>%c[10,145,161,255]Установка глушителя "Ротор-43"%c[default] </text>
+	</string>
+	<string id="mag_svd_descr">
+		<text>%c[10,145,161,255]Установка расширенного магазина [15 пт.]%c[default] </text>
+	</string>
+	<string id="sil_sig_descr">
+		<text>%c[10,145,161,255]Установка глушителя "5.56 НАТО"%c[default] </text>
+	</string>
+	<string id="march_scope_descr">
+		<text>%c[10,145,161,255]Установка оптического прицела [March Tactical 3-24x42 FFP]%c[default] </text>
+	</string>
+	<string id="sig_grip_descr">
+		<text>%c[10,145,161,255]Установка вертикальной рукояти%c[default] </text>
+	</string>
+	<string id="sig552_grip_descr">
+		<text>%c[10,145,161,255]Установка вертикальной рукояти%c[default] </text>
+	</string>
+	<string id="mag84_descr">
+		<text>%c[10,145,161,255]Установка расширенного магазина на 84пт.%c[default] </text>
+	</string>
+	<string id="mag12_descr">
+		<text>%c[10,145,161,255]Установка расширенного магазина на 12пт.%c[default] </text>
+	</string>
+	<string id="mag15_descr">
+		<text>%c[10,145,161,255]Установка расширенного магазина на 15пт.%c[default] </text>
+	</string>
+	<string id="mag17_descr">
+		<text>%c[10,145,161,255]Установка расширенного магазина на 17пт.%c[default] </text>
+	</string>
+	<string id="mag20_descr">
+		<text>%c[10,145,161,255]Установка расширенного магазина на 20пт.%c[default] </text>
+	</string>
+	<string id="compensator_eagle_descr">
+		<text>%c[10,145,161,255]Установка дульного компенсатора [Снижение отдачи].%c[default] </text>
+	</string>
+	<string id="id_mp_money">
+		<text>Деньги</text>
+	</string>
+	<string id="mm_mp_pda_hunt">
+		<text>Бонус за КПК</text>
+	</string>
+	<string id="st_drink">
+		<text>выпить</text>
+	</string>
+	<string id="st_mp_direct_ip">
+		<text>Прямой IP</text>
+	</string>
+	<string id="ui_mm_default">
+		<text>По умолчанию</text>
+	</string>
+	<string id="ui_mm_detail_density">
+		<text>Плотность травы</text>
+	</string>
+	<string id="ui_mm_r2_sun">
+		<text>Тень от солнца</text>
+	</string>
+	<string id="ui_mm_r2_sun_details">
+		<text>Тень травы</text>
+	</string>
+	<string id="ui_mm_render_2">
+		<text>Рендер-2</text>
+	</string>
+	<string id="ui_pda_details">
+		<text># /детали</text>
+	</string>
+	<string id="ui_st_btn_cancel">
+		<text>Отмена</text>
+	</string>
+	<string id="ui_st_btn_no">
+		<text>Нет</text>
+	</string>
+	<string id="ui_st_btn_ok">
+		<text>ОК</text>
+	</string>
+	<string id="ui_st_btn_yes">
+		<text>Да</text>
+	</string>
+	<string id="ui_st_cant_run_r2">
+		<text>Вы не можете запустить второй рендер на вашем компьютере</text>
+	</string>
+	<string id="ui_st_conn_invalid_host">
+		<text>Ошибка соединения: неверный хост</text>
+	</string>
+	<string id="ui_st_conn_invalid_pass">
+		<text>Ошибка соединения: неверный пароль</text>
+	</string>
+	<string id="ui_st_conn_rejected_server">
+		<text>Ошибка соединения: соединение прервано сервером</text>
+	</string>
+	<string id="ui_st_conn_sess_full">
+		<text>Ошибка соединения: сервер заполнен</text>
+	</string>
+	<string id="ui_st_days">
+		<text>дн.</text>
+	</string>
+	<string id="ui_st_error">
+		<text>Ошибка</text>
+	</string>
+	<string id="ui_st_file_exist_owerwrite_q">
+		<text>Файл с таким именем уже существует. Перезаписать?</text>
+	</string>
+	<string id="ui_st_file_name_is_empty">
+		<text>Имя файла пустое</text>
+	</string>
+	<string id="ui_st_hours">
+		<text>час.</text>
+	</string>
+	<string id="ui_st_leave">
+		<text>Уйти</text>
+	</string>
+	<string id="ui_st_mins">
+		<text>мин.</text>
+	</string>
+	<string id="ui_st_months">
+		<text>мес.</text>
+	</string>
+	<string id="ui_st_params">
+		<text>Параметры</text>
+	</string>
+	<string id="ui_st_secs">
+		<text>сек.</text>
+	</string>
+	<string id="ui_st_select_one_map">
+		<text>Пожалуйста, выберите хотя бы одну карту</text>
+	</string>
+	<string id="ui_st_take_all">
+		<text>Взять все</text>
+	</string>
+	<string id="ui_st_time_remains">
+		<text>Осталось</text>
+	</string>
+	<string id="ui_st_trade">
+		<text>Торговать</text>
+	</string>
+	<string id="ui_st_voting_disabled">
+		<text>Голосование отключено</text>
+	</string>
+	<string id="ui_st_want_to_leave_game_q">
+		<text>Вы действительно хотите покинуть игру?</text>
+	</string>
+	<string id="ui_st_your_items">
+		<text>Ваши вещи</text>
+	</string>
+	<string id="st_game_over_press_jump">
+		<text>Нажмите ($$ACTION_JUMP$$) для выхода в главное меню</text>
+	</string>
+	<string id="st_level">
+		<text>Уровень</text>
+	</string>
+	<string id="st_opening_stream">
+		<text>Открытие потока</text>
+	</string>
+	<string id="st_loading_cform">
+		<text>Загрузка формы объектов</text>
+	</string>
+	<string id="st_prefetching_objects">
+		<text>Кэширование объектов</text>
+	</string>
+	<string id="st_creating_new_game">
+		<text>Создание новой игры</text>
+	</string>
+	<string id="st_loading_alife_simulator">
+		<text>Сервер: Загрузка симуляции жизни</text>
+	</string>
+	<string id="st_server_connecting">
+		<text>Сервер: Соединяемся</text>
+	</string>
+	<string id="st_loading_saved_game">
+		<text>Загрузка игры</text>
+	</string>
+	<string id="st_validating_cdkey">
+		<text>Проверка ключа</text>
+	</string>
+	<string id="st_loading_ai_objects">
+		<text>Загрузка ИИ объектов</text>
+	</string>
+	<string id="st_client_connecting_to">
+		<text>Клиент: Соединение с</text>
+	</string>
+	<string id="st_client_spawning">
+		<text>Клиент: Создание</text>
+	</string>
+	<string id="st_loading_textures">
+		<text>Загрузка текстур</text>
+	</string>
+	<string id="st_client_synchronising">
+		<text>Клиент: Синхронизация</text>
+	</string>
+	<string id="st_server_starting">
+		<text>Сервер: Старт</text>
+	</string>
+	<string id="st_loading_shaders">
+		<text>Загрузка шейдеров</text>
+	</string>
+	<string id="st_loading_geometry">
+		<text>Загрузка геометрии</text>
+	</string>
+	<string id="st_loading_spatial_db">
+		<text>Загрузка базы пространств</text>
+	</string>
+	<string id="st_loading_details">
+		<text>Загрузка детальных объектов</text>
+	</string>
+	<string id="st_loading_sectors_portals">
+		<text>Загрузка секторов и порталов</text>
+	</string>
+	<string id="ui_st_conn_version_differs">
+		<text>Ошибка соединения: Отличаются версии.</text>
+	</string>
+	<string id="ui_st_conn_cdkey_invalid">
+		<text>Ошибка соединения: Неверный CD-Key.</text>
+	</string>
+	<string id="ui_st_conn_cdkey_in_use">
+		<text>Ошибка соединения: Такой CD-Key уже используется.</text>
+	</string>
+	<string id="ui_st_conn_cdkey_disabled">
+		<text>Ошибка соединения: Ваш CD-Key заблокирован. Свяжитесь со службой поддержки.</text>
+	</string>
+	<string id="ui_st_conn_new_patch">
+		<text>Доступен новый патч. \n Версия: %s\n %s\n Хотите загрузить его сейчас?</text>
+	</string>
+	<string id="ui_st_conn_no_new_patch">
+		<text>Нет новых патчей</text>
+	</string>
+	<string id="ui_mm_delete_existing_file_q">
+		<text>Вы действительно хотите удалить файл?</text>
+	</string>
+	<string id="st_game_paused">
+		<text>Пауза</text>
+	</string>
+	<string id="st_bolt">
+		<text>Болт</text>
+	</string>
+	<string id="st_items">
+		<text>Предметы</text>
+	</string>
+	<string id="st_video">
+		<text>Видео</text>
+	</string>
+	<string id="st_audio">
+		<text>Звук</text>
+	</string>
+	<string id="st_game">
+		<text>Игра</text>
+	</string>
+	<string id="st_controll">
+		<text>Управление</text>
+	</string>
+	<string id="ui_st_connecting_to_masterserver">
+		<text>Присоединение к мастер-серверу</text>
+	</string>
+	<string id="mp_only_one_voting">
+		<text>Разрешено только одно активное голосование</text>
+	</string>
+	<string id="ui_st_patch_download_success">
+		<text>Патч успешно скачан. Установить?</text>
+	</string>
+	<string id="ui_st_patch_download_error">
+		<text>Невозможно скачать патч.</text>
+	</string>
+	<string id="ui_st_load_game_confirm">
+		<text>Загрузка игры приведет к потере несохраненных данных. Желаете продолжить?</text>
+	</string>
+	<string id="ui_st_invalid_saved_game">
+		<text>Не совпадает версия сохранённой игры или сохранённая игра испорчена.</text>
+	</string>
+	<!-- added for freeplay start setup ui -->
+	<string id="ui_st_profile">
+		<text>Профиль</text>
+	</string>
+	<string id="st_fs_community">
+		<text>Группировка</text>
+	</string>
+	<string id="st_fs_inventory">
+		<text>Вещи</text>
+	</string>
+	<string id="st_fs_spawnpoint">
+		<text>Место старта</text>
+	</string>
+	<!-- added for freeplay start setup profiles names -->
+	<string id="prof_Dolg_min">
+		<text>Долг (мин.)</text>
+	</string>
+	<string id="prof_Freedom_min">
+		<text>Свобода (мин.)</text>
+	</string>
+	<string id="prof_Killer_min">
+		<text>Наемник (мин.)</text>
+	</string>
+	<string id="prof_Monolith_min">
+		<text>Монолит (мин.)</text>
+	</string>
+	<!-- added for freeplay start setup spawnpoints names -->
+	<string id="sp_loners_base">
+		<text>Лагерь новичков (Кордон)</text>
+	</string>
+	<string id="sp_freedom_base">
+		<text>База Свободы (Военные Склады)</text>
+	</string>
+	<string id="sp_dolg_base">
+		<text>Бункер Долга (Бар)</text>
+	</string>
+	<string id="sp_military_base1">
+		<text>Южный Блокпост (Кордон)</text>
+	</string>
+	<string id="sp_military_base2">
+		<text>НИИ (Агропром)</text>
+	</string>
+	<string id="sp_killer_base">
+		<text>Хутор (Военные Склады)</text>
+	</string>
+	<string id="sp_bandit_base">
+		<text>База Борова (Темная Долина)</text>
+	</string>
+	<string id="sp_monolith_base1">
+		<text>База Монолита (Припять)</text>
+	</string>
+	<string id="sp_monolith_base2">
+		<text>База Монолита 2 (Радар)</text>
+	</string>
+	<string id="sp_ecolog_base">
+		<text>Лагерь экологов (Янтарь)</text>
+	</string>
+	<string id="closed_beta_test_descr">
+		<text>Внимание! Этот билд предназначен строго для закрытого бета тестирования. Если вы не являетесь тестером, то просьба сообщить разработчику в Discord (Robbie#0925).</text>
+	</string>
+	#include "ui_mod_icon.ltx"
+</string_table>
